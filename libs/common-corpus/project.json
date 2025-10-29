@@ -1,0 +1,34 @@
+{
+  "name": "common-corpus",
+  "sourceRoot": "libs/common-corpus",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:node",
+      "options": {
+        "outputPath": "dist/libs/common-corpus",
+        "main": "libs/common-corpus/index.js"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm test",
+        "cwd": "libs/common-corpus"
+      }
+    },
+    "build-layer": {
+      "executor": "@nx/js:node",
+      "options": {
+        "command": "npm run build:layer",
+        "cwd": "libs/common-corpus"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["libs/common-corpus/**/*.js"]
+      }
+    }
+  }
+}

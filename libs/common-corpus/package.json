@@ -1,0 +1,47 @@
+{
+  "name": "common-corpus",
+  "version": "0.1.0",
+  "description": "Shared text corpus library with lambda layer capabilities",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/",
+    "start": "node index.js",
+    "cover": "istanbul cover --include-all-sources node_modules/mocha/bin/_mocha test/",
+    "build:layer": "npm run build:layer:prepare && npm run build:layer:zip",
+    "build:layer:prepare": "mkdir -p layer/nodejs/node_modules/common-corpus && cp -r corpus/ index.js lambda-index.js package.json layer/nodejs/node_modules/common-corpus/",
+    "build:layer:zip": "cd layer && zip -r ../common-corpus-layer.zip nodejs/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelpaulukonis/common-corpus.git"
+  },
+  "keywords": [
+    "texts",
+    "ebooks",
+    "nlg",
+    "corpus",
+    "corpora"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/michaelpaulukonis/common-corpus/issues"
+  },
+  "homepage": "https://github.com/michaelpaulukonis/common-corpus#readme",
+  "dependencies": {
+    "iconv-lite": "0.4.15",
+    "mkdirp": "0.5.1",
+    "nlp_compromise": "6.5.3",
+    "node-zipkit": "0.1.2",
+    "rimraf": "2.6.1"
+  },
+  "devDependencies": {
+    "chai": "3.5.0",
+    "gulp": "3.9.1",
+    "gulp-eslint": "3.0.1",
+    "gulp-if": "2.0.2",
+    "gulp-mocha": "4.0.1",
+    "istanbul": "0.4.5",
+    "mocha": "3.2.0"
+  }
+}

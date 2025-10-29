@@ -16,7 +16,7 @@
   - Create tools/ directory for build and deployment scripts
   - _Requirements: 7.1, 7.2, 7.4, 7.5_
 
-- [ ] 3. Migrate common-corpus as shared library
+- [x] 3. Migrate common-corpus as shared library
 
   - Copy common-corpus source code to libs/common-corpus/
   - Create libs/common-corpus/project.json with Nx library configuration
@@ -31,9 +31,9 @@
   - Verify lambda-index.js functionality in monorepo context
   - _Requirements: 3.1, 3.2_
 
-- [ ] 4. Migrate PoeticalBot application
+- [ ] 4. Obtain and migrate PoeticalBot application source code
 
-  - Copy PoeticalBot source code to apps/poeticalbot/
+  - Locate and copy PoeticalBot source code to apps/poeticalbot/
   - Create apps/poeticalbot/project.json with Nx application configuration
   - Update package.json to reference workspace common-corpus dependency
   - Preserve existing lambda/ directory and terraform/ configuration
@@ -46,23 +46,28 @@
   - Verify Lambda deployment configuration
   - _Requirements: 2.2, 2.4_
 
-- [ ] 5. Create Lambda handler wrapper for listmania
+- [ ] 5. Obtain and analyze listmania application source code
 
+  - Locate and copy listmania source code to apps/listmania/
   - Analyze existing listmania CLI interface and functionality
+  - Document current Heroku deployment configuration for migration reference
+  - _Requirements: 4.1, 4.2_
+
+- [ ] 6. Create Lambda handler wrapper for listmania
+
   - Create lambda/index.js handler wrapper around existing CLI functionality
   - Implement event-to-CLI argument conversion logic
   - Add error handling and Lambda response formatting
   - _Requirements: 4.2, 4.5_
 
-- [ ] 6. Migrate listmania application with Lambda conversion
+- [ ] 7. Complete listmania migration with Lambda conversion
 
-  - Copy listmania source code to apps/listmania/
   - Create apps/listmania/project.json with Nx application configuration
   - Update package.json to reference workspace common-corpus dependency
-  - Integrate the Lambda handler wrapper created in task 5
+  - Integrate the Lambda handler wrapper created in task 6
   - _Requirements: 4.1, 4.4, 4.5_
 
-- [ ] 7. Create terraform configuration for listmania Lambda deployment
+- [ ] 8. Create terraform configuration for listmania Lambda deployment
 
   - Create apps/listmania/terraform/ directory
   - Write terraform configuration for AWS Lambda function
@@ -70,21 +75,21 @@
   - Set up environment variables and IAM roles for Lambda execution
   - _Requirements: 4.3, 4.5_
 
-- [ ] 7.1 Write deployment validation tests for listmania Lambda
+- [ ] 8.1 Write deployment validation tests for listmania Lambda
 
   - Test terraform configuration syntax
   - Verify Lambda handler functionality
   - _Requirements: 4.2, 4.3_
 
-- [ ] 8. Configure Nx task orchestration and shared tooling
+- [ ] 9. Configure Nx task orchestration and shared tooling
 
   - Set up Nx executors for build, test, lint, and deploy targets across all applications
-  - Create unified npm scripts using nx run-many commands
   - Configure shared ESLint configuration integrated with Nx
   - Set up Nx dependency graph and implicit dependencies
+  - Verify unified npm scripts using nx run-many commands are working correctly
   - _Requirements: 1.3, 1.5, 5.4, 6.3, 6.4_
 
-- [ ] 9. Consolidate documentation and create monorepo README
+- [ ] 10. Consolidate documentation and create monorepo README
 
   - Create root-level README.md with monorepo structure and getting started instructions
   - Copy and organize existing documentation from all applications into docs/
@@ -92,21 +97,21 @@
   - Create development workflow documentation for Nx-based development
   - _Requirements: 6.1, 6.2, 7.4_
 
-- [ ] 9.1 Write documentation validation scripts
+- [ ] 10.1 Write documentation validation scripts
 
   - Verify all documentation links are functional
   - Check that code examples in documentation are syntactically correct
   - _Requirements: 6.1, 6.2_
 
-- [ ] 10. Optimize shared dependencies and workspace configuration
+- [ ] 11. Optimize shared dependencies and workspace configuration
 
   - Identify and consolidate shared dependencies like compromise, commander, tumblr.js
-  - Move common devDependencies to root package.json
+  - Move common devDependencies to root package.json (already partially done)
   - Configure Nx caching for optimal build performance
   - Set up proper dependency hoisting with pnpm workspace configuration
   - _Requirements: 5.2, 5.3, 5.5_
 
-- [ ] 11. Create deployment and development scripts
+- [ ] 12. Create deployment and development scripts
 
   - Create tools/deploy-all.js script for deploying all applications
   - Create tools/test-all.js script for comprehensive testing
@@ -114,21 +119,20 @@
   - Create Lambda layer build script for common-corpus
   - _Requirements: 1.5, 6.3, 3.4_
 
-- [ ] 11.1 Write validation tests for deployment scripts
+- [ ] 12.1 Write validation tests for deployment scripts
 
   - Test deployment script error handling
   - Verify development environment setup
   - _Requirements: 1.5, 6.3_
 
-- [ ] 12. Consolidate and migrate Kiro configurations
+- [ ] 13. Consolidate and migrate Kiro configurations
 
   - Merge .kiro/ configurations from all applications
   - Preserve application-specific Kiro settings in respective directories
-  - Create root-level .kiro/ configuration for monorepo-wide settings
   - Update steering files and hooks for monorepo development workflow
   - _Requirements: 6.5, 2.3_
 
-- [ ] 13. Final integration testing and validation
+- [ ] 14. Final integration testing and validation
   - Verify all applications build and run correctly in monorepo context
   - Test Lambda deployments for both PoeticalBot and listmania
   - Validate common-corpus integration across all consuming applications

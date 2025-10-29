@@ -4,15 +4,7 @@
   },
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "nxCloudId": "hLLqOutard",
-  "plugins": [
-    {
-      "plugin": "@nx/js/plugin",
-      "options": {
-        "buildTargetName": "build",
-        "testTargetName": "test"
-      }
-    }
-  ],
+  "plugins": [],
   "release": {
     "projectsRelationship": "independent",
     "projects": ["apps/*"],
