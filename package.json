@@ -1,0 +1,48 @@
+{
+  "name": "nlp-monorepo",
+  "version": "0.1.0",
+  "description": "Monorepo for NLP applications: PoeticalBot, common-corpus, and listmania",
+  "private": true,
+  "scripts": {
+    "dev": "nx run-many --target=dev --all",
+    "build": "nx run-many --target=build --all",
+    "test": "nx run-many --target=test --all",
+    "lint": "nx run-many --target=lint --all",
+    "deploy:poeticalbot": "nx deploy poeticalbot",
+    "deploy:listmania": "nx deploy listmania",
+    "deploy:all": "nx run-many --target=deploy --projects=poeticalbot,listmania",
+    "clean": "nx reset"
+  },
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
+  "keywords": [
+    "nlp",
+    "poetry",
+    "text-generation",
+    "tumblr-bot",
+    "aws-lambda",
+    "monorepo"
+  ],
+  "author": "Michael Paulukonis",
+  "license": "MIT",
+  "dependencies": {
+    "compromise": "^13.8.0",
+    "commander": "^7.0.0",
+    "dotenv": "^8.2.0",
+    "tumblr.js": "^5.0.0"
+  },
+  "devDependencies": {
+    "@nx/js": "^22.0.2",
+    "eslint": "^8.57.1",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0",
+    "nx": "22.0.2",
+    "standard": "^17.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "nx": {}
+}
