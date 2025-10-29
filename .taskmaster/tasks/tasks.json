@@ -1,0 +1,22 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Set up Separation Architecture for Tumblr Posting Service",
+        "description": "Design and establish the architecture to separate Tumblr-posting functionality from poeticalbot and listmania, creating an independent posting service with API access.",
+        "details": "This task involves designing a new architecture where Tumblr posting is handled by a dedicated service rather than being embedded in the poeticalbot and listmania applications.\n\n1. Analyze the current Tumblr posting code in both projects to understand commonalities and differences\n2. Design an API specification for how poeticalbot and listmania will communicate with the new posting service\n   - Define required endpoints (e.g., /post, /schedule, /status)\n   - Specify request/response formats in JSON\n   - Design authentication mechanism (API keys)\n   - Document rate limits and error handling\n3. Create infrastructure diagrams showing the new component relationships\n4. Select appropriate technology for the posting service:\n   - Evaluate serverless options (AWS Lambda, Azure Functions, etc.)\n   - Consider container-based deployment if more control is needed\n   - Determine hosting and scaling requirements\n5. Set up a repository structure for the new posting service\n6. Create a development roadmap for implementing the changes across all three services\n7. Address data migration concerns if existing scheduled posts need to be transferred\n8. Design monitoring and logging strategy for the new service architecture",
+        "testStrategy": "1. Create mockups of the API to validate the design before implementation\n2. Develop API tests using Postman or similar tool that verify all planned endpoints\n3. Set up integration tests that simulate poeticalbot and listmania making requests to the new posting service\n4. Create test scenarios for authentication failures and API misuse\n5. Test posting to a sandbox Tumblr account to verify end-to-end functionality\n6. Verify logging and monitoring capture appropriate operational data\n7. Conduct load testing to ensure the service can handle anticipated request volume\n8. Perform security review of the API authentication mechanism",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "medium",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-10-29T18:02:26.778Z",
+      "description": "Default tasks context",
+      "updated": "2025-10-29T18:02:56.431Z"
+    }
+  }
+}

@@ -49,3 +49,7 @@ Thumbs.db
 # Legacy files (can be removed after migration)
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
+
+# Task files
+# tasks.json
+# tasks/ 
