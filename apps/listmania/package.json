@@ -1,0 +1,68 @@
+{
+  "name": "listmania",
+  "version": "0.1.0",
+  "description": "maker of lists",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "logs": "heroku logs -n 1500 > heroku.log",
+    "cover": "npm run clean:cover && npm run cover:js",
+    "clean:cover": "rm -rf ./docs/coverage",
+    "cover:js": "nyc mocha --recursive ./test/*.tests.js",
+    "test": "standard --fix && npm run test:js",
+    "test:js": "mocha --timeout 50000 ./test/*.tests.js",
+    "update": "npx npm-check -u"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MichaelPaulukonis/listmania.git"
+  },
+  "keywords": [
+    "nlg",
+    "nlp",
+    "lists",
+    "epoetry",
+    "bots",
+    "tumblr",
+    "tumblrbot",
+    "electronicliterature",
+    "elit"
+  ],
+  "author": "Michael Paulukonis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MichaelPaulukonis/listmania/issues"
+  },
+  "homepage": "https://github.com/MichaelPaulukonis/listmania#readme",
+  "dependencies": {
+    "commander": "^7.0.0",
+    "common-corpus": "workspace:*",
+    "compromise": "^13.8.0",
+    "corpora-project": "^0.2.0",
+    "dotenv": "^8.2.0",
+    "fuzzy-matching": "0.4.3",
+    "random-seed": "0.3.0",
+    "tumblr.js": "^3.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "dirty-chai": "^2.0.1",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0",
+    "pre-commit": "^1.2.2",
+    "simple-timer": "0.0.5",
+    "standard": "^17.0.0"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "it",
+      "before",
+      "beforeEach",
+      "after"
+    ]
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}

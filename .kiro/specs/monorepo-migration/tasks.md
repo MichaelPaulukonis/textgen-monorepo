@@ -25,13 +25,13 @@
   - Maintain existing corpus/ directory and lambda layer build capability
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 5.4_
 
-- [ ] 3.1 Write unit tests for common-corpus library integration
+- [x] 3.1 Write unit tests for common-corpus library integration
 
   - Test workspace dependency resolution
   - Verify lambda-index.js functionality in monorepo context
   - _Requirements: 3.1, 3.2_
 
-- [ ] 4. Obtain and migrate PoeticalBot application source code
+- [x] 4. Migrate PoeticalBot application
 
   - Locate and copy PoeticalBot source code to apps/poeticalbot/
   - Create apps/poeticalbot/project.json with Nx application configuration
@@ -40,13 +40,13 @@
   - Maintain existing .kiro/ and .specstory/ configurations
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-- [ ] 4.1 Write integration tests for PoeticalBot workspace integration
+- [x] 4.1 Write integration tests for PoeticalBot workspace integration
 
   - Test common-corpus dependency resolution
   - Verify Lambda deployment configuration
   - _Requirements: 2.2, 2.4_
 
-- [ ] 5. Obtain and analyze listmania application source code
+- [x] 5. Obtain and analyze listmania application source code
 
   - Locate and copy listmania source code to apps/listmania/
   - Analyze existing listmania CLI interface and functionality
