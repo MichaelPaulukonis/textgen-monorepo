@@ -1,0 +1,6 @@
+# Libs Directory
+
+This directory contains shared libraries in the monorepo.
+
+Shared libraries will be placed here following Nx conventions:
+- libs/common-corpus/ - Shared text corpus library with lambda layer capabilities

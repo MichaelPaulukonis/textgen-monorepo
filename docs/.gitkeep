@@ -1,0 +1,8 @@
+# Documentation Directory
+
+This directory contains consolidated documentation for the monorepo.
+
+Documentation will be organized as:
+- Consolidated documentation from all applications
+- Individual application documentation preserved in their respective directories
+- Development workflow documentation for Nx-based development

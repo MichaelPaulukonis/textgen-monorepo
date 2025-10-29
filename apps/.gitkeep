@@ -1,0 +1,7 @@
+# Apps Directory
+
+This directory contains applications in the monorepo.
+
+Applications will be placed here following Nx conventions:
+- apps/poeticalbot/ - Poetry generation bot (Lambda)
+- apps/listmania/ - List generation bot (Lambda)

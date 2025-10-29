@@ -1,0 +1,9 @@
+# Tools Directory
+
+This directory contains build and deployment scripts for the monorepo.
+
+Tools will include:
+- tools/deploy-all.js - Script for deploying all applications
+- tools/test-all.js - Script for comprehensive testing
+- Development environment setup scripts
+- Lambda layer build scripts for common-corpus
