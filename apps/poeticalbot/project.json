@@ -1,0 +1,57 @@
+{
+  "name": "poeticalbot",
+  "sourceRoot": "apps/poeticalbot/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'Build complete - PoeticalBot is ready for deployment'",
+        "cwd": "apps/poeticalbot"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm test",
+        "cwd": "apps/poeticalbot"
+      }
+    },
+    "test:unit": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run test:unit",
+        "cwd": "apps/poeticalbot"
+      }
+    },
+    "test:integration": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run test:integration",
+        "cwd": "apps/poeticalbot"
+      }
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd terraform && terraform apply",
+        "cwd": "apps/poeticalbot"
+      }
+    },
+    "cli": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run cli:run",
+        "cwd": "apps/poeticalbot"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "standard",
+        "cwd": "apps/poeticalbot"
+      }
+    }
+  },
+  "implicitDependencies": ["common-corpus"]
+}

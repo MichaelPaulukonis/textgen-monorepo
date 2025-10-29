@@ -1,0 +1,17 @@
+.env*
+node_modules/
+output/
+coverage/
+demo.js
+wn.js
+*.log
+.nyc_output/# Terra
+form artifacts
+terraform/*.zip
+terraform/poeticalbot-lambda/
+terraform/.terraform/
+terraform/terraform.tfstate*
+terraform/terraform.tfstate
+*.zip
+
+*.hard-coded.BEWARE.js

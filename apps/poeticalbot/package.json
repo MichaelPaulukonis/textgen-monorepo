@@ -1,0 +1,72 @@
+{
+  "name": "poeticalbot",
+  "version": "0.2.0",
+  "description": "Tumblr Poetry Generator developed for NaPoGenMo2016",
+  "homepage": "https://poeticalbot.tumblr.com",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node index.js",
+    "logs": "heroku logs -n 1500 > heroku.log",
+    "clean:cover": "rimraf ./docs/coverage",
+    "cover": "run-s clean:cover cover:js",
+    "cover:js": "nyc mocha --recursive ./test/*.tests.js",
+    "coretest": "mocha test/poetifier.tests.js",
+    "test": "npm run test:js",
+    "test:fix": "standard --fix && npm run test:js",
+    "test:js": "mocha --timeout 50000 ./test/*.tests.js",
+    "test:integration": "mocha --timeout 60000 ./test/*integration*.tests.js",
+    "test:unit": "mocha --timeout 30000 ./test/*.tests.js --invert --grep 'integration|Integration'",
+    "cli:run": "node src/cli.js",
+    "cli:sample": "node src/cli.js --method queneau-buckets --corporaFilter eliot --no-post",
+    "cli:help": "node src/cli.js --help",
+    "update": "npx npm-check -u",
+    "heroku:login": "heroku login",
+    "heroku:scheduler": "heroku addons:open scheduler",
+    "heroku:config": "heroku config"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MichaelPaulukonis/napogenmo2016"
+  },
+  "author": "Michael Paulukonis",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "commander": "^6.2.1",
+    "common-corpus": "workspace:*",
+    "compromise": "^11.13.2",
+    "dotenv": "^7.0.0",
+    "fuzzy-matching": "0.4.3",
+    "in-a-nutshell": "0.1.2",
+    "natural": "^0.6.3",
+    "node-mispelr": "0.0.1",
+    "pos": "^0.4.2",
+    "ramda": "^0.27.1",
+    "random-seed": "0.3.0",
+    "rhymes": "^1.0.2",
+    "simple-timer": "0.0.5",
+    "tagspewer": "0.3.1",
+    "tumblr.js": "^5.0.0"
+  },
+  "engines": {
+    "node": "^22.16.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "dirty-chai": "^2.0.1",
+    "mocha": "^6.1.4",
+    "nyc": "^13.3.0",
+    "pre-commit": "^1.2.2",
+    "rimraf": "^2.6.3",
+    "standard": "^12.0.1"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "it",
+      "before",
+      "beforeEach",
+      "after"
+    ]
+  }
+}
