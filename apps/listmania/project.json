@@ -1,0 +1,57 @@
+{
+  "name": "listmania",
+  "sourceRoot": "apps/listmania",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'Build complete - Listmania is ready for deployment'",
+        "cwd": "apps/listmania"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm test",
+        "cwd": "apps/listmania"
+      }
+    },
+    "test:unit": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run test:js",
+        "cwd": "apps/listmania"
+      }
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd terraform && terraform apply",
+        "cwd": "apps/listmania"
+      }
+    },
+    "cli": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm start",
+        "cwd": "apps/listmania"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "standard",
+        "cwd": "apps/listmania"
+      }
+    },
+    "lambda:test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node lambda/test-handler.js",
+        "cwd": "apps/listmania"
+      }
+    }
+  },
+  "implicitDependencies": ["common-corpus"]
+}

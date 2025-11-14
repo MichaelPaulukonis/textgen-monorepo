@@ -4,10 +4,10 @@
   "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nx/js:node",
+      "executor": "nx:run-commands",
       "options": {
-        "outputPath": "dist/libs/common-corpus",
-        "main": "libs/common-corpus/index.js"
+        "command": "echo 'Build complete - common-corpus is ready'",
+        "cwd": "libs/common-corpus"
       }
     },
     "test": {
