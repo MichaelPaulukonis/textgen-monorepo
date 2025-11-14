@@ -1,0 +1,71 @@
+{
+  "scheduledEvent": {
+    "description": "EventBridge scheduled event - generates and posts a list automatically",
+    "event": {
+      "source": "aws.events",
+      "detail-type": "Scheduled Event",
+      "time": "2024-01-15T12:00:00Z"
+    }
+  },
+  "directInvocationDefault": {
+    "description": "Direct invocation with default settings",
+    "event": {
+      "action": "generate-and-post"
+    }
+  },
+  "directInvocationCustom": {
+    "description": "Direct invocation with custom corpus filter and method",
+    "event": {
+      "corporaFilter": "shakespeare",
+      "method": "matchStrats"
+    }
+  },
+  "directInvocationPattern": {
+    "description": "Direct invocation with custom NLP pattern",
+    "event": {
+      "matchPattern": "#Adjective #Noun",
+      "method": "matchStrats"
+    }
+  },
+  "generateOnly": {
+    "description": "Generate a list without posting to Tumblr",
+    "event": {
+      "action": "generate-only",
+      "corporaFilter": "poetry"
+    }
+  },
+  "generateOnlyWeird": {
+    "description": "Generate using the 'weird' strategy (celebrity body parts)",
+    "event": {
+      "action": "generate-only",
+      "method": "weirdStrats"
+    }
+  },
+  "generateOnlyPattern": {
+    "description": "Generate using pattern matching strategy",
+    "event": {
+      "action": "generate-only",
+      "method": "patternStrats"
+    }
+  },
+  "postOnly": {
+    "description": "Post a pre-generated list (requires valid list object)",
+    "event": {
+      "action": "post-only",
+      "list": {
+        "list": [
+          "First Item",
+          "Second Item",
+          "Third Item"
+        ],
+        "metadata": {
+          "title": "Example List",
+          "source": "manual",
+          "strategy": "manual",
+          "length": 3
+        },
+        "printable": "<div class='list'><div class='item'>1. First Item</div><div class='item'>2. Second Item</div><div class='item'>3. Third Item</div></div><!-- config: {\"source\":\"manual\",\"strategy\":\"manual\",\"title\":\"Example List\",\"length\":3} -->"
+      }
+    }
+  }
+}
