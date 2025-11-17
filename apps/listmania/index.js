@@ -1,7 +1,7 @@
 const listifier = new (require('./lib/listify'))()
 const util = require('./lib/util.js')({ statusVerbosity: 0 })
 const config = require('./config.js')
-const tumblr = require('tumblr.js');
+const tumblr = require('tumblr.js')
 
 const ALWAYS_PRINT = 0
 const { prepForPublish, prefixifiers } = require('./lib/prep')
@@ -11,7 +11,7 @@ const client = tumblr.createClient({
   consumer_secret: config.consumerSecret,
   token: config.accessToken,
   token_secret: config.accessSecret
-});
+})
 
 const logger = function (msg) {
   util.debug(msg, ALWAYS_PRINT)
@@ -57,16 +57,18 @@ const teller = function () {
     const pfx = util.pick(Object.keys(prefixifiers))
     list.printable = prepForPublish(list, prefixifiers[pfx])
 
+    console.log(JSON.stringify(config))
+
     // TODO: uh.... separate out posting from the listifier
     if (config.postLive) {
       client.createTextPost('leanstooneside',
-      { title: list.metadata.title, body: list.printable },
-      (err, _) => {
-        if (err) {
-          logger(JSON.stringify(err))
-          logger(err)
-        }
-      })
+        { title: list.metadata.title, body: list.printable },
+        (err, _) => {
+          if (err) {
+            logger(JSON.stringify(err))
+            logger(err)
+          }
+        })
     } else {
       logger(JSON.stringify(list, null, 2))
     }

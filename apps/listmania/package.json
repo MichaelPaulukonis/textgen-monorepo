@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "logs": "heroku logs -n 1500 > heroku.log",
     "cover": "npm run clean:cover && npm run cover:js",
     "clean:cover": "rm -rf ./docs/coverage",
     "cover:js": "nyc mocha --recursive ./test/*.tests.js",
@@ -15,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MichaelPaulukonis/listmania.git"
+    "url": "git+https://github.com/MichaelPaulukonis/textgen-monorepo.git"
   },
   "keywords": [
     "nlg",
@@ -31,9 +30,9 @@
   "author": "Michael Paulukonis",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/MichaelPaulukonis/listmania/issues"
+    "url": "https://github.com/MichaelPaulukonis/textgen-monorepo/issues"
   },
-  "homepage": "https://github.com/MichaelPaulukonis/listmania#readme",
+  "homepage": "https://github.com/MichaelPaulukonis/textgen-monorepo#readme",
   "dependencies": {
     "commander": "^7.0.0",
     "common-corpus": "workspace:*",
@@ -63,6 +62,6 @@
     ]
   },
   "engines": {
-    "node": "18.x"
+    "node": "22.x"
   }
 }

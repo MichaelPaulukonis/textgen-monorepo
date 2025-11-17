@@ -114,11 +114,11 @@ Posts a pre-generated list to Tumblr.
 
 Required environment variables (set in Lambda configuration):
 
-- `consumer_key` - Tumblr OAuth consumer key
-- `consumer_secret` - Tumblr OAuth consumer secret
-- `token` - Tumblr OAuth access token
-- `token_secret` - Tumblr OAuth access token secret
-- `post_live` - Set to "true" to enable posting (default: false)
+- `CONSUMER_KEY` - Tumblr OAuth consumer key
+- `CONSUMER_SECRET` - Tumblr OAuth consumer secret
+- `TOKEN` - Tumblr OAuth access TOKEN
+- `TOKEN_SECRET` - Tumblr OAuth access TOKEN secret
+- `POST_LIVE` - Set to "true" to enable posting (default: false)
 
 ## Local Testing
 

@@ -53,21 +53,21 @@
   - Document current Heroku deployment configuration for migration reference
   - _Requirements: 4.1, 4.2_
 
-- [ ] 6. Create Lambda handler wrapper for listmania
+- [x] 6. Create Lambda handler wrapper for listmania
 
   - Create lambda/index.js handler wrapper around existing CLI functionality
   - Implement event-to-CLI argument conversion logic
   - Add error handling and Lambda response formatting
   - _Requirements: 4.2, 4.5_
 
-- [ ] 7. Complete listmania migration with Lambda conversion
+- [x] 7. Complete listmania migration with Lambda conversion
 
   - Create apps/listmania/project.json with Nx application configuration
   - Update package.json to reference workspace common-corpus dependency
   - Integrate the Lambda handler wrapper created in task 6
   - _Requirements: 4.1, 4.4, 4.5_
 
-- [ ] 8. Create terraform configuration for listmania Lambda deployment
+- [x] 8. Create terraform configuration for listmania Lambda deployment
 
   - Create apps/listmania/terraform/ directory
   - Write terraform configuration for AWS Lambda function
@@ -75,7 +75,7 @@
   - Set up environment variables and IAM roles for Lambda execution
   - _Requirements: 4.3, 4.5_
 
-- [ ] 8.1 Write deployment validation tests for listmania Lambda
+- [x] 8.1 Write deployment validation tests for listmania Lambda
 
   - Test terraform configuration syntax
   - Verify Lambda handler functionality

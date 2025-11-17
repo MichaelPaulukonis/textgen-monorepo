@@ -1,0 +1,27 @@
+# AWS Configuration
+aws_region = "us-east-1"
+
+# Tumblr API Credentials
+# Get these from https://www.tumblr.com/oauth/apps
+CONSUMER_KEY    = "your-consumer-key-here"
+CONSUMER_SECRET = "your-consumer-secret-here"
+TOKEN          = "your-access-TOKEN-here"
+TOKEN_SECRET   = "your-TOKEN-secret-here"
+
+# Posting Configuration
+POST_LIVE = "true"  # Set to "false" for testing without posting
+
+# List Generation Configuration
+corpora_filter = ""  # Optional: filter for corpus selection
+match_pattern  = ""  # Optional: pattern matching configuration
+method         = "clue_combo"  # List generation method
+
+# Scheduling Configuration
+# Examples:
+# - "rate(1 hour)" - every hour
+# - "rate(6 hours)" - every 6 hours
+# - "cron(0 12 * * ? *)" - daily at noon UTC
+schedule_expression = "rate(6 hours)"
+
+# Logging Configuration
+log_retention_days = 7  # CloudWatch log retention in days

@@ -41,11 +41,11 @@
 - **Platform**: Currently deployed on Heroku
 - **Scheduling**: Uses Heroku Scheduler addon for periodic execution
 - **Environment Variables**:
-  - `consumer_key`: Tumblr API consumer key
-  - `consumer_secret`: Tumblr API consumer secret
-  - `token`: Tumblr access token
-  - `token_secret`: Tumblr access token secret
-  - `post_live`: Boolean flag to enable/disable live posting
+  - `CONSUMER_KEY`: Tumblr API consumer key
+  - `CONSUMER_SECRET`: Tumblr API consumer secret
+  - `TOKEN`: Tumblr access TOKEN
+  - `TOKEN_SECRET`: Tumblr access TOKEN secret
+  - `POST_LIVE`: Boolean flag to enable/disable live posting
 - **Scripts**: 
   - `heroku logs -n 1500 > heroku.log`: Log retrieval
   - No Procfile found (likely uses default `npm start`)
@@ -103,11 +103,11 @@ Lambda events should map to CLI options:
 
 ### Environment Variables Migration
 Heroku → Lambda environment variable mapping:
-- `consumer_key` → `CONSUMER_KEY`
-- `consumer_secret` → `CONSUMER_SECRET`
-- `token` → `TOKEN`
-- `token_secret` → `TOKEN_SECRET`
-- `post_live` → `POST_LIVE`
+- `CONSUMER_KEY` → `CONSUMER_KEY`
+- `CONSUMER_SECRET` → `CONSUMER_SECRET`
+- `TOKEN` → `TOKEN`
+- `TOKEN_SECRET` → `TOKEN_SECRET`
+- `POST_LIVE` → `POST_LIVE`
 
 ### Scheduling Migration
 - **From**: Heroku Scheduler addon

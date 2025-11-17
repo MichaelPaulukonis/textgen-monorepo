@@ -11,12 +11,25 @@
         "dependencies": [],
         "priority": "medium",
         "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Document and Standardize Deployment Processes Across Applications",
+        "description": "Analyze, document, and standardize deployment processes for listmania and poeticalbot applications, resolving conflicts between package.json scripts and shell scripts to create a clear deployment workflow.",
+        "details": "## Current Deployment Investigation\n1. Analyze all deployment-related scripts in both applications:\n   - Review package.json scripts in listmania and poeticalbot\n   - Examine shell scripts (deploy.sh, build-lambda-package.sh)\n   - Document the purpose and functionality of each script\n\n2. Identify conflicts and inconsistencies:\n   - Map out dependencies between scripts\n   - Note redundant or contradictory script commands\n   - Document environment-specific deployment variations\n\n## Standardization and Resolution\n1. Determine the optimal deployment process for each application:\n   - Consider application architecture and hosting environment\n   - Evaluate build requirements, deployment targets, and post-deployment steps\n   - Design a clear sequential deployment workflow\n\n2. Resolve conflicts:\n   - Decide which scripts will be maintained vs. deprecated\n   - Refactor package.json scripts for clarity and consistency\n   - Update shell scripts to align with the standardized approach\n   - Ensure proper script naming conventions and documentation\n\n## Documentation Creation\n1. Create comprehensive deployment documentation in each app's README:\n   - Prerequisites (environment setup, credentials, etc.)\n   - Step-by-step deployment instructions\n   - Description of each script's purpose and when to use it\n   - Troubleshooting section for common issues\n\n2. Create deployment diagrams:\n   - Visualize the deployment process flow\n   - Show relationships between different scripts and environments\n   - Indicate where manual intervention may be needed\n\n## Implementation\n1. Update scripts based on standardization decisions:\n   - Refactor package.json scripts\n   - Update shell scripts\n   - Add inline documentation to scripts\n   - Create helper scripts if needed to simplify complex processes\n\n2. Prepare for future architecture changes:\n   - Ensure documentation notes upcoming separation of Tumblr posting functionality\n   - Flag scripts that will need updating after architecture changes",
+        "testStrategy": "1. Verification Testing:\n   - Perform test deployments for each application using only the documented steps\n   - Verify that deployments succeed in development, staging, and production environments\n   - Ensure all deployment artifacts are correctly generated and placed\n\n2. Review Process:\n   - Conduct a team review of the documentation for clarity and completeness\n   - Have a team member unfamiliar with the deployment process attempt deployments using only the documentation\n   - Collect feedback and refine documentation accordingly\n\n3. Regression Testing:\n   - Verify that applications function correctly after deployment using the standardized process\n   - Run application-specific tests post-deployment to verify functionality\n   - Check that no deployment steps or configurations are lost in the standardization\n\n4. Documentation Validation:\n   - Create a checklist of all deployment scenarios covered in documentation\n   - Validate each scenario through actual execution\n   - Ensure troubleshooting section addresses common failure points",
+        "status": "pending",
+        "dependencies": [
+          1
+        ],
+        "priority": "high",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-10-29T18:02:26.778Z",
       "description": "Default tasks context",
-      "updated": "2025-10-29T18:02:56.431Z"
+      "updated": "2025-11-16T05:04:49.849Z"
     }
   }
 }
