@@ -23,6 +23,8 @@ coverage/
 # Nx
 .nx/cache
 .nx/workspace-data
+graph.html
+static/
 
 # Lambda deployment packages
 *.zip
