@@ -2,6 +2,7 @@
 
 # Build Lambda deployment package for listmania
 # This script creates a zip file containing all necessary code and dependencies
+# Usage: ./build-lambda.sh
 
 set -e
 
@@ -9,10 +10,7 @@ echo "Building listmania Lambda deployment package..."
 
 # Get the directory where this script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
-
-# Change to project directory
-cd "$PROJECT_DIR"
+cd "$SCRIPT_DIR"
 
 # Clean up any existing package
 rm -f terraform/listmania-lambda.zip
@@ -68,3 +66,7 @@ rm -rf $BUILD_DIR
 SIZE=$(du -h terraform/listmania-lambda.zip | cut -f1)
 echo "✓ Lambda package created: terraform/listmania-lambda.zip ($SIZE)"
 echo "✓ Build complete!"
+echo ""
+echo "Next steps:"
+echo "  - Review terraform plan: nx run listmania:deploy:plan"
+echo "  - Deploy to AWS: nx run listmania:deploy"

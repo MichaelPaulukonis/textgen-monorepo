@@ -5,8 +5,17 @@
   "targets": {
     "build": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/terraform/poeticalbot-lambda.zip"],
       "options": {
-        "command": "echo 'Build complete - PoeticalBot is ready for deployment'",
+        "command": "./build-lambda.sh",
+        "cwd": "apps/poeticalbot"
+      }
+    },
+    "package": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/terraform/poeticalbot-lambda.zip"],
+      "options": {
+        "command": "./build-lambda.sh",
         "cwd": "apps/poeticalbot"
       }
     },
@@ -33,9 +42,27 @@
     },
     "deploy": {
       "executor": "nx:run-commands",
+      "dependsOn": ["build"],
       "options": {
-        "command": "cd terraform && terraform apply",
-        "cwd": "apps/poeticalbot"
+        "commands": [
+          "cd terraform && terraform init -input=false",
+          "cd terraform && terraform plan -input=false",
+          "cd terraform && terraform apply -auto-approve"
+        ],
+        "cwd": "apps/poeticalbot",
+        "parallel": false
+      }
+    },
+    "deploy:plan": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "commands": [
+          "cd terraform && terraform init -input=false",
+          "cd terraform && terraform plan -input=false"
+        ],
+        "cwd": "apps/poeticalbot",
+        "parallel": false
       }
     },
     "cli": {
