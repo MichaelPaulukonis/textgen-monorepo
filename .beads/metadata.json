@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "textgen_monorepo",
+  "project_id": "1bba62c3-a9ca-4ba9-a795-df151c594ddd"
+}
