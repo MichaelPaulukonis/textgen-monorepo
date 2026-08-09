@@ -10,9 +10,13 @@ Common Corpus provides easy programmatic access to 100+ carefully selected texts
 
 ### Installation
 
-```bash
-npm install github:michaelpaulukonis/common-corpus
+This package lives inside the `textgen-monorepo` Nx/pnpm workspace and isn't published standalone. Consuming apps (`poeticalbot`, `listmania`) depend on it via:
+
+```json
+"common-corpus": "workspace:*"
 ```
+
+Run `pnpm install` from the repo root; pnpm links the workspace copy in automatically.
 
 ### Basic Usage
 
@@ -50,8 +54,9 @@ node util.js --text "neuromancer"
 - **100+ Curated Texts** across multiple genres and domains
 - **Smart Filtering** using regex patterns to find texts by category or author
 - **Text Processing** with automatic paragraph reconstruction and sentence extraction
-- **Multiple Formats** supporting plain text, compressed archives, and pre-processed datasets
+- **Plain-text corpus** — texts ship uncompressed (~89MB); archive/zip support was removed, see [Roadmap](#roadmap)
 - **CLI Interface** for exploration and shell integration
+- **CORPUS_PATH override** for pointing at a different corpus directory locally or in tests
 - **Zero Configuration** - works out of the box
 
 ## Text Categories
@@ -87,13 +92,15 @@ node util.js --text "neuromancer"
 ## Roadmap
 
 ### Version 1.0 (Planned)
-- **Modern Dependencies**: Migrate from `nlp_compromise` to `compromise`
+- **Modern Dependencies**: Migrate from `nlp_compromise` to `compromise`; update mocha/chai/nyc off their long-EOL pinned versions
 - **Performance**: Async/await API and caching improvements
 - **Security**: Input validation and safe file handling
 - **Documentation**: Comprehensive guides and examples
 
+### Decided Against
+- **Zip/archive corpus compression** — the original zip-on-disk strategy (unzip-on-first-read, cache to disk) was built for Heroku's persistent, writable dyno filesystem. It cannot work under AWS Lambda: the layer mount (`/opt`) is read-only, so even a single invocation hitting that code path would fail, not just after the dyno's session ended. Corpus now ships as plain text (~89MB, well under Lambda's 250MB unzipped layer limit) and the zip-handling code (`node-zipkit`, `mkdirp`) has been removed.
+
 ### Future Enhancements
-- **Compression**: Reduce corpus size (75MB → 25MB)
 - **Streaming**: Support for large text processing
 - **Metadata**: Rich text information (author, year, genre)
 - **Search**: Full-text search capabilities

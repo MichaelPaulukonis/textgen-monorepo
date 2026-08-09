@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/michaelpaulukonis/common-corpus#readme",
   "dependencies": {
+    "commander": "^7.0.0",
     "iconv-lite": "0.4.15",
     "nlp_compromise": "6.5.3"
   },

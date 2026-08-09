@@ -12,19 +12,21 @@ let dumpCorpora = function(corp) {
 program
   .version(`0.0.1`)
   .option(`-f, --filter [string]`, `string or regex`)
-  .option(`-l --list`, `list all texts in corpus`)
-  .option(`-t --text [string]`, `return text (exact match of a single text)`)
+  .option(`-l, --list`, `list all texts in corpus`)
+  .option(`-t, --text [string]`, `return text (exact match of a single text)`)
   .parse(process.argv);
 
-if (program.list) {
+let opts = program.opts();
+
+if (opts.list) {
   dumpCorpora(corpora.texts);
 }
 
-if (program.filter) {
-  dumpCorpora(corpora.filter(program.filter));
+if (opts.filter) {
+  dumpCorpora(corpora.filter(opts.filter));
 }
 
-if (program.text) {
-  let book = corpora.filter(program.text)[0];
+if (opts.text) {
+  let book = corpora.filter(opts.text)[0];
   console.log(book.text());
 }

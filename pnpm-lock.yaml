@@ -164,6 +164,9 @@ importers:
 
   libs/common-corpus:
     dependencies:
+      commander:
+        specifier: ^7.0.0
+        version: 7.2.0
       iconv-lite:
         specifier: 0.4.15
         version: 0.4.15
