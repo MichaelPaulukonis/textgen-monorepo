@@ -8,7 +8,7 @@
     "start": "node index.js",
     "cover": "istanbul cover --include-all-sources node_modules/mocha/bin/_mocha test/",
     "build:layer": "npm run build:layer:prepare && npm run build:layer:zip",
-    "build:layer:prepare": "mkdir -p layer/nodejs/node_modules/common-corpus && cp -r corpus/ index.js lambda-index.js package.json layer/nodejs/node_modules/common-corpus/",
+    "build:layer:prepare": "mkdir -p layer/nodejs/node_modules/common-corpus && cp -r corpus/ index.js package.json layer/nodejs/node_modules/common-corpus/",
     "build:layer:zip": "cd layer && zip -r ../common-corpus-layer.zip nodejs/"
   },
   "repository": {
@@ -30,10 +30,7 @@
   "homepage": "https://github.com/michaelpaulukonis/common-corpus#readme",
   "dependencies": {
     "iconv-lite": "0.4.15",
-    "mkdirp": "0.5.1",
-    "nlp_compromise": "6.5.3",
-    "node-zipkit": "0.1.2",
-    "rimraf": "2.6.1"
+    "nlp_compromise": "6.5.3"
   },
   "devDependencies": {
     "chai": "3.5.0",

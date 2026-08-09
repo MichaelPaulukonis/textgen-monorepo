@@ -49,15 +49,6 @@
         expect(corpora.texts).to.be.instanceOf(Array);
       });
 
-      it('should resolve lambda-index.js from workspace context', function() {
-        const LambdaCorpora = require('../lambda-index.js');
-        expect(LambdaCorpora).to.be.a('function');
-        
-        const corpora = new LambdaCorpora();
-        expect(corpora).to.be.an.instanceof(LambdaCorpora);
-        expect(corpora.texts).to.be.instanceOf(Array);
-      });
-
     });
 
     describe('File Structure Integrity', function() {
@@ -70,12 +61,12 @@
         expect(corpusContents.length).to.be.greaterThan(0);
       });
 
-      it('should preserve both index.js and lambda-index.js', function() {
+      it('should have a single consolidated index.js (no separate lambda-index.js)', function() {
         const indexPath = path.join(__dirname, '../index.js');
         const lambdaIndexPath = path.join(__dirname, '../lambda-index.js');
-        
+
         expect(fs.existsSync(indexPath)).to.be.true;
-        expect(fs.existsSync(lambdaIndexPath)).to.be.true;
+        expect(fs.existsSync(lambdaIndexPath)).to.be.false;
       });
 
       it('should maintain lib directory with utilities', function() {

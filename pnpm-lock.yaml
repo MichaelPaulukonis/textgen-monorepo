@@ -167,18 +167,9 @@ importers:
       iconv-lite:
         specifier: 0.4.15
         version: 0.4.15
-      mkdirp:
-        specifier: 0.5.1
-        version: 0.5.1
       nlp_compromise:
         specifier: 6.5.3
         version: 6.5.3
-      node-zipkit:
-        specifier: 0.1.2
-        version: 0.1.2
-      rimraf:
-        specifier: 2.6.1
-        version: 2.6.1
     devDependencies:
       chai:
         specifier: 3.5.0
@@ -1527,8 +1518,8 @@ packages:
     resolution: {integrity: sha512-WH07T4q+IkY8pbZv0uGlQOQBbZ+sA3pjbizpSv5h/C/ya9GOR59bLlOWiZ3XxPaCdnD0FHyhTlZ649gJK0IP1g==}
     engines: {node: '>=0.10.0'}
 
-  corpora@https://codeload.github.com/dariusk/corpora/tar.gz/refs/heads/master:
-    resolution: {tarball: https://codeload.github.com/dariusk/corpora/tar.gz/refs/heads/master}
+  corpora@https://github.com/dariusk/corpora/archive/master.tar.gz:
+    resolution: {tarball: https://github.com/dariusk/corpora/archive/master.tar.gz}
     version: 0.0.1
 
   cosmiconfig@7.1.0:
@@ -3454,9 +3445,6 @@ packages:
   node-releases@2.0.26:
     resolution: {integrity: sha512-S2M9YimhSjBSvYnlr5/+umAnPHE++ODwt5e2Ij6FoX45HA/s4vHdkDx1eax2pAPeAOqu4s9b7ppahsyEFdVqQA==}
 
-  node-zipkit@0.1.2:
-    resolution: {integrity: sha512-2wko8STTkqTcwhscTlHWYV49pGZqDDmnxKTmCSKPnN7am610mg8R44lVuajti+0gxqs+xVbKbccBg1xbkOHe8Q==}
-
   nopt@3.0.6:
     resolution: {integrity: sha512-4GUt3kSEYmk4ITxzB/b9vaIDfUVWN/Ml1Fwl11IlnIG2iaJ9O6WXZ9SrYM9NLI8OCBieN2Y8SWC2oJV0RQ7qYg==}
     hasBin: true
@@ -4087,11 +4075,6 @@ packages:
 
   rhymes@1.0.3:
     resolution: {integrity: sha512-zfNMmGsbqzr7PU3eC8kDmOs8OAI6h++1m7tFEQlZqBX9E81EjPD3jLpbEgWNTHe7/BZgqx92x8z7gw/Sa55v4A==}
-
-  rimraf@2.6.1:
-    resolution: {integrity: sha512-5QIcndZ8am2WyseL6lln/utl51SwRBQs/at+zi1UnhsnPyZcAID+g0PZrKdb+kJn2fo/CwgyJweR8sP36Jer5g==}
-    deprecated: Rimraf versions prior to v4 are no longer supported
-    hasBin: true
 
   rimraf@2.6.3:
     resolution: {integrity: sha512-mwqeW5XsA2qAejG46gYdENaxXjx9onRNCfn7L0duuP4hCuTIi/QO7PDK07KJfp1d+izWPrzEJDcSqBa0OZQriA==}
@@ -6473,9 +6456,9 @@ snapshots:
 
   corpora-project@0.2.0:
     dependencies:
-      corpora: https://codeload.github.com/dariusk/corpora/tar.gz/refs/heads/master
+      corpora: https://github.com/dariusk/corpora/archive/master.tar.gz
 
-  corpora@https://codeload.github.com/dariusk/corpora/tar.gz/refs/heads/master: {}
+  corpora@https://github.com/dariusk/corpora/archive/master.tar.gz: {}
 
   cosmiconfig@7.1.0:
     dependencies:
@@ -8808,10 +8791,6 @@ snapshots:
 
   node-releases@2.0.26: {}
 
-  node-zipkit@0.1.2:
-    dependencies:
-      rimraf: 2.6.3
-
   nopt@3.0.6:
     dependencies:
       abbrev: 1.0.9
@@ -9511,10 +9490,6 @@ snapshots:
     dependencies:
       cmu-pronouncing-dictionary: 1.0.3
       lodash: 4.17.21
-
-  rimraf@2.6.1:
-    dependencies:
-      glob: 7.2.3
 
   rimraf@2.6.3:
     dependencies:

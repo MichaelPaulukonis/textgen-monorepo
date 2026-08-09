@@ -7,10 +7,6 @@
       Corpora = require(`../index.js`),
       newcorpora = new Corpora();
 
-  // setup should make sure that the unzip-temp folder is empty
-  // so, perhaps that should be exposed by the library?
-  // or just make it a parallel dependency?
-
   describe(`Corpora tests`, function() {
 
     describe(`API tests`, function() {
