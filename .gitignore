@@ -61,3 +61,6 @@ Thumbs.db
 *.db
 .beads-credential-key
 .beads/proxieddb/
+
+# SpecStory session history (synced to SpecStory Cloud, no need to track in git)
+.specstory/
