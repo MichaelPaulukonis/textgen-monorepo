@@ -57,8 +57,6 @@ const teller = function () {
     const pfx = util.pick(Object.keys(prefixifiers))
     list.printable = prepForPublish(list, prefixifiers[pfx])
 
-    console.log(JSON.stringify(config))
-
     // TODO: uh.... separate out posting from the listifier
     if (config.postLive) {
       client.createTextPost('leanstooneside',
