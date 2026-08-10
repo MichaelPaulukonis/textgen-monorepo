@@ -70,7 +70,7 @@ const Util = function (options) {
   }
 
   this.pickRemove = function (arr) {
-    var index = math.random(arr.length)
+    var index = math(arr.length)
     return arr.splice(index, 1)[0]
   }
 

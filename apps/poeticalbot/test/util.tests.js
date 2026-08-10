@@ -59,4 +59,27 @@ describe(`util tests`, () => {
 
     // TODO: okay, now actually test the methods!
   })
+
+  describe(`functional tests`, () => {
+    describe(`pickRemove`, () => {
+      // regression: random-seed's math.random() takes no arguments, so
+      // math.random(arr.length) silently ignored the arg and returned a
+      // float in [0,1), truncated to index 0 by splice — pickRemove
+      // always removed the first element, never a random one.
+      it(`removes elements in a seeded-random order, not always index 0`, () => {
+        var seededUtil = new Util({ seed: `test-seed`, statusVerbosity: 0 })
+        var arr = [`a`, `b`, `c`, `d`, `e`]
+        var removed = [1, 2, 3, 4, 5].map(() => seededUtil.pickRemove(arr))
+        expect(removed).to.deep.equal([`e`, `a`, `b`, `c`, `d`])
+      })
+
+      it(`removes and returns exactly one element, shrinking the array by one`, () => {
+        var arr = [`a`, `b`, `c`]
+        var removedItem = util.pickRemove(arr)
+        expect(arr).to.have.lengthOf(2)
+        expect([`a`, `b`, `c`]).to.include(removedItem)
+        expect(arr).to.not.include(removedItem)
+      })
+    })
+  })
 })
