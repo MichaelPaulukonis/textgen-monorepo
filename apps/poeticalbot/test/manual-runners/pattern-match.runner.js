@@ -1,8 +1,8 @@
 let Corpora = require(`common-corpus`)
-const Matcher = require(`../../lib/pattern-match`)
+const Matcher = require(`../../src/lib/pattern-match`)
 const { getMatchingLines } = new Matcher()
-const util = require('../../lib/util')()
-const textutil = require(`../../lib/textutil`)
+const util = require('../../src/lib/util')()
+const textutil = require(`../../src/lib/textutil`)
 
 // limited to 50K chars at random location
 // this reduces processing time, but also result size

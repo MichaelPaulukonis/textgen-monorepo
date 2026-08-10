@@ -48,6 +48,6 @@ if (program.reduce) {
   config.reduce = true
 }
 
-let poetifier = new (require(`./lib/poetifier.js`))({ config: config })
+let poetifier = new (require(`../../src/lib/poetifier.js`))({ config: config })
 
 poetifier.poem()
