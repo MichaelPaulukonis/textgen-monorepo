@@ -8,28 +8,41 @@ See output @ <http://poeticalbot.tumblr.com/>
 
 ## running
 
-LOCAL - `node test/manualrunners/writepoem.js`
-REMOTE - `heroku run node index.js`
+This app runs from the monorepo root via `nx`, or directly from `apps/poeticalbot` — both call the same `src/cli.js`.
 
-TODO: index should take option to NOT publish
+```bash
+# from repo root
+nx cli:sample poeticalbot     # queneau-buckets method, doesn't post
+nx cli:help poeticalbot       # full flag reference
+
+# or, from apps/poeticalbot directly
+npm run cli:sample
+npm run cli:help
+node src/cli.js --corpora-filter eliot --verbose
+```
+
+By default `src/cli.js` generates a poem and prints it — it does **not** post to Tumblr unless you pass `--post` (or set `POST_LIVE=true`). See `node src/cli.js --help` for the full flag list (`--method`, `--seed`, `--corpora-filter`, `--transform`, `--verbose`).
+
+There's also `node test/manual-runners/writepoem.js`, an older, more minimal runner used for quick manual checks against `src/lib/poetifier.js` directly (bypasses the CLI's config/logging layer). It's not part of the test suite and doesn't default to a generation method — pass `--method` explicitly (`jgnoetry`, `queneau-buckets`, or `drone`) or you'll get an empty poem back.
+
 TODO: some things log, some things don't - it's erratic and the logs can be confusing
 
 ## testing
 
 `npm t`
 
-## publishing
+## deploying
 
-`git push heroku master`
+Deployment is AWS Lambda via Terraform, standardized through `nx` — see the top-level `docs/DEPLOYMENT.md`.
 
-TODO: look into automatic github hooks - https://devcenter.heroku.com/articles/github-integration
+```bash
+nx run poeticalbot:deploy:plan   # review only
+nx run poeticalbot:deploy
+```
 
 ### tumblr connection in `.env`
 
-These config vars are used for local running.
-On Heroku itself, they will be config vars.
-
-You can gt them from the heroku applications config, or from Tumblr
+Create a `.env` file in `apps/poeticalbot` with your Tumblr app credentials for local running (there's no `.env.example` checked in — these are the required keys). In Lambda, these are set as environment variables via Terraform instead.
 
 ```env
 consumer_key=<OAuth consumer key>
