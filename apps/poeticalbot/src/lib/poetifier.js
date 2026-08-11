@@ -1,3 +1,5 @@
+const { boundedLetterFilter, retryTitle } = require(`./retry-bounds.js`)
+
 class Poetifier {
   constructor(options) {
     let util = new (require(`./util.js`))({ statusVerbosity: 0, seed: options.config.seed })
@@ -167,26 +169,11 @@ class Poetifier {
     let letterExistsFilterTransform = function (poem, letter) {
       // only words that contain a given letter remain
       // TODO: uh, only use letters that occur more than... 5 times?
-      let coreFilter = function (poem) {
-        let poemCopy = JSON.parse(JSON.stringify(poem))
-        let targetLetter = (typeof letter === `undefined`)
-          ? util.pick(`abcdefghijklmnoprstuvwxyz`.split(``))
-          : letter
-        // TODO: lines does not always exist!!!
-        if (!poem.lines) {
-          util.logger(`NO LINES PROPERTY FOUND`, JSON.stringify(poem, null, 2))
-        }
-        poemCopy.lines = poemCopy.lines.map((line) => line.split(` `) // NAIVE SPLITTING
-          .filter(word => word.indexOf(targetLetter) > -1)
-          .join(` `))
-        poemCopy.text = poemCopy.lines.join(`\n`)
-        return poemCopy
+      // TODO: lines does not always exist!!!
+      if (!poem.lines) {
+        util.logger(`NO LINES PROPERTY FOUND`, JSON.stringify(poem, null, 2))
       }
-      let filtered = coreFilter(poem)
-      while (filtered.text.trim().length < 10) {
-        filtered = coreFilter(poem)
-      }
-      return filtered
+      return boundedLetterFilter(poem, letter, util)
     }
     let queneaubuckets = function (config) {
       let Buckets = require(`./bucketRunner`)
@@ -269,11 +256,7 @@ class Poetifier {
           util: util,
           texts: source
         })
-        if (!poem.title) {
-          do {
-            poem.title = titlifier.generate(poem.text)
-          } while (poem.title.split(` `).length === 0)
-        }
+        poem = retryTitle(poem, titlifier)
         // do we pass transformers in to the generator?
         // NO, because that means the generator has to know how to manipulate the transformer
         // INSTEAD, the generator can pass back params that the transformer can optionally process
