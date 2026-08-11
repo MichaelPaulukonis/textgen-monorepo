@@ -5,7 +5,7 @@
   "homepage": "https://poeticalbot.tumblr.com",
   "main": "src/index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/index.js",
     "logs": "heroku logs -n 1500 > heroku.log",
     "clean:cover": "rimraf ./docs/coverage",
     "cover": "run-s clean:cover cover:js",
