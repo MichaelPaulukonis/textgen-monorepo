@@ -56,6 +56,12 @@ describe('NPF Formatting', () => {
       expect(result.content).to.be.an('array')
     })
 
+    it('rejects a poem with no title and no text as invalid NPF', () => {
+      const emptyPoem = { title: '', lines: [], text: '', source: '', seed: '' }
+      const npfPost = npfFormatter.convertPoemToNPF(emptyPoem)
+      expect(npfFormatter.validateNPF(npfPost)).to.equal(false)
+    })
+
     it('handles very long poems', () => {
       const longPoem = {
         title: 'Long Poem',

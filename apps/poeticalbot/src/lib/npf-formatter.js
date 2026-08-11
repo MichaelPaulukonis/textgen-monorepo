@@ -165,7 +165,7 @@ function convertPoemToNPFWithLogging(poem, logger) {
  * @returns {boolean} True if valid
  */
 function validateNPF(npfPost) {
-  if (!npfPost.content || !Array.isArray(npfPost.content)) {
+  if (!npfPost.content || !Array.isArray(npfPost.content) || npfPost.content.length === 0) {
     return false
   }
 
