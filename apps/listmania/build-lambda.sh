@@ -26,28 +26,10 @@ cp -r lambda $BUILD_DIR/
 cp -r lib $BUILD_DIR/
 cp config.js $BUILD_DIR/
 
-# Create Lambda-specific package.json (without workspace dependencies)
+# Create Lambda-specific package.json (without workspace dependencies),
+# derived from the real package.json so versions/engines can't drift (textgen-monorepo-213)
 echo "Creating Lambda package.json..."
-cat > $BUILD_DIR/package.json << 'EOF'
-{
-  "name": "listmania-lambda",
-  "version": "0.1.0",
-  "description": "Listmania Lambda Function",
-  "main": "lambda/index.js",
-  "dependencies": {
-    "commander": "^7.0.0",
-    "compromise": "^13.8.0",
-    "corpora-project": "^0.2.0",
-    "dotenv": "^8.2.0",
-    "fuzzy-matching": "0.4.3",
-    "random-seed": "0.3.0",
-    "tumblr.js": "^3.0.0"
-  },
-  "engines": {
-    "node": "18.x"
-  }
-}
-EOF
+node "$SCRIPT_DIR/../../scripts/generate-lambda-package-json.js" package.json "$BUILD_DIR/package.json" lambda/index.js
 
 # Install production dependencies
 echo "Installing production dependencies..."

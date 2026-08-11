@@ -24,35 +24,10 @@ mkdir -p $BUILD_DIR
 echo "Copying source files..."
 cp -r src/* $BUILD_DIR/
 
-# Create Lambda-specific package.json (without workspace dependencies)
+# Create Lambda-specific package.json (without workspace dependencies),
+# derived from the real package.json so versions/engines can't drift (textgen-monorepo-213)
 echo "Creating Lambda package.json..."
-cat > $BUILD_DIR/package.json << 'EOF'
-{
-  "name": "poeticalbot-lambda",
-  "version": "1.0.0",
-  "description": "PoeticalBot Lambda Function",
-  "main": "index.js",
-  "dependencies": {
-    "commander": "^6.2.1",
-    "compromise": "^11.13.2",
-    "dotenv": "^7.0.0",
-    "fuzzy-matching": "0.4.3",
-    "in-a-nutshell": "0.1.2",
-    "natural": "^0.6.3",
-    "node-mispelr": "0.0.1",
-    "pos": "^0.4.2",
-    "ramda": "^0.27.1",
-    "random-seed": "0.3.0",
-    "rhymes": "^1.0.2",
-    "simple-timer": "0.0.5",
-    "tagspewer": "0.3.1",
-    "tumblr.js": "^3.0.0"
-  },
-  "engines": {
-    "node": "18.x"
-  }
-}
-EOF
+node "$SCRIPT_DIR/../../scripts/generate-lambda-package-json.js" package.json "$BUILD_DIR/package.json" index.js
 
 # Install production dependencies
 echo "Installing production dependencies..."
