@@ -29,7 +29,7 @@ const LineReduce = function (config) {
   // stripPunct = (t) => t.replace(/^[^a-z0-9\]|[^a-z0-9]$/ig, '');
   // fails for 'U.S.A.'
 
-  const stripPunct = (t) => t.replace(/^[^a-z0-9-]|[^a-z0-9-]$/ig, ``)
+  const stripPunct = (t) => t.replace(/^[^a-z0-9-]+|[^a-z0-9-]+$/ig, ``)
 
   const filter = ({ text, type, search }) => {
     // TODO: compromise has startgrams and endgrams
@@ -67,7 +67,7 @@ const LineReduce = function (config) {
     return { lines: reduced, text: reduced.join(`\n`) }
   }
 
-  return { filter }
+  return { filter, stripPunct }
 }
 
 module.exports = { LineReduce, types: reduceType }

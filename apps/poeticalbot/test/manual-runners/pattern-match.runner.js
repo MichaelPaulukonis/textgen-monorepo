@@ -1,4 +1,5 @@
 let Corpora = require(`common-corpus`)
+const nlp = require(`compromise`)
 const Matcher = require(`../../src/lib/pattern-match`)
 const { getMatchingLines } = new Matcher()
 const util = require('../../src/lib/util')()
@@ -45,6 +46,8 @@ if (program.patternMatch) {
 
 const book = getText(config.corporaFilter)
 config.lines = textutil.sentencify(book.text)
+// getMatchingLines expects an already-built compromise doc, same as lrRunner.js does
+config.nlpObj = nlp(config.lines.join(' '))
 const matchObj = getMatchingLines(config)
 
 console.log(JSON.stringify(matchObj.sentences, null, 2))

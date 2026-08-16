@@ -27,12 +27,13 @@ describe('manual-runners scripts', function () {
     expect(result).to.be.a('string')
   })
 
-  it('pattern-match.runner.js resolves its modules without a MODULE_NOT_FOUND error', function () {
+  it('pattern-match.runner.js runs without throwing', function () {
+    let result
     try {
-      execSync('node test/manual-runners/pattern-match.runner.js', { encoding: 'utf8' })
+      result = execSync('node test/manual-runners/pattern-match.runner.js', { encoding: 'utf8' })
     } catch (error) {
-      expect(error.message).to.not.include('MODULE_NOT_FOUND')
-      expect(error.message).to.not.include('Cannot find module')
+      expect.fail('pattern-match.runner.js threw: ' + error.message)
     }
+    expect(result).to.be.a('string')
   })
 })

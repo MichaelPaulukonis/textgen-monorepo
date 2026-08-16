@@ -29,6 +29,27 @@ describe(`linereduce `, () => {
     })
   })
 
+  describe('stripPunct', () => {
+    let linereduce
+    before(() => {
+      linereduce = new LineReduce({ util })
+    })
+
+    it('strips a full run of trailing punctuation, not just the last character', () => {
+      // OCR'd source text can leave unbalanced parens; a naive single-char strip
+      // left the ")" behind when it wasn't the very last character (e.g. "olfact).")
+      expect(linereduce.stripPunct('olfact).')).to.equal('olfact')
+    })
+
+    it('strips a full run of leading punctuation', () => {
+      expect(linereduce.stripPunct('((hello')).to.equal('hello')
+    })
+
+    it('preserves a mid-word hyphen', () => {
+      expect(linereduce.stripPunct('wicket-bag')).to.equal('wicket-bag')
+    })
+  })
+
   describe('... in action', () => {
     let linereduce, blob
     before(() => {
