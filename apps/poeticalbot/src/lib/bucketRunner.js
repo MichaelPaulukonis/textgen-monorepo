@@ -138,16 +138,18 @@ const bucketRunner = function (opts) {
 
     let finalPunct = config.finalPunct || `.`
     // TODO: elaboration, if not defined, see what's most common? or some other heuristic
-    lines = lines.map((l) => re.test(l.trim()) ? l.trim() : l.trim() + finalPunct)
+    lines = lines.map((l) =>
+      re.test(l.trim()) ? l.trim() : l.trim() + finalPunct
+    )
     return lines
   }
 
   this.generate = () => {
-    const text = opts.texts.map(t => t.text())
+    const text = opts.texts.map((t) => t.text())
 
     const sentences = textutil.sentencify(text)
 
-    const q = (queneauBuckets(opts)).seed(sentences)
+    const q = queneauBuckets(opts).seed(sentences)
 
     const strategies = [
       incrementinglines,

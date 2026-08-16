@@ -25,13 +25,18 @@ const JGnoetry = function (util) {
     return new JGnoetry(util)
   }
 
-  let debug = util.debug || function (msg) {
-    console.log(msg) // eslint-disable-line no-console
-  }
+  let debug =
+    util.debug ||
+    function (msg) {
+      console.log(msg) // eslint-disable-line no-console
+    }
 
   // TODO: corpora should be set PRIOR to calling generate
   this.generate = function (templateText, options, corpora, existingText) {
-    debug(`Options: \n  punctuation handling is: ` + options.handlePunctuation, 1)
+    debug(
+      `Options: \n  punctuation handling is: ` + options.handlePunctuation,
+      1
+    )
     debug(`  starting lines by: ` + options.byNewlineOrPunctuation, 1)
 
     // get the template text, make an array out of it
@@ -42,7 +47,13 @@ const JGnoetry = function (util) {
 
     // TODO: rename all of this, and come up with a structure to pass in/back data?
     // becuase.... we could build tInfo EXTERNAL to this.generate and reduce the ugly param-list.....
-    var tInfo = processTemplate(aTemplateText, templateText, corpora, options, existingText)
+    var tInfo = processTemplate(
+      aTemplateText,
+      templateText,
+      corpora,
+      options,
+      existingText
+    )
     var aGeneratedWords = tInfo.aGeneratedWords
     var aGeneratedWordsStatic = tInfo.aGeneratedWordsStatic
     aTemplateText = tInfo.aTemplateText
@@ -66,7 +77,13 @@ const JGnoetry = function (util) {
     // you see how most of this is part of tInfo?!?
     // !!!
     // TODO: OMG the parameter list!
-    var gnoe = getOutput(aTemplateText, aGeneratedWords, aGeneratedWordsStatic, corpora, options)
+    var gnoe = getOutput(
+      aTemplateText,
+      aGeneratedWords,
+      aGeneratedWordsStatic,
+      corpora,
+      options
+    )
 
     var output = {
       displayText: editStringPunctuationOutput(gnoe.outputString),
@@ -79,7 +96,13 @@ const JGnoetry = function (util) {
 
   // THIS IS WHERE THE MAGIC HAPPENS
   // this mashes the markov-words into the template, as needed, if they match syllables
-  var getOutput = function (aTemplateText, aGeneratedWords, aGeneratedWordsStatic, corpora, options) {
+  var getOutput = function (
+    aTemplateText,
+    aGeneratedWords,
+    aGeneratedWordsStatic,
+    corpora,
+    options
+  ) {
     // number of syllables counted in generated words accepted so far, minus syllables counted in template
     var syllableBalance = 0
 
@@ -130,24 +153,44 @@ const JGnoetry = function (util) {
           syllableBalance += tempWordSyllCount
           loopCount++
 
-          debug(`    After adding word: ` + tempWord + `, Syllable Balance is ` + syllableBalance, 2)
+          debug(
+            `    After adding word: ` +
+              tempWord +
+              `, Syllable Balance is ` +
+              syllableBalance,
+            2
+          )
 
           // add word for printout and editor buffers
           var wordToPrint = tempWord.trim()
 
           // if capitalizing first words in sentence, capitalize
-          if (options.capitalize.customSentence === true && isFollowingPunctuation === true) {
-            wordToPrint = wordToPrint.charAt(0).toUpperCase() + wordToPrint.substring(1)
+          if (
+            options.capitalize.customSentence === true &&
+            isFollowingPunctuation === true
+          ) {
+            wordToPrint =
+              wordToPrint.charAt(0).toUpperCase() + wordToPrint.substring(1)
           }
 
           // if capitalizing first words after a newline, capitalize
-          if (options.capitalize.customLine === true && isFollowingNewline === true) {
-            wordToPrint = wordToPrint.charAt(0).toUpperCase() + wordToPrint.substring(1)
+          if (
+            options.capitalize.customLine === true &&
+            isFollowingNewline === true
+          ) {
+            wordToPrint =
+              wordToPrint.charAt(0).toUpperCase() + wordToPrint.substring(1)
           }
 
           // if capitalizing 'I', capitalize the word to print
           if (options.capitalize.customI === true) {
-            if (wordToPrint === `i` || wordToPrint === `i'll` || wordToPrint === `i'm` || wordToPrint === `i'd` || wordToPrint === `i've`) {
+            if (
+              wordToPrint === `i` ||
+              wordToPrint === `i'll` ||
+              wordToPrint === `i'm` ||
+              wordToPrint === `i'd` ||
+              wordToPrint === `i've`
+            ) {
               wordToPrint = wordToPrint.replace(`i`, `I`)
             }
           }
@@ -261,7 +304,11 @@ const JGnoetry = function (util) {
   // * * * * * * * * * * * * * * * *
   // CHAINED N-GRAM FUNCTIONS
 
-  var makeWordsArray = function (numberOfWords, byNewlineOrPunctuation, corpora) {
+  var makeWordsArray = function (
+    numberOfWords,
+    byNewlineOrPunctuation,
+    corpora
+  ) {
     // the array that will be returned
     var toReturn = []
 
@@ -316,7 +363,15 @@ const JGnoetry = function (util) {
     // for each text, get its weight, subtract it from the random number
     // if the total is 0 or less, use that text
     for (var i = 0; i < corpora.texts.length; i++) {
-      debug(`  randomWeight is: ` + randomWeight + ` and corpora.weights[` + i + `] is: ` + corpora.weights[i], 2)
+      debug(
+        `  randomWeight is: ` +
+          randomWeight +
+          ` and corpora.weights[` +
+          i +
+          `] is: ` +
+          corpora.weights[i],
+        2
+      )
       randomWeight = randomWeight - corpora.weights[i]
       if (randomWeight <= 0) {
         corpusText = corpora.texts[i]
@@ -348,7 +403,8 @@ const JGnoetry = function (util) {
   }
 
   // not currently used - think this will be part of template expansion
-  var hasNonTemplateWord = function (aTemplateText) { // eslint-disable-line no-unused-vars
+  var hasNonTemplateWord = function (aTemplateText) {
+    // eslint-disable-line no-unused-vars
     for (var i = 0; i < aTemplateText.length; i++) {
       if (aTemplateText[i] !== `[s]` && aTemplateText[i] !== `[n]`) {
         return true
@@ -368,7 +424,17 @@ const JGnoetry = function (util) {
 
   // whether a given word is an end punctuation or not
   var isPunctuation = function (word) {
-    if (word === `.` || word === `?` || word === `!` || word === `,` || word === `:` || word === `;` || word === `--` || word === `'`) { // '
+    if (
+      word === `.` ||
+      word === `?` ||
+      word === `!` ||
+      word === `,` ||
+      word === `:` ||
+      word === `;` ||
+      word === `--` ||
+      word === `'`
+    ) {
+      // '
       return true
     }
     return false
@@ -447,7 +513,15 @@ const JGnoetry = function (util) {
     // for each text, get its weight, subtract it from the random number
     // if the total is 0 or less, use that text
     for (var i = 0; i < corpora.texts.length; i++) {
-      debug(`  randomWeight is: ` + randomWeight + ` and corpora.weights[` + i + `] is: ` + corpora.weights[i], 2)
+      debug(
+        `  randomWeight is: ` +
+          randomWeight +
+          ` and corpora.weights[` +
+          i +
+          `] is: ` +
+          corpora.weights[i],
+        2
+      )
       randomWeight = randomWeight - corpora.weights[i]
       if (randomWeight <= 0) {
         corpusText = corpora.texts[i]
@@ -460,7 +534,11 @@ const JGnoetry = function (util) {
     var randomIndex = Math.floor(util.random() * corpusText.length)
 
     debug(`  randomIndex is: ` + randomIndex, 2)
-    debug(`  character in context: ` + getCharacterInContext(corpusText, randomIndex), 2)
+    debug(
+      `  character in context: ` +
+        getCharacterInContext(corpusText, randomIndex),
+      2
+    )
 
     // find the next word after it given the history
     return findFollowingWord(corpusText, history, randomIndex)
@@ -482,7 +560,10 @@ const JGnoetry = function (util) {
     // first, make sure the history word is actually in the corpus
     // if not, set the history word to ' '
     if (corpusText.indexOf(history) === -1) {
-      debug(`  history ` + history + ` not found in corpus, setting to blank`, 2)
+      debug(
+        `  history ` + history + ` not found in corpus, setting to blank`,
+        2
+      )
       history = ` `
     }
 
@@ -512,7 +593,11 @@ const JGnoetry = function (util) {
       indexAfterHistory++
     }
     debug(`  first non-space index after history is: ` + indexAfterHistory, 2)
-    debug(`  character in context: ` + getCharacterInContext(corpusText, indexAfterHistory), 2)
+    debug(
+      `  character in context: ` +
+        getCharacterInContext(corpusText, indexAfterHistory),
+      2
+    )
 
     // find the first space after the end of the history
     // (i.e. the space-delimited token following the history text)
@@ -532,13 +617,25 @@ const JGnoetry = function (util) {
       if (corpusText.charAt(indexAfterHistory) === ` `) {
         indexAfterHistory++
       }
-      debug(`  RECALCULATED first non-space index after history is: ` + indexAfterHistory, 2)
-      debug(`  character in context: ` + getCharacterInContext(corpusText, indexAfterHistory), 2)
+      debug(
+        `  RECALCULATED first non-space index after history is: ` +
+          indexAfterHistory,
+        2
+      )
+      debug(
+        `  character in context: ` +
+          getCharacterInContext(corpusText, indexAfterHistory),
+        2
+      )
       firstSpaceAfterHistory = corpusText.indexOf(` `, indexAfterHistory)
     }
 
     debug(`  first space after history is: ` + firstSpaceAfterHistory, 2)
-    debug(`  character in context: ` + getCharacterInContext(corpusText, firstSpaceAfterHistory), 2)
+    debug(
+      `  character in context: ` +
+        getCharacterInContext(corpusText, firstSpaceAfterHistory),
+      2
+    )
 
     // if the history is the last token in the text, and the last token is unique, report failure
     if (firstSpaceAfterHistory === -1) {
@@ -546,12 +643,16 @@ const JGnoetry = function (util) {
     }
 
     // find the first word after the history
-    var firstWordAfterHistory = corpusText.substring(indexAfterHistory, firstSpaceAfterHistory)
+    var firstWordAfterHistory = corpusText.substring(
+      indexAfterHistory,
+      firstSpaceAfterHistory
+    )
     debug(`  first word after history is: ` + firstWordAfterHistory + `\n`, 2)
 
     // TODO: make this configurable option
     // plus: other cleanup
-    if (true) { // eslint-disable-line no-constant-condition
+    if (true) {
+      // eslint-disable-line no-constant-condition
       firstWordAfterHistory = firstWordAfterHistory.replace(/\n/g, ` `)
     }
 
@@ -568,7 +669,8 @@ const JGnoetry = function (util) {
     // inputText = ' ' + inputText + ' ';
 
     // place spaces around certain punctuation (but not dashes and apostrophes)
-    inputText = inputText.replace(/ ,/g, `,`)
+    inputText = inputText
+      .replace(/ ,/g, `,`)
       .replace(/ \./g, `.`)
       .replace(/ \?/g, `? `)
       .replace(/ !/g, `! `)
@@ -603,7 +705,13 @@ const JGnoetry = function (util) {
     return returnString
   }
 
-  var processTemplate = function (aTemplateText, templateText, corpora, options, existingText) {
+  var processTemplate = function (
+    aTemplateText,
+    templateText,
+    corpora,
+    options,
+    existingText
+  ) {
     // generate a variable-length array of words
     var initialNumberWords = aTemplateText.length * 2
     var aGeneratedWords = []
@@ -620,7 +728,11 @@ const JGnoetry = function (util) {
 
     if (existingText.length === 0) {
       // first time we've run the program -- there is no active button-text area
-      aGeneratedWords = makeWordsArray(initialNumberWords, options.byNewlineOrPunctuation, corpora)
+      aGeneratedWords = makeWordsArray(
+        initialNumberWords,
+        options.byNewlineOrPunctuation,
+        corpora
+      )
     } else {
       // a sample of the "existingText" as it is passed-in
       // ids are not used, the background color is immaterial EXCEPT for when it is transparent

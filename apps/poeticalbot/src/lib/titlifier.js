@@ -1,4 +1,5 @@
-let titleTypes = { RandomLine: `RandomLine`,
+let titleTypes = {
+  RandomLine: `RandomLine`,
   LineFirst: `LineFirst`,
   LineLast: `LineLast`,
   WordFreq: `WordFreq`,
@@ -53,7 +54,9 @@ const Titlifier = function (options) {
         // random line, but not the first, not the last
         lineNbr = util.randomInRange(1, lines.length - 2)
       }
-      if (lineNbr >= lines.length) { lineNbr = lines.length - 1 }
+      if (lineNbr >= lines.length) {
+        lineNbr = lines.length - 1
+      }
       return lines[lineNbr]
     }
   }
@@ -65,7 +68,12 @@ const Titlifier = function (options) {
 
     if (wordfreqs.length > 4) {
       let wordCount = util.randomInRange(2, wordfreqs.length > 10 ? 10 : 4)
-      title = wordfreqs.slice(0, wordCount).map(function (elem) { return elem.word }).join(` `)
+      title = wordfreqs
+        .slice(0, wordCount)
+        .map(function (elem) {
+          return elem.word
+        })
+        .join(` `)
     } else {
       if (wordfreqs[0] && wordfreqs[0].word) {
         title = wordfreqs[0].word
@@ -80,7 +88,9 @@ const Titlifier = function (options) {
   let titlefier = function (text, titlemethod) {
     let untitled = `[UNTITLED]`
 
-    if (!text) { return untitled }
+    if (!text) {
+      return untitled
+    }
 
     // wish we could weight this a bit...
     let lines = text.split(`\n`)
@@ -90,7 +100,8 @@ const Titlifier = function (options) {
     let last = lines.length > 0 ? lines.length - 1 : 0
     // if only one line...
 
-    let strategies = [ titleLineStrategy(),
+    let strategies = [
+      titleLineStrategy(),
       titleLineStrategy(first),
       titleLineStrategy(last),
       titleWordFreq,
@@ -128,7 +139,7 @@ const Titlifier = function (options) {
           strategy = strategies[3]
           break
 
-          // strategies[4] is the same as 3 to give a higher random weighting
+        // strategies[4] is the same as 3 to give a higher random weighting
 
         case `Summary`:
           strategy = strategies[5]

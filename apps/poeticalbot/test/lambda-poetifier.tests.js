@@ -21,7 +21,7 @@ describe('Lambda Environment Poetifier', () => {
 
     it('throws an error if config not supplied as parameter', () => {
       expect(() => {
-        (() => new Poetifier())()
+        ;(() => new Poetifier())()
       }).to.throw(Error)
     })
 
@@ -33,7 +33,10 @@ describe('Lambda Environment Poetifier', () => {
   before(() => {
     console.log('🔍 Setting up Lambda Environment Poetifier test...')
     console.log('Environment check:')
-    console.log('  - AWS_LAMBDA_FUNCTION_NAME:', process.env.AWS_LAMBDA_FUNCTION_NAME)
+    console.log(
+      '  - AWS_LAMBDA_FUNCTION_NAME:',
+      process.env.AWS_LAMBDA_FUNCTION_NAME
+    )
     console.log('  - POST_LIVE:', process.env.POST_LIVE)
 
     // Simulate Lambda environment for testing
@@ -56,7 +59,10 @@ describe('Lambda Environment Poetifier', () => {
       poem = newpoetifier.poem({})
 
       console.log('✅ Poem generated successfully')
-      console.log('Lambda Poetifier Test Result:', JSON.stringify(poem, null, 2))
+      console.log(
+        'Lambda Poetifier Test Result:',
+        JSON.stringify(poem, null, 2)
+      )
     } catch (error) {
       console.error('❌ Error in test setup:', error.message)
       console.error('Stack:', error.stack)
@@ -97,7 +103,9 @@ describe('Lambda Environment Poetifier', () => {
         expect(poem.lines).to.have.length.above(0)
       })
       it('and contain strings (or nothing)', () => {
-        expect(poem.lines.filter(e => typeof e === 'string')).to.have.length(poem.lines.length)
+        expect(poem.lines.filter((e) => typeof e === 'string')).to.have.length(
+          poem.lines.length
+        )
       })
     })
 

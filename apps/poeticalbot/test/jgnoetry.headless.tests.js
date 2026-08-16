@@ -28,21 +28,24 @@ describe(`jGnoetry.headless tests`, () => {
     it(`should return a string when called with proper params`, () => {
       // NOTE: if you don't want to set all this up, use the runner!
       const options = {
-        'handlePunctuation': `noParen`,
-        'byNewlineOrPunctuation': `punctuation`,
-        'capitalize': {
-          'method': `capitalizeCustom`,
-          'customSentence': true,
-          'customLine': true,
-          'customI': true
+        handlePunctuation: `noParen`,
+        byNewlineOrPunctuation: `punctuation`,
+        capitalize: {
+          method: `capitalizeCustom`,
+          customSentence: true,
+          customLine: true,
+          customI: true
         },
-        'appendToPoem': `appendPeriod`,
-        'areWordsSelectedBegin': `startSelected`,
-        'thisWordSelectedBegin': `startSelected`,
-        'changeSelectionEffect': `requiresClick`,
-        'statusVerbosity': 1
+        appendToPoem: `appendPeriod`,
+        areWordsSelectedBegin: `startSelected`,
+        thisWordSelectedBegin: `startSelected`,
+        changeSelectionEffect: `requiresClick`,
+        statusVerbosity: 1
       }
-      const corpora = { texts: [`this is the cat that was over there with the mill.`], weights: [100] }
+      const corpora = {
+        texts: [`this is the cat that was over there with the mill.`],
+        weights: [100]
+      }
       const template = `[s] [n] `
       const existingText = ``
 
@@ -68,23 +71,31 @@ describe(`jGnoetry.headless tests`, () => {
      */
     it(`should keep existingText when told`, () => {
       const options = {
-        'handlePunctuation': `noParen`,
-        'byNewlineOrPunctuation': `punctuation`,
-        'capitalize': {
-          'method': `capitalizeCustom`,
-          'customSentence': true,
-          'customLine': true,
-          'customI': true
+        handlePunctuation: `noParen`,
+        byNewlineOrPunctuation: `punctuation`,
+        capitalize: {
+          method: `capitalizeCustom`,
+          customSentence: true,
+          customLine: true,
+          customI: true
         },
-        'appendToPoem': `appendPeriod`,
-        'areWordsSelectedBegin': `startSelected`,
-        'thisWordSelectedBegin': `startSelected`,
-        'changeSelectionEffect': `requiresClick`,
-        'statusVerbosity': 1
+        appendToPoem: `appendPeriod`,
+        areWordsSelectedBegin: `startSelected`,
+        thisWordSelectedBegin: `startSelected`,
+        changeSelectionEffect: `requiresClick`,
+        statusVerbosity: 1
       }
-      const corpora = { texts: [`the cat the dog the oboe and the mill were in the dob barn with the rat`], weights: [100] }
+      const corpora = {
+        texts: [
+          `the cat the dog the oboe and the mill were in the dob barn with the rat`
+        ],
+        weights: [100]
+      }
       const template = `[s] [s] [n] `
-      const existingText = [{ text: `the`, keep: true }, { text: `the`, keep: false }]
+      const existingText = [
+        { text: `the`, keep: true },
+        { text: `the`, keep: false }
+      ]
       const output = jg.generate(template, options, corpora, existingText)
 
       // hrm. we've got a leading-space issue in jgnoetry....
@@ -94,7 +105,9 @@ describe(`jGnoetry.headless tests`, () => {
 
       expect(output).to.be.an(`object`)
       expect(output.displayText).to.be.a(`string`)
-      expect(words[0].toLowerCase()).to.equal(existingText[0].text.toLowerCase())
+      expect(words[0].toLowerCase()).to.equal(
+        existingText[0].text.toLowerCase()
+      )
     })
   })
 })

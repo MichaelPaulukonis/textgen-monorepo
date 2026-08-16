@@ -60,7 +60,9 @@ describe(`poetifier with lrRunner`, () => {
       it(`and contain strings (or nothing)`, () => {
         // if poem.poem has elements, they are all strings
         // OR it does not have elements
-        expect(poem.lines.filter(e => typeof e === `string`)).to.have.length(poem.lines.length)
+        expect(poem.lines.filter((e) => typeof e === `string`)).to.have.length(
+          poem.lines.length
+        )
       })
     })
 
@@ -131,7 +133,9 @@ describe(`poetifier with lrRunner`, () => {
       it(`and contain strings (or nothing)`, () => {
         // if poem.poem has elements, they are all strings
         // OR it does not have elements
-        expect(poem.lines.filter(e => typeof e === `string`)).to.have.length(poem.lines.length)
+        expect(poem.lines.filter((e) => typeof e === `string`)).to.have.length(
+          poem.lines.length
+        )
       })
     })
 

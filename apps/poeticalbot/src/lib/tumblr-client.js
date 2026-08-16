@@ -23,14 +23,14 @@ class TumblrClient {
 
     try {
       const tumblr = require('tumblr.js')
-      
+
       this.client = tumblr.createClient({
         consumer_key: this.credentials.consumerKey,
         consumer_secret: this.credentials.consumerSecret,
         token: this.credentials.accessToken,
         token_secret: this.credentials.accessSecret
       })
-      
+
       this.initialized = true
     } catch (error) {
       throw new Error(`Failed to initialize Tumblr client: ${error.message}`)
@@ -44,13 +44,13 @@ class TumblrClient {
   async validateCredentials() {
     try {
       this.initialize()
-      
+
       const userInfo = await this.client.userInfo()
-      
+
       return {
         valid: true,
         user: userInfo.user.name,
-        blogs: userInfo.user.blogs.map(blog => ({
+        blogs: userInfo.user.blogs.map((blog) => ({
           name: blog.name,
           url: blog.url,
           primary: blog.primary
@@ -89,10 +89,10 @@ class TumblrClient {
   async postPoem(poem, blogName) {
     try {
       this.initialize()
-      
+
       // Convert poem to NPF format
       const npfPost = convertPoemToNPF(poem)
-      
+
       // Validate NPF structure
       if (!validateNPF(npfPost)) {
         throw new Error('Generated NPF structure is invalid')
@@ -100,7 +100,7 @@ class TumblrClient {
 
       // Post to Tumblr
       const response = await this.client.createPost(blogName, npfPost)
-      
+
       return {
         success: true,
         postId: response.id,
@@ -127,9 +127,9 @@ class TumblrClient {
   async getBlogInfo(blogName) {
     try {
       this.initialize()
-      
+
       const blogInfo = await this.client.blogInfo(blogName)
-      
+
       return {
         success: true,
         blog: {
@@ -160,16 +160,16 @@ class TumblrClient {
   async getRecentPosts(blogName, options = {}) {
     try {
       this.initialize()
-      
+
       const posts = await this.client.blogPosts(blogName, {
         limit: options.limit || 5,
         offset: options.offset || 0,
         type: options.type || 'text'
       })
-      
+
       return {
         success: true,
-        posts: posts.posts.map(post => ({
+        posts: posts.posts.map((post) => ({
           id: post.id,
           type: post.type,
           title: post.title || post.summary,
@@ -199,9 +199,9 @@ class TumblrClient {
   async deletePost(blogName, postId) {
     try {
       this.initialize()
-      
+
       await this.client.deletePost(blogName, postId)
-      
+
       return {
         success: true,
         error: null
@@ -221,13 +221,19 @@ class TumblrClient {
   getStatus() {
     return {
       initialized: this.initialized,
-      hasCredentials: !!(this.credentials?.consumerKey && 
-                        this.credentials?.consumerSecret && 
-                        this.credentials?.accessToken && 
-                        this.credentials?.accessSecret),
+      hasCredentials: !!(
+        this.credentials?.consumerKey &&
+        this.credentials?.consumerSecret &&
+        this.credentials?.accessToken &&
+        this.credentials?.accessSecret
+      ),
       credentialsPartial: {
-        consumerKey: this.credentials?.consumerKey ? `${this.credentials.consumerKey.substring(0, 8)}...` : null,
-        accessToken: this.credentials?.accessToken ? `${this.credentials.accessToken.substring(0, 8)}...` : null
+        consumerKey: this.credentials?.consumerKey
+          ? `${this.credentials.consumerKey.substring(0, 8)}...`
+          : null,
+        accessToken: this.credentials?.accessToken
+          ? `${this.credentials.accessToken.substring(0, 8)}...`
+          : null
       }
     }
   }

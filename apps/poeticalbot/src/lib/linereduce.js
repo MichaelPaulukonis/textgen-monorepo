@@ -6,10 +6,10 @@
 // }
 
 const reduceType = {
-  'search': 'search',
-  'start': `start`,
-  'end': `end`,
-  'pattern': `pattern`
+  search: 'search',
+  start: `start`,
+  end: `end`,
+  pattern: `pattern`
 }
 
 const lf = require(`../lib/linefind.js`)
@@ -29,7 +29,7 @@ const LineReduce = function (config) {
   // stripPunct = (t) => t.replace(/^[^a-z0-9\]|[^a-z0-9]$/ig, '');
   // fails for 'U.S.A.'
 
-  const stripPunct = (t) => t.replace(/^[^a-z0-9-]+|[^a-z0-9-]+$/ig, ``)
+  const stripPunct = (t) => t.replace(/^[^a-z0-9-]+|[^a-z0-9-]+$/gi, ``)
 
   const filter = ({ text, type, search }) => {
     // TODO: compromise has startgrams and endgrams

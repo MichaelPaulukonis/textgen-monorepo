@@ -165,7 +165,11 @@ function convertPoemToNPFWithLogging(poem, logger) {
  * @returns {boolean} True if valid
  */
 function validateNPF(npfPost) {
-  if (!npfPost.content || !Array.isArray(npfPost.content) || npfPost.content.length === 0) {
+  if (
+    !npfPost.content ||
+    !Array.isArray(npfPost.content) ||
+    npfPost.content.length === 0
+  ) {
     return false
   }
 
@@ -182,7 +186,10 @@ function validateNPF(npfPost) {
     // Validate formatting if present
     if (block.formatting) {
       for (const format of block.formatting) {
-        if (typeof format.start !== 'number' || typeof format.end !== 'number') {
+        if (
+          typeof format.start !== 'number' ||
+          typeof format.end !== 'number'
+        ) {
           return false
         }
       }

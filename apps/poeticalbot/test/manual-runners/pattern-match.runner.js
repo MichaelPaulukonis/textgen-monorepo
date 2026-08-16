@@ -14,7 +14,8 @@ var getText = (filter) => {
   let textObj = util.pick(source)
   let text = textObj.text()
   let startPos = util.randomInRange(0, text.length - chars)
-  let blob = (text.length <= chars ? text : text.slice(startPos, startPos + chars))
+  let blob =
+    text.length <= chars ? text : text.slice(startPos, startPos + chars)
 
   // console.log(`text.length: ${text.length} startPos: ${startPos} blob-borders: ${startPos+chars}`);
 
@@ -31,8 +32,14 @@ const config = {
 let program = require(`commander`)
 program
   .version(`0.0.3`)
-  .option(`-c, --corporaFilter [string]`, `filename substring filter (non-case sensitive)`)
-  .option(`-p, --patternMatch [string]`, `nlp-compromise matchPattern for list elements`)
+  .option(
+    `-c, --corporaFilter [string]`,
+    `filename substring filter (non-case sensitive)`
+  )
+  .option(
+    `-p, --patternMatch [string]`,
+    `nlp-compromise matchPattern for list elements`
+  )
   // .option(`-m, --method [string]`, `method-type (See index.js)`)
   .parse(process.argv)
 

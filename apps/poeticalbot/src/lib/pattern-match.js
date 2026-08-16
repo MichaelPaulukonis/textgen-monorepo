@@ -1,24 +1,80 @@
 let util = new (require(`./util`))()
 let textutil = require(`./textutil.js`)
 
-const tags = [`Acronym`, `Adjective`, `Adverb`, `Auxillary`, `Cardinal`, `City`,
-  `ClauseEnd`, `Comparative`, `Condition`, `Conjunction`, `Contraction`,
-  `Copula`, `Country`, `Currency`, `Date`, `Demonym`, `Determiner`,
-  `Duration`, `Expression`, `FemaleName`, `FirstName`, `FuturePerfect`,
-  `Gerund`, `Holiday`, `Infinitive`, `LastName`, `MaleName`, `Modal`,
-  `Money`, `Month`, `Negative`, `NiceNumber`, `Noun`, `NounPhrase+`, `NumberRange`,
-  `NumericValue`, `Ordinal`, `Organization`, `Participle`, `Particle`,
-  `PastTense`, `PerfectTense`, `Person`, `Place`, `Pluperfect`,
-  `Plural`, `Possessive`, `Preposition`, `PresentTense`, `Pronoun`,
-  `QuestionWord`, `Quotation`, `RelativeDay`, `Singular`, `Superlative`,
-  `Time`, `Unit`, `Value`, `Verb`, `VerbPhrase+`, `WeekDay`, `Year`]
+const tags = [
+  `Acronym`,
+  `Adjective`,
+  `Adverb`,
+  `Auxillary`,
+  `Cardinal`,
+  `City`,
+  `ClauseEnd`,
+  `Comparative`,
+  `Condition`,
+  `Conjunction`,
+  `Contraction`,
+  `Copula`,
+  `Country`,
+  `Currency`,
+  `Date`,
+  `Demonym`,
+  `Determiner`,
+  `Duration`,
+  `Expression`,
+  `FemaleName`,
+  `FirstName`,
+  `FuturePerfect`,
+  `Gerund`,
+  `Holiday`,
+  `Infinitive`,
+  `LastName`,
+  `MaleName`,
+  `Modal`,
+  `Money`,
+  `Month`,
+  `Negative`,
+  `NiceNumber`,
+  `Noun`,
+  `NounPhrase+`,
+  `NumberRange`,
+  `NumericValue`,
+  `Ordinal`,
+  `Organization`,
+  `Participle`,
+  `Particle`,
+  `PastTense`,
+  `PerfectTense`,
+  `Person`,
+  `Place`,
+  `Pluperfect`,
+  `Plural`,
+  `Possessive`,
+  `Preposition`,
+  `PresentTense`,
+  `Pronoun`,
+  `QuestionWord`,
+  `Quotation`,
+  `RelativeDay`,
+  `Singular`,
+  `Superlative`,
+  `Time`,
+  `Unit`,
+  `Value`,
+  `Verb`,
+  `VerbPhrase+`,
+  `WeekDay`,
+  `Year`
+]
 
 // word, as opposed to sentences or larger
 // so we remove punctuation, etc.
 let wordCleaner = (word) => {
   // single-apostrophes left for now (posessive and contractions)
   // need a better algorithm....
-  let clean = word.trim().replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$|[()_,"]|-+/g, ``).replace(/\s+/g, ` `)
+  let clean = word
+    .trim()
+    .replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$|[()_,"]|-+/g, ``)
+    .replace(/\s+/g, ` `)
   return clean.trim()
 }
 
@@ -28,26 +84,41 @@ let PatternMatcher = function () {
   }
 
   const getPatterns = ({ lines, selectedMethod, matchPattern, nlpObj }) => {
-    const matchStrategyFactory = (template) => n => {
+    const matchStrategyFactory = (template) => (n) => {
       return {
         filtered: n.match(template).out(`array`),
         descr: `match: '${template}'`
       }
     }
 
-    let posStrategy = () => n => {
-      const targetPos = util.pick([`nouns`, `adjectives`, `adverbs`, `places`, `verbs`, `values`, `people`])
+    let posStrategy = () => (n) => {
+      const targetPos = util.pick([
+        `nouns`,
+        `adjectives`,
+        `adverbs`,
+        `places`,
+        `verbs`,
+        `values`,
+        `people`
+      ])
       return {
-        filtered: n[targetPos]().out(`array`).map(n => wordCleaner(textutil.cleaner(n))),
+        filtered: n[targetPos]()
+          .out(`array`)
+          .map((n) => wordCleaner(textutil.cleaner(n))),
         descr: `pos: ${targetPos}`
       }
     }
 
     let matchPatternFactory = () => {
       let tag = util.pick(tags)
-      if (util.coinflip()) { tag = tag.indexOf(`+`) > 0 ? tag : tag + `+` }
-      let template = util.pick([`#${tag}`, `. #${tag} .`,
-        `. (#${util.pick(tags)}|#${util.pick(tags)})+ .`])
+      if (util.coinflip()) {
+        tag = tag.indexOf(`+`) > 0 ? tag : tag + `+`
+      }
+      let template = util.pick([
+        `#${tag}`,
+        `. #${tag} .`,
+        `. (#${util.pick(tags)}|#${util.pick(tags)})+ .`
+      ])
       if (util.coinflip(0.75)) {
         let max = util.randomInRange(4, 10)
         template = template.replace(/\./g, `{1,${max}}`)
@@ -56,11 +127,14 @@ let PatternMatcher = function () {
     }
 
     // looking at compromise tags @ https://github.com/nlp-compromise/compromise/blob/5596d9286e5228278dfcd956d5b98cf9adc0912c/src/sentence/pos/parts_of_speech.js
-    let matchStrats = [matchStrategyFactory(`#Adjective #Noun . (are|is) . #Adjective #Noun`),
+    let matchStrats = [
+      matchStrategyFactory(`#Adjective #Noun . (are|is) . #Adjective #Noun`),
       matchStrategyFactory(`#Noun * are #Noun+`),
       matchStrategyFactory(`#Noun .? are #Noun+`),
       matchStrategyFactory(`#Adjective #Noun`),
-      matchStrategyFactory(`#Adjective+? #Noun .? (are|is) .? (#Adjective|#Noun)+`),
+      matchStrategyFactory(
+        `#Adjective+? #Noun .? (are|is) .? (#Adjective|#Noun)+`
+      ),
       matchStrategyFactory(`#Adjective? #Noun+ of #Adjective? #Noun`),
       matchStrategyFactory(`#Adverb and #Adverb`),
       matchStrategyFactory(`#Adverb+ #Verb+`),
@@ -95,15 +169,17 @@ let PatternMatcher = function () {
       // looks like EVERYTHING _should be_ in https://github.com/nlp-compromise/compromise/blob/master/src/tags/tree.js
     ]
 
-    let posStrats = [posStrategy,
+    let posStrats = [
       posStrategy,
       posStrategy,
       posStrategy,
       posStrategy,
       posStrategy,
-      posStrategy]
+      posStrategy,
+      posStrategy
+    ]
 
-    let patternStrats = [matchPatternFactory(),
+    let patternStrats = [
       matchPatternFactory(),
       matchPatternFactory(),
       matchPatternFactory(),
@@ -112,7 +188,9 @@ let PatternMatcher = function () {
       matchPatternFactory(),
       matchPatternFactory(),
       matchPatternFactory(),
-      matchPatternFactory()]
+      matchPatternFactory(),
+      matchPatternFactory()
+    ]
 
     let strategies = matchStrats.concat(posStrats, patternStrats)
 
@@ -139,9 +217,9 @@ let PatternMatcher = function () {
 
     // TODO: use passed-in nlpObj
 
-    const matcherFunc = (matchPattern
+    const matcherFunc = matchPattern
       ? matchStrategyFactory(matchPattern)
-      : util.pick(strategy || strategies))
+      : util.pick(strategy || strategies)
     // const matchedLines = matcherFunc(lines.join(' '))
     const matchedLines = matcherFunc(nlpObj)
 
@@ -153,9 +231,11 @@ let PatternMatcher = function () {
 
   const getMatchingLines = function (params) {
     const strategy = getPatterns(params)
-    const uniques = [...(new Set(strategy.parts))]
+    const uniques = [...new Set(strategy.parts)]
 
-    const smaller = params.lines.filter(s => uniques.find(sb => s.toLowerCase().includes(sb)))
+    const smaller = params.lines.filter((s) =>
+      uniques.find((sb) => s.toLowerCase().includes(sb))
+    )
 
     return {
       fragments: uniques,

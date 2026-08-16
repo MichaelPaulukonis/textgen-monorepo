@@ -24,19 +24,24 @@ describe('NPF Formatting', () => {
     })
 
     it('includes poem title as heading', () => {
-      const headingBlock = npfContent.content.find(block => block.type === 'text' && block.subtype === 'heading2')
+      const headingBlock = npfContent.content.find(
+        (block) => block.type === 'text' && block.subtype === 'heading2'
+      )
       expect(headingBlock).to.exist()
       expect(headingBlock.text).to.equal(samplePoem.title)
     })
 
     it('includes poem text as formatted content', () => {
-      const textBlocks = npfContent.content.filter(block => block.type === 'text' && !block.subtype)
+      const textBlocks = npfContent.content.filter(
+        (block) => block.type === 'text' && !block.subtype
+      )
       expect(textBlocks.length).to.be.above(0)
     })
 
     it('includes source attribution', () => {
-      const sourceBlock = npfContent.content.find(block =>
-        block.type === 'text' && block.text && block.text.includes('Source:')
+      const sourceBlock = npfContent.content.find(
+        (block) =>
+          block.type === 'text' && block.text && block.text.includes('Source:')
       )
       expect(sourceBlock).to.exist()
     })
@@ -65,8 +70,12 @@ describe('NPF Formatting', () => {
     it('handles very long poems', () => {
       const longPoem = {
         title: 'Long Poem',
-        lines: Array(100).fill('This is a very long line that repeats many times'),
-        text: Array(100).fill('This is a very long line that repeats many times').join('\n'),
+        lines: Array(100).fill(
+          'This is a very long line that repeats many times'
+        ),
+        text: Array(100)
+          .fill('This is a very long line that repeats many times')
+          .join('\n'),
         source: 'test-source',
         seed: 'test-seed'
       }
@@ -78,7 +87,11 @@ describe('NPF Formatting', () => {
     it('handles special characters in poem text', () => {
       const specialPoem = {
         title: 'Special Characters: @#$%^&*()',
-        lines: ['Line with "quotes"', 'Line with <tags>', 'Line with & ampersands'],
+        lines: [
+          'Line with "quotes"',
+          'Line with <tags>',
+          'Line with & ampersands'
+        ],
         text: 'Line with "quotes"\nLine with <tags>\nLine with & ampersands',
         source: 'test-source',
         seed: 'test-seed'

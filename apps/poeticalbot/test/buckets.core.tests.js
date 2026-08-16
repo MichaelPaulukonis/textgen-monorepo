@@ -22,7 +22,9 @@ describe(`queneau-buckets-modified core tests`, () => {
     })
 
     it(`should throw a custom error if not provided with a util`, () => {
-      expect(() => queneauBuckets()).to.throw(`util.pick must be supplied as part of config`)
+      expect(() => queneauBuckets()).to.throw(
+        `util.pick must be supplied as part of config`
+      )
     })
 
     it(`should expose a seed method`, () => {

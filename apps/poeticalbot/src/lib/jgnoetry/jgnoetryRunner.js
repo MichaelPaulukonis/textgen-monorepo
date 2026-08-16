@@ -2,7 +2,11 @@ const { templates } = require('./templating')
 
 const jgRunner = function (options) {
   if (options === undefined) {
-    options = { debug: function (msg) { console.log(msg) } } // eslint-disable-line no-console
+    options = {
+      debug: function (msg) {
+        console.log(msg)
+      }
+    } // eslint-disable-line no-console
   }
 
   const corpora = {
@@ -22,37 +26,52 @@ const jgRunner = function (options) {
 
   // work around this naming weirdness
   const jgOptions = {
-    'method': `jgnoetry`,
-    'handlePunctuation': `noParen`,
-    'byNewlineOrPunctuation': `punctuation`,
-    'capitalize': {
-      'method': `capitalizeCustom`, // capitalizeNone, capitalizeAsCorpus
-      'customSentence': true, // sentence beginning
-      'customLine': true, // line beginnings
-      'customI': true // capitalize "I"
+    method: `jgnoetry`,
+    handlePunctuation: `noParen`,
+    byNewlineOrPunctuation: `punctuation`,
+    capitalize: {
+      method: `capitalizeCustom`, // capitalizeNone, capitalizeAsCorpus
+      customSentence: true, // sentence beginning
+      customLine: true, // line beginnings
+      customI: true // capitalize "I"
     },
-    'appendToPoem': `appendPeriod`,
-    'statusVerbosity': 0
+    appendToPoem: `appendPeriod`,
+    statusVerbosity: 0
   }
 
   let existingText = []
 
-  const capitalizations = [`capitalizeCustom`, `capitalizeNone`, `capitalizeAsCorpus`]
+  const capitalizations = [
+    `capitalizeCustom`,
+    `capitalizeNone`,
+    `capitalizeAsCorpus`
+  ]
 
-  const endPuncts = [`appendNothing`, `appendPeriod`, `appendQuestion`, `appendExclamation`]
+  const endPuncts = [
+    `appendNothing`,
+    `appendPeriod`,
+    `appendQuestion`,
+    `appendExclamation`
+  ]
 
   // methods: random, even, tilted
   // ditch the "pick one, pick two" - let that be the domain of the corpora filters
   // (this is a hold-over from when there were no corpora filters)
   const assignWeights = (count) => {
-    const strategies = [assignWeightsRandom, assignWeightsEven, assignWeightsTentpole]
+    const strategies = [
+      assignWeightsRandom,
+      assignWeightsEven,
+      assignWeightsTentpole
+    ]
     const strategy = util.pick(strategies)
     return strategy(count)
   }
 
   // one item will be much more significant than the others
   const assignWeightsTentpole = function (count) {
-    if (count === 1) { return [100] }
+    if (count === 1) {
+      return [100]
+    }
 
     var weights = []
 
@@ -65,7 +84,7 @@ const jgRunner = function (options) {
       weights[i] = util.random(100 - total)
       total += weights[i]
     }
-    weights[count - 1] = (100 - total)
+    weights[count - 1] = 100 - total
 
     util.shuffle(weights)
 
@@ -124,11 +143,14 @@ const jgRunner = function (options) {
 
   var cleaner = function (text) {
     // remove /r (DOS style)
-    return text.replace(/\r/g, ``)
-      // remove leading whitespace
-      .replace(/^\s*/g, ``)
-      .replace(/\n\s*/g, `\n`)
-      .trim()
+    return (
+      text
+        .replace(/\r/g, ``)
+        // remove leading whitespace
+        .replace(/^\s*/g, ``)
+        .replace(/\n\s*/g, `\n`)
+        .trim()
+    )
   }
 
   // TODO: the corpora should be an array of objects, each of which has a name, a text, and an associated weigth
@@ -148,9 +170,14 @@ const jgRunner = function (options) {
   util.debug(templateName, 0)
   util.debug(corpora.weights.join(` `), 0)
 
-  const titles = corpora.texts.map(t => t.name)
-  corpora.texts = corpora.texts.map(b => b.text())
-  const output = jg.generate(templates[templateName], jgOptions, corpora, existingText)
+  const titles = corpora.texts.map((t) => t.name)
+  corpora.texts = corpora.texts.map((b) => b.text())
+  const output = jg.generate(
+    templates[templateName],
+    jgOptions,
+    corpora,
+    existingText
+  )
   const text = cleaner(output.displayText)
   const lines = text.split('\n')
 

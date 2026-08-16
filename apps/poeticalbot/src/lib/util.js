@@ -34,7 +34,9 @@ const Util = function (options) {
     var count = 0
     for (var prop in obj) {
       if (prop !== `id`) {
-        if (math.random() < 1 / ++count) { result = obj[prop] }
+        if (math.random() < 1 / ++count) {
+          result = obj[prop]
+        }
       }
     }
     return result
@@ -54,7 +56,7 @@ const Util = function (options) {
   }
 
   this.random = function (max) {
-    return (max !== undefined ? randomInRange(0, max) : math.random())
+    return max !== undefined ? randomInRange(0, max) : math.random()
   }
 
   var randomInRange = function (min, max) {
@@ -65,8 +67,10 @@ const Util = function (options) {
   this.randomInRange = randomInRange
 
   this.coinflip = function (chance) {
-    if (!chance) { chance = 0.5 }
-    return (math.floatBetween(0, 1) < chance)
+    if (!chance) {
+      chance = 0.5
+    }
+    return math.floatBetween(0, 1) < chance
   }
 
   this.pickRemove = function (arr) {

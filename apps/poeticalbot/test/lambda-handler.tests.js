@@ -13,7 +13,8 @@ describe('Lambda Handler Integration', () => {
     getRemainingTimeInMillis: () => 30000,
     functionName: 'poeticalbot-test',
     functionVersion: '$LATEST',
-    invokedFunctionArn: 'arn:aws:lambda:us-east-1:123456789012:function:poeticalbot-test',
+    invokedFunctionArn:
+      'arn:aws:lambda:us-east-1:123456789012:function:poeticalbot-test',
     memoryLimitInMB: '128',
     awsRequestId: 'test-request-id'
   }

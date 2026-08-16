@@ -25,7 +25,11 @@ class LambdaHandler {
       if (event.source === 'aws.events') {
         // EventBridge scheduled event
         return await this.processScheduledEvent(event, context)
-      } else if (event.Records && event.Records[0] && event.Records[0].eventSource === 'aws:sqs') {
+      } else if (
+        event.Records &&
+        event.Records[0] &&
+        event.Records[0].eventSource === 'aws:sqs'
+      ) {
         // SQS message event (future service separation)
         return await this.processSQSEvent(event, context)
       } else {
@@ -57,7 +61,10 @@ class LambdaHandler {
     const result = await this.generateAndPostPoem()
 
     if (result.error) {
-      this.logError('Scheduled poetry generation failed', new Error(result.error))
+      this.logError(
+        'Scheduled poetry generation failed',
+        new Error(result.error)
+      )
       return {
         statusCode: 500,
         body: JSON.stringify({
@@ -71,7 +78,9 @@ class LambdaHandler {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: result.posted ? 'Poem generated and posted successfully' : 'Poem generated (posting disabled)',
+        message: result.posted
+          ? 'Poem generated and posted successfully'
+          : 'Poem generated (posting disabled)',
         postId: result.postId,
         poemTitle: result.poem?.title,
         requestId: context.awsRequestId
@@ -93,7 +102,7 @@ class LambdaHandler {
     for (const record of event.Records) {
       try {
         const message = JSON.parse(record.body)
-        
+
         if (message.type === 'generate-poem') {
           const result = await this.processGenerationRequest(message)
           results.push({ messageId: record.messageId, result })
@@ -101,8 +110,14 @@ class LambdaHandler {
           const result = await this.processPostingRequest(message)
           results.push({ messageId: record.messageId, result })
         } else {
-          this.logError('Unknown SQS message type', new Error(`Unknown type: ${message.type}`))
-          results.push({ messageId: record.messageId, error: 'Unknown message type' })
+          this.logError(
+            'Unknown SQS message type',
+            new Error(`Unknown type: ${message.type}`)
+          )
+          results.push({
+            messageId: record.messageId,
+            error: 'Unknown message type'
+          })
         }
       } catch (error) {
         this.logError('SQS message processing error', error)
@@ -157,7 +172,9 @@ class LambdaHandler {
       return {
         statusCode: result.error ? 500 : 200,
         body: JSON.stringify({
-          message: result.posted ? 'Poem generated and posted' : 'Poem generated (posting disabled)',
+          message: result.posted
+            ? 'Poem generated and posted'
+            : 'Poem generated (posting disabled)',
           poem: result.poem,
           posted: result.posted,
           postId: result.postId,
@@ -197,19 +214,30 @@ class LambdaHandler {
     try {
       // Create modified config for this generation
       const generationConfig = { ...this.config }
-      
+
       // Override config with options
       if (options.method) {
-        generationConfig.poetry = { ...generationConfig.poetry, method: options.method }
+        generationConfig.poetry = {
+          ...generationConfig.poetry,
+          method: options.method
+        }
       }
       if (options.seed) {
-        generationConfig.poetry = { ...generationConfig.poetry, seed: options.seed }
+        generationConfig.poetry = {
+          ...generationConfig.poetry,
+          seed: options.seed
+        }
       }
       if (options.corporaFilter) {
-        generationConfig.poetry = { ...generationConfig.poetry, corporaFilter: options.corporaFilter }
+        generationConfig.poetry = {
+          ...generationConfig.poetry,
+          corporaFilter: options.corporaFilter
+        }
       }
 
-      const poetifier = new (require('./lib/poetifier.js'))({ config: generationConfig })
+      const poetifier = new (require('./lib/poetifier.js'))({
+        config: generationConfig
+      })
       const poem = poetifier.poem()
 
       if (poem && poem.title && poem.text) {
@@ -233,29 +261,29 @@ class LambdaHandler {
     try {
       const TumblrClient = require('./lib/tumblr-client')
       const client = TumblrClient.fromConfig(this.config)
-      
+
       const result = await client.postPoem(poem, this.config.posting.blogName)
-      
+
       if (result.success) {
         this.log(`Posted poem successfully: ${result.postId}`)
         this.logPoemMetadata(poem)
       } else {
         this.logError('Poem posting failed', new Error(result.error))
       }
-      
-      return { 
-        success: result.success, 
-        postId: result.postId, 
+
+      return {
+        success: result.success,
+        postId: result.postId,
         url: result.url,
-        error: result.error 
+        error: result.error
       }
     } catch (error) {
       this.logError('Poem posting error', error)
-      return { 
-        success: false, 
-        postId: null, 
+      return {
+        success: false,
+        postId: null,
         url: null,
-        error: error.message 
+        error: error.message
       }
     }
   }
@@ -266,7 +294,7 @@ class LambdaHandler {
    */
   async generateAndPostPoem() {
     const generationResult = await this.generatePoem()
-    
+
     if (generationResult.error || !generationResult.poem) {
       return {
         poem: generationResult.poem,
@@ -304,7 +332,7 @@ class LambdaHandler {
     this.log(`Lambda invocation - RequestId: ${context.awsRequestId}`)
     this.log(`Function: ${context.functionName} v${context.functionVersion}`)
     this.log(`Event source: ${event.source || 'direct'}`)
-    
+
     if (this.config.logging.level === 'debug') {
       this.log('Event details:', JSON.stringify(event, null, 2))
     }

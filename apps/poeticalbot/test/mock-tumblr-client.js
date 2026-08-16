@@ -83,10 +83,12 @@ class MockTumblrClient {
    * Validate credentials (mock implementation)
    */
   validateCredentials() {
-    return !!(this.credentials.consumer_key &&
-             this.credentials.consumer_secret &&
-             this.credentials.token &&
-             this.credentials.token_secret)
+    return !!(
+      this.credentials.consumer_key &&
+      this.credentials.consumer_secret &&
+      this.credentials.token &&
+      this.credentials.token_secret
+    )
   }
 }
 

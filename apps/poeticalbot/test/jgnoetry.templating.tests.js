@@ -22,7 +22,11 @@ describe(`jGnoetry.templating tests`, () => {
 
   describe(`syllableCount tests`, () => {
     // TODO: more words with more syllables
-    let sylbs = [[`and`, 1], [`but`, 1], [`hate`, 1]]
+    let sylbs = [
+      [`and`, 1],
+      [`but`, 1],
+      [`hate`, 1]
+    ]
     for (let i = 0, len = sylbs.length; i < len; i++) {
       let s = sylbs[i]
       it(`should count syllables correctly for '${s[0]}' with algorithm (non-exception words)`, () => {

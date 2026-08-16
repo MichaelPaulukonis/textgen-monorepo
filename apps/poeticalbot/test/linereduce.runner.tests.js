@@ -10,7 +10,7 @@ const nlp = require('compromise')
 
 // extracted from linereduce itself
 // so... maybe it's a utility?
-const stripPunct = (t) => t.replace(/^[^a-z0-9-]|[^a-z0-9-]$/ig, ``)
+const stripPunct = (t) => t.replace(/^[^a-z0-9-]|[^a-z0-9-]$/gi, ``)
 
 describe(`linereduceRunner `, () => {
   describe(`API`, () => {
@@ -21,7 +21,11 @@ describe(`linereduceRunner `, () => {
 
   describe('... in action', () => {
     it('... will get a set of sentences that START with the same word', () => {
-      const reduced = new LinereduceRunner({ util, texts: [testData.corporaDummy], reduceType: types.start })
+      const reduced = new LinereduceRunner({
+        util,
+        texts: [testData.corporaDummy],
+        reduceType: types.start
+      })
       expect(reduced).to.be.an('object')
       expect(reduced).to.have.property('lines')
       expect(reduced).to.have.property('text')
@@ -35,12 +39,19 @@ describe(`linereduceRunner `, () => {
       expect(reduced.text.length).to.be.greaterThan(0)
 
       const firstWord = stripPunct(reduced.lines[0].split(' ')[0])
-      const allSame = reduced.lines.reduce((p, line) => p && stripPunct(line).startsWith(firstWord), true)
+      const allSame = reduced.lines.reduce(
+        (p, line) => p && stripPunct(line).startsWith(firstWord),
+        true
+      )
       expect(allSame).to.be.true()
     })
 
     it('... will get a set of sentences that END with the same word', () => {
-      const reduced = new LinereduceRunner({ util, texts: [testData.corporaDummy], reduceType: types.end })
+      const reduced = new LinereduceRunner({
+        util,
+        texts: [testData.corporaDummy],
+        reduceType: types.end
+      })
       expect(reduced).to.be.an('object')
       expect(reduced).to.have.property('lines')
       expect(reduced).to.have.property('text')
@@ -54,12 +65,19 @@ describe(`linereduceRunner `, () => {
       expect(reduced.text.length).to.be.greaterThan(0)
 
       const lastWord = stripPunct(reduced.lines[0].split(' ').slice(-1)[0])
-      const allSame = reduced.lines.reduce((p, line) => p && stripPunct(line).endsWith(lastWord), true)
+      const allSame = reduced.lines.reduce(
+        (p, line) => p && stripPunct(line).endsWith(lastWord),
+        true
+      )
       expect(allSame).to.be.true()
     })
 
     it('... will get a set of sentences that contain a 2+ word sequence', () => {
-      const reduced = new LinereduceRunner({ util, texts: [testData.corporaDummy], reduceType: types.search })
+      const reduced = new LinereduceRunner({
+        util,
+        texts: [testData.corporaDummy],
+        reduceType: types.search
+      })
       expect(reduced).to.be.an('object')
       expect(reduced).to.have.property('lines')
       expect(reduced).to.have.property('text')

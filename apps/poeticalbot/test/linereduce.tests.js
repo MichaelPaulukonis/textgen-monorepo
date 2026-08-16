@@ -19,7 +19,7 @@ describe(`linereduce `, () => {
 
     it(`... should throw a TypeError if not provided with a util`, () => {
       expect(function () {
-        (() => new LineReduce())()
+        ;(() => new LineReduce())()
       }).to.throw(Error)
     })
 
@@ -74,7 +74,10 @@ This is probably not.`
       expect(firsts.lines.length).to.be.greaterThan(0)
 
       const firstWord = firsts.lines[0].split(' ')[0]
-      const allSame = firsts.lines.reduce((p, line) => p && line.startsWith(firstWord), true)
+      const allSame = firsts.lines.reduce(
+        (p, line) => p && line.startsWith(firstWord),
+        true
+      )
       expect(allSame).to.be.true()
     })
 
@@ -87,19 +90,29 @@ This is probably not.`
       expect(lasts.lines.length).to.be.greaterThan(0)
 
       const lastWord = lasts.lines[0].split(' ').slice(-1)[0]
-      const allSame = lasts.lines.reduce((p, line) => p && line.endsWith(lastWord), true)
+      const allSame = lasts.lines.reduce(
+        (p, line) => p && line.endsWith(lastWord),
+        true
+      )
       expect(allSame).to.be.true()
     })
 
     it('... will get a set of sentences that match some pattern', () => {
-      const matches = linereduce.filter({ type: types.search, text: blob, search: / is / })
+      const matches = linereduce.filter({
+        type: types.search,
+        text: blob,
+        search: / is /
+      })
       expect(matches).to.be.an('object')
       expect(matches).to.have.property('lines')
       expect(matches).to.have.property('text')
 
       expect(matches.lines.length).to.be.greaterThan(0)
 
-      const allSame = matches.lines.reduce((p, line) => p && line.indexOf(' is ') > -1, true)
+      const allSame = matches.lines.reduce(
+        (p, line) => p && line.indexOf(' is ') > -1,
+        true
+      )
       expect(allSame).to.be.true()
     })
   })

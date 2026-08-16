@@ -30,7 +30,7 @@ class CLI {
 
     for (let i = 0; i < args.length; i++) {
       const arg = args[i]
-      
+
       switch (arg) {
         case '-h':
         case '--help':
@@ -112,23 +112,37 @@ Environment Variables:
     try {
       // Create modified config for this generation
       const generationConfig = { ...this.config }
-      
+
       // Override config with CLI options
       if (options.method) {
-        generationConfig.poetry = { ...generationConfig.poetry, method: options.method }
+        generationConfig.poetry = {
+          ...generationConfig.poetry,
+          method: options.method
+        }
       }
       if (options.seed) {
-        generationConfig.poetry = { ...generationConfig.poetry, seed: options.seed }
+        generationConfig.poetry = {
+          ...generationConfig.poetry,
+          seed: options.seed
+        }
       }
       if (options.corporaFilter) {
-        generationConfig.poetry = { ...generationConfig.poetry, corporaFilter: options.corporaFilter }
+        generationConfig.poetry = {
+          ...generationConfig.poetry,
+          corporaFilter: options.corporaFilter
+        }
       }
       if (options.transform !== null) {
-        generationConfig.poetry = { ...generationConfig.poetry, transform: options.transform }
+        generationConfig.poetry = {
+          ...generationConfig.poetry,
+          transform: options.transform
+        }
       }
 
       // Generate poem
-      const poetifier = new (require('./lib/poetifier.js'))({ config: generationConfig })
+      const poetifier = new (require('./lib/poetifier.js'))({
+        config: generationConfig
+      })
       const poem = poetifier.poem()
 
       return { poem, error: null }
@@ -146,21 +160,21 @@ Environment Variables:
     try {
       const TumblrClient = require('./lib/tumblr-client')
       const client = TumblrClient.fromConfig(this.config)
-      
+
       const result = await client.postPoem(poem, this.config.posting.blogName)
-      
-      return { 
-        success: result.success, 
-        postId: result.postId, 
+
+      return {
+        success: result.success,
+        postId: result.postId,
         url: result.url,
-        error: result.error 
+        error: result.error
       }
     } catch (error) {
-      return { 
-        success: false, 
-        postId: null, 
+      return {
+        success: false,
+        postId: null,
         url: null,
-        error: error.message 
+        error: error.message
       }
     }
   }
@@ -173,14 +187,14 @@ Environment Variables:
   displayPoem(poem, options = {}) {
     console.log('\n📝 Generated Poem:')
     console.log('==================')
-    
+
     if (poem.title) {
       console.log(`Title: ${poem.title}`)
       console.log('')
     }
-    
+
     console.log(poem.text)
-    
+
     if (options.verbose) {
       console.log('\n📊 Metadata:')
       console.log('=============')
@@ -188,9 +202,12 @@ Environment Variables:
       if (poem.source) console.log(`Source: ${poem.source}`)
       if (poem.template) console.log(`Template: ${poem.template}`)
       if (poem.method) console.log(`Method: ${poem.method}`)
-      
+
       if (poem.metadata) {
-        console.log('Additional metadata:', JSON.stringify(poem.metadata, null, 2))
+        console.log(
+          'Additional metadata:',
+          JSON.stringify(poem.metadata, null, 2)
+        )
       }
     }
   }
@@ -213,13 +230,19 @@ Environment Variables:
     // Validate configuration if posting is requested
     if (options.post) {
       try {
-        if (!this.config.tumblr.consumerKey || !this.config.tumblr.consumerSecret || 
-            !this.config.tumblr.accessToken || !this.config.tumblr.accessSecret) {
+        if (
+          !this.config.tumblr.consumerKey ||
+          !this.config.tumblr.consumerSecret ||
+          !this.config.tumblr.accessToken ||
+          !this.config.tumblr.accessSecret
+        ) {
           throw new Error('Tumblr API credentials not configured')
         }
       } catch (error) {
         console.error('❌ Configuration Error:', error.message)
-        console.log('\n💡 Set up your .env file with Tumblr API credentials to enable posting')
+        console.log(
+          '\n💡 Set up your .env file with Tumblr API credentials to enable posting'
+        )
         process.exit(1)
       }
     }
@@ -248,7 +271,9 @@ Environment Variables:
 
       if (postResult.success) {
         console.log(`✅ Posted successfully! Post ID: ${postResult.postId}`)
-        console.log(`🔗 View at: https://${this.config.posting.blogName}/post/${postResult.postId}`)
+        console.log(
+          `🔗 View at: https://${this.config.posting.blogName}/post/${postResult.postId}`
+        )
       } else {
         console.error('❌ Posting failed:', postResult.error)
         process.exit(1)
@@ -265,7 +290,7 @@ module.exports = CLI
 // Run CLI if this file is executed directly
 if (require.main === module) {
   const cli = new CLI()
-  cli.run().catch(error => {
+  cli.run().catch((error) => {
     console.error('❌ Unexpected error:', error.message)
     process.exit(1)
   })

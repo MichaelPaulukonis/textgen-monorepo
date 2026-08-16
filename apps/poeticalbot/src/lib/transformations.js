@@ -17,14 +17,15 @@ const transformations = {
     return s.replace(/mb$/, 'm')
   },
   cchange: (s) => {
-    return s.replace(/([^s]|^)(c)(h)/g, '$1x$3').trim()
+    return s
+      .replace(/([^s]|^)(c)(h)/g, '$1x$3')
+      .trim()
       .replace(/cia/g, 'xia')
       .replace(/c(i|e|y)/g, 's$1')
       .replace(/c/g, 'k')
   },
   dchange: (s) => {
-    return s.replace(/d(ge|gy|gi)/g, 'j$1')
-      .replace(/d/g, 't')
+    return s.replace(/d(ge|gy|gi)/g, 'j$1').replace(/d/g, 't')
   },
   dropG: (s) => {
     s = s.replace(/gh(^$|[^aeiou])/g, 'h$1')

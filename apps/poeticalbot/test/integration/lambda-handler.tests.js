@@ -13,7 +13,8 @@ describe('Lambda Handler', () => {
     getRemainingTimeInMillis: () => 30000,
     functionName: 'poeticalbot-test',
     functionVersion: '$LATEST',
-    invokedFunctionArn: 'arn:aws:lambda:us-east-1:123456789012:function:poeticalbot-test',
+    invokedFunctionArn:
+      'arn:aws:lambda:us-east-1:123456789012:function:poeticalbot-test',
     memoryLimitInMB: '128',
     awsRequestId: 'test-request-id'
   }
@@ -21,7 +22,7 @@ describe('Lambda Handler', () => {
   before(async () => {
     // Set test mode to avoid posting to Tumblr
     process.env.POST_LIVE = 'false'
-    
+
     try {
       result = await handler(mockEvent, mockContext)
     } catch (error) {

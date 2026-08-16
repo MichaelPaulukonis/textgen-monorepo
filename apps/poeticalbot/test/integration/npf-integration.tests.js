@@ -14,7 +14,8 @@ const mockContext = {
   getRemainingTimeInMillis: () => 30000,
   functionName: 'poeticalbot-test',
   functionVersion: '$LATEST',
-  invokedFunctionArn: 'arn:aws:lambda:us-east-1:123456789012:function:poeticalbot-test',
+  invokedFunctionArn:
+    'arn:aws:lambda:us-east-1:123456789012:function:poeticalbot-test',
   memoryLimitInMB: '128',
   awsRequestId: 'test-request-id'
 }
@@ -22,20 +23,22 @@ const mockContext = {
 console.log('🎭 Testing Lambda handler with NPF formatting...')
 
 handler(mockEvent, mockContext)
-  .then(result => {
+  .then((result) => {
     console.log('\n✅ Lambda handler successful!')
     console.log('Result:', result)
-    
+
     const config = require('../../src/config.js')
     if (config.postLive) {
-      console.log('\n🚀 POST_LIVE is true - this posted to Tumblr with NPF format!')
+      console.log(
+        '\n🚀 POST_LIVE is true - this posted to Tumblr with NPF format!'
+      )
       console.log('Check https://poeticalbot.tumblr.com for the new post')
     } else {
       console.log('\n✅ POST_LIVE is false - NPF format shown in logs above')
       console.log('💡 Set POST_LIVE=true to test live posting with NPF')
     }
   })
-  .catch(error => {
+  .catch((error) => {
     console.error('\n❌ Lambda handler failed:')
     console.error('Error:', error.message)
     console.error('Stack:', error.stack)

@@ -5,10 +5,13 @@ const { execSync } = require('child_process')
 describe('CLI Integration', () => {
   describe('CLI execution', () => {
     it('can generate a poem without posting', () => {
-      const result = execSync('node src/cli.js --no-post --method queneau-buckets --corporaFilter eliot', {
-        encoding: 'utf8',
-        timeout: 30000
-      })
+      const result = execSync(
+        'node src/cli.js --no-post --method queneau-buckets --corporaFilter eliot',
+        {
+          encoding: 'utf8',
+          timeout: 30000
+        }
+      )
 
       expect(result).to.be.a('string')
       expect(result.length).to.be.above(0)

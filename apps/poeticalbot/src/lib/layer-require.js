@@ -28,7 +28,7 @@ function detectEnvironment() {
 function layerRequire(moduleName, options = {}) {
   const { required = true } = options
   const environment = detectEnvironment()
-  
+
   let module = null
   let lastError = null
 
@@ -48,14 +48,18 @@ function layerRequire(moduleName, options = {}) {
     }
   } catch (error) {
     lastError = error
-    
+
     if (required) {
       const errorMessage = `Failed to load module '${moduleName}' in ${environment} environment: ${error.message}`
-      
+
       if (environment === 'lambda') {
-        throw new Error(`${errorMessage}\n\nThis may indicate:\n- Lambda layer is not properly configured\n- Module is not included in the layer\n- Layer path is incorrect`)
+        throw new Error(
+          `${errorMessage}\n\nThis may indicate:\n- Lambda layer is not properly configured\n- Module is not included in the layer\n- Layer path is incorrect`
+        )
       } else {
-        throw new Error(`${errorMessage}\n\nThis may indicate:\n- Module is not installed (run 'npm install')\n- Module name is incorrect\n- Dependencies are missing`)
+        throw new Error(
+          `${errorMessage}\n\nThis may indicate:\n- Module is not installed (run 'npm install')\n- Module name is incorrect\n- Dependencies are missing`
+        )
       }
     }
   }
@@ -83,7 +87,7 @@ function validateDependency(moduleName) {
  */
 function getEnvironmentInfo() {
   const environment = detectEnvironment()
-  
+
   return {
     environment,
     isLambda: environment === 'lambda',

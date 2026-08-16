@@ -64,7 +64,9 @@ describe(`poetifier Queneau-Buckets incrementingLines`, () => {
       it(`and contain strings (or nothing)`, () => {
         // if poem.poem has elements, they are all strings
         // OR it does not have elements
-        expect(poem.lines.filter(e => typeof e === `string`)).to.have.length(poem.lines.length)
+        expect(poem.lines.filter((e) => typeof e === `string`)).to.have.length(
+          poem.lines.length
+        )
       })
     })
 
@@ -141,7 +143,9 @@ describe(`poetifier Queneau-Buckets decrementinglines`, () => {
       it(`and contain strings (or nothing)`, () => {
         // if poem.poem has elements, they are all strings
         // OR it does not have elements
-        expect(poem.lines.filter(e => typeof e === `string`)).to.have.length(poem.lines.length)
+        expect(poem.lines.filter((e) => typeof e === `string`)).to.have.length(
+          poem.lines.length
+        )
       })
     })
 
@@ -218,7 +222,9 @@ describe(`poetifier Queneau-Buckets shortLines`, () => {
       it(`and contain strings (or nothing)`, () => {
         // if poem.poem has elements, they are all strings
         // OR it does not have elements
-        expect(poem.lines.filter(e => typeof e === `string`)).to.have.length(poem.lines.length)
+        expect(poem.lines.filter((e) => typeof e === `string`)).to.have.length(
+          poem.lines.length
+        )
       })
     })
 
@@ -283,7 +289,9 @@ describe(`poetifier Queneau-Buckets diamond substrategy`, () => {
       it(`and contain strings (or nothing)`, () => {
         // if poem.poem has elements, they are all strings
         // OR it does not have elements
-        expect(poem.lines.filter(e => typeof e === `string`)).to.have.length(poem.lines.length)
+        expect(poem.lines.filter((e) => typeof e === `string`)).to.have.length(
+          poem.lines.length
+        )
       })
     })
 
@@ -360,7 +368,9 @@ describe(`poetifier Queneau-Buckets drone substrategy`, () => {
       it(`and contain strings (or nothing)`, () => {
         // if poem.poem has elements, they are all strings
         // OR it does not have elements
-        expect(poem.lines.filter(e => typeof e === `string`)).to.have.length(poem.lines.length)
+        expect(poem.lines.filter((e) => typeof e === `string`)).to.have.length(
+          poem.lines.length
+        )
       })
     })
 

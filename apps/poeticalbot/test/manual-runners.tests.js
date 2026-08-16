@@ -20,7 +20,9 @@ describe('manual-runners scripts', function () {
   it('writepoem.js runs without a MODULE_NOT_FOUND error', function () {
     let result
     try {
-      result = execSync('node test/manual-runners/writepoem.js', { encoding: 'utf8' })
+      result = execSync('node test/manual-runners/writepoem.js', {
+        encoding: 'utf8'
+      })
     } catch (error) {
       expect.fail('writepoem.js threw: ' + error.message)
     }
@@ -30,7 +32,9 @@ describe('manual-runners scripts', function () {
   it('pattern-match.runner.js runs without throwing', function () {
     let result
     try {
-      result = execSync('node test/manual-runners/pattern-match.runner.js', { encoding: 'utf8' })
+      result = execSync('node test/manual-runners/pattern-match.runner.js', {
+        encoding: 'utf8'
+      })
     } catch (error) {
       expect.fail('pattern-match.runner.js threw: ' + error.message)
     }

@@ -2,12 +2,15 @@ const { boundedLetterFilter, retryTitle } = require(`./retry-bounds.js`)
 
 class Poetifier {
   constructor(options) {
-    let util = new (require(`./util.js`))({ statusVerbosity: 0, seed: options.config.seed })
+    let util = new (require(`./util.js`))({
+      statusVerbosity: 0,
+      seed: options.config.seed
+    })
     options.util = util
     // TODO: pass in util (for randomization) to jgnoetry and mispelr
     let jgnoetry = require(`./jgnoetry/jgnoetryRunner.js`)
     let Drone = require(`./sentence.drone.js`)
-    let titlifier = new (require(`../lib/titlifier`)).Titlifier({ util: util })
+    let titlifier = new (require(`../lib/titlifier`).Titlifier)({ util: util })
     let mispelr = require(`node-mispelr`)
     let ALWAYS_PRINT = 0
     // let rhymer = require(`../filter/rhymer`)({ util: util })
@@ -22,7 +25,8 @@ class Poetifier {
     util.log = logger
     // TODO: make this a module, as well....
     var reduceCorpora = function (texts) {
-      var strategies = [corporaSevenStrategy,
+      var strategies = [
+        corporaSevenStrategy,
         corporaSevenStrategy,
         corporaFilterStrategy(`childrens|apocalypsenow`),
         corporaFilterStrategy(`childrens|folklore`),
@@ -84,7 +88,7 @@ class Poetifier {
     var corporaFilterStrategy = function (filter) {
       return function (corpus) {
         var r = new RegExp(filter, `i`)
-        return corpus.filter(m => m.name.match(r) !== null)
+        return corpus.filter((m) => m.name.match(r) !== null)
       }
     }
     const isNumeric = (value) => !isNaN(value - parseFloat(value))
@@ -105,7 +109,9 @@ class Poetifier {
         transformMispeller
       ]
       let strategy = util.pick(strategies)
-      let chance = isNumeric(config.transformChance) ? config.transformChance : 0.15
+      let chance = isNumeric(config.transformChance)
+        ? config.transformChance
+        : 0.15
       return util.coinflip(chance) ? strategy(poem) : poem
     }
     // let transformRhymer = function (poem) {
@@ -153,16 +159,18 @@ class Poetifier {
       if (util.coinflip()) {
         lines = lines.reverse()
       }
-      poem.text = lines.filter(l => l.trim().length > 0).join(`\n`)
+      poem.text = lines.filter((l) => l.trim().length > 0).join(`\n`)
       return poem
     }
     let vowelifilterTransform = function (poem) {
-      poem.lines = poem.lines.map(l => l.replace(/[aeiou]/ig, ``))
+      poem.lines = poem.lines.map((l) => l.replace(/[aeiou]/gi, ``))
       poem.text = poem.lines.join(`\n`)
       return poem
     }
     let consonafilterTransform = function (poem) {
-      poem.lines = poem.lines.map(l => l.replace(/[bcdfghjklmnpqrstvwxyz]/ig, ``))
+      poem.lines = poem.lines.map((l) =>
+        l.replace(/[bcdfghjklmnpqrstvwxyz]/gi, ``)
+      )
       poem.text = poem.lines.join(`\n`)
       return poem
     }
@@ -189,13 +197,16 @@ class Poetifier {
         let texts
         let drone = () => `drone`
         // redefined below, but needed for comparisons
-        let strategies = [queneaubuckets,
-          jgnoetry,
-          drone]
+        let strategies = [queneaubuckets, jgnoetry, drone]
         if (config.file) {
           // TODO: if file does not exist.... do something else
           // end, I Guess.
-          texts = [{ name: corpora.cleanName(config.file), text: () => corpora.readFile(config.file) }]
+          texts = [
+            {
+              name: corpora.cleanName(config.file),
+              text: () => corpora.readFile(config.file)
+            }
+          ]
         } else {
           texts = reduceCorpora(corpora.texts)
         }
@@ -222,12 +233,18 @@ class Poetifier {
         // it turns on use of the (uh...) linereduce utility
         if (config.reduce || util.coinflip(0.3)) {
           config.reduce = true // if random selection
-          let lr = new (require(`./lrRunner.js`))({ util: util, texts: texts, reduceType: config.reduceType })
-          source = [{
-            name: texts.reduce((p, c) => p + ` ` + c.name, ``),
-            text: () => lr.lines.join('\n'),
-            sentences: () => lr.lines // bucketRunner takes in text AND re-sentencifies it. AAAARGH
-          }]
+          let lr = new (require(`./lrRunner.js`))({
+            util: util,
+            texts: texts,
+            reduceType: config.reduceType
+          })
+          source = [
+            {
+              name: texts.reduce((p, c) => p + ` ` + c.name, ``),
+              text: () => lr.lines.join('\n'),
+              sentences: () => lr.lines // bucketRunner takes in text AND re-sentencifies it. AAAARGH
+            }
+          ]
         }
         // instantiate drone only after texts selected, above
         if (strategy === drone) {
@@ -242,10 +259,11 @@ class Poetifier {
             sentences = texts[0].sentences()
             // sentences = util.pick(corpora.filter('sentence')).sentences();
           }
-          strategy = () => new Drone({
-            util: util,
-            sentences: sentences
-          }).generate()
+          strategy = () =>
+            new Drone({
+              util: util,
+              sentences: sentences
+            }).generate()
         }
         // TODO: include strategy name in output
         // TODO: include EVERY OPTION
@@ -265,7 +283,10 @@ class Poetifier {
         // make this conditional, geez
         if (config.transform) poem = transformer(poem)
         // do not clean if we're processing from one of the ascii-art files
-        if (texts.filter(t => t.name.match(/ascii|emoticon/i) !== null).length === 0) {
+        if (
+          texts.filter((t) => t.name.match(/ascii|emoticon/i) !== null)
+            .length === 0
+        ) {
           poem.text = textutils.cleaner(poem.text)
         }
         poem.seed = util.seed

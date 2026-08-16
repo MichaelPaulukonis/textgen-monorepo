@@ -19,7 +19,7 @@ describe(`poetifier`, () => {
 
     it(`throws an error if config not supplied as parameter`, () => {
       expect(() => {
-        (() => new Poetifier())()
+        ;(() => new Poetifier())()
       }).to.throw(Error)
     })
 
@@ -80,7 +80,9 @@ describe(`poetifier`, () => {
       it(`and contain strings (or nothing)`, () => {
         // if poem.poem has elements, they are all strings
         // OR it does not have elements
-        expect(poem.lines.filter(e => typeof e === `string`)).to.have.length(poem.lines.length)
+        expect(poem.lines.filter((e) => typeof e === `string`)).to.have.length(
+          poem.lines.length
+        )
       })
     })
 

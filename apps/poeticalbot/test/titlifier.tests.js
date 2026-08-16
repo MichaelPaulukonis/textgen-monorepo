@@ -2,7 +2,7 @@ let expect = require(`chai`).expect
 let util = new (require(`../src/lib/util.js`))()
 let Titlifier = require(`../src/lib/titlifier`).Titlifier
 let titlifierTypes = require(`../src/lib/titlifier`).types
-let titlifier = new (require(`../src/lib/titlifier`)).Titlifier({ util: util })
+let titlifier = new (require(`../src/lib/titlifier`).Titlifier)({ util: util })
 
 describe(`titlefier tests`, function () {
   describe(`API`, function () {
@@ -20,7 +20,7 @@ describe(`titlefier tests`, function () {
 
     it(`should throw a TypeError if not provided with a util`, function () {
       expect(function () {
-        (() => new Titlifier())()
+        ;(() => new Titlifier())()
       }).to.throw(Error)
     })
 
@@ -44,7 +44,8 @@ describe(`titlefier tests`, function () {
   })
 
   describe(`generate title with explicit methods from all-punct blob`, function () {
-    let puncts = [`..............................................`,
+    let puncts = [
+      `..............................................`,
       `.........................................`,
       `...................................`,
       `..............................`,
@@ -52,29 +53,40 @@ describe(`titlefier tests`, function () {
       `....................`,
       `...............`,
       `..........`,
-      `.....`]
+      `.....`
+    ]
     let punctpoem = puncts.join(`\n`)
     let firstLine = puncts[0]
     let lastLine = puncts[puncts.length - 1]
 
     it(`should return the first line when indicated`, function () {
-      expect(titlifier.generate(punctpoem, titlifierTypes.LineFirst)).to.equal(firstLine)
+      expect(titlifier.generate(punctpoem, titlifierTypes.LineFirst)).to.equal(
+        firstLine
+      )
     })
 
     it(`should return the last line when indicated`, function () {
-      expect(titlifier.generate(punctpoem, titlifierTypes.LineLast)).to.equal(lastLine)
+      expect(titlifier.generate(punctpoem, titlifierTypes.LineLast)).to.equal(
+        lastLine
+      )
     })
 
     it(`should return a random line when indicated`, function () {
-      expect(titlifier.generate(punctpoem, titlifierTypes.RandomLine)).to.have.length.above(lastLine.length - 1)
+      expect(
+        titlifier.generate(punctpoem, titlifierTypes.RandomLine)
+      ).to.have.length.above(lastLine.length - 1)
     })
 
     it(`should not fail when summary indicated`, function () {
-      expect(() => titlifier.generate(punctpoem, titlifierTypes.Summary)).to.not.throw(Error)
+      expect(() =>
+        titlifier.generate(punctpoem, titlifierTypes.Summary)
+      ).to.not.throw(Error)
     })
 
     it(`should not fail when summary indicated`, function () {
-      expect(titlifier.generate(punctpoem, titlifierTypes.Summary)).to.equal(`[UNTITLED]`)
+      expect(titlifier.generate(punctpoem, titlifierTypes.Summary)).to.equal(
+        `[UNTITLED]`
+      )
     })
   })
 })

@@ -43,7 +43,12 @@ const Runner = function (config) {
         attempts++
         // TODOL every time, it runs nlp() on the text
         // we probably do this several times until it works
-        matchObj = patternMatchLines({ lines: sents, method: config.method, matchPattern: config.matchPattern, nlpObj: n })
+        matchObj = patternMatchLines({
+          lines: sents,
+          method: config.method,
+          matchPattern: config.matchPattern,
+          nlpObj: n
+        })
         if (matchObj.sentences.length === 0 && config.matchPattern) {
           config.matchPattern = null
         }
@@ -54,9 +59,7 @@ const Runner = function (config) {
 
     case types.search:
     default:
-      const ngrams = nlp(sents.join('\n'))
-        .ngrams()
-        .data()
+      const ngrams = nlp(sents.join('\n')).ngrams().data()
 
       if (ngrams.length === 0) {
         selection = { lines: [], text: sents.join('\n') }
@@ -67,10 +70,15 @@ const Runner = function (config) {
       // so we can pick (randomly? or largest?) possibilities
       // with the below, we are ALWAYS picking from > 2, so, I guess that okay
       const twoOrMoreWords = ngrams.filter((d) => d.count > 1 && d.size > 1)
-      const search = (twoOrMoreWords.length === 0)
-        ? util.pick(ngrams)
-        : util.pick(twoOrMoreWords)
-      selection = linereduce.filter({ type: types.search, search: search.normal, text: sents })
+      const search =
+        twoOrMoreWords.length === 0
+          ? util.pick(ngrams)
+          : util.pick(twoOrMoreWords)
+      selection = linereduce.filter({
+        type: types.search,
+        search: search.normal,
+        text: sents
+      })
   }
 
   return {

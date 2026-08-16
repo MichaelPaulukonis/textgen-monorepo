@@ -48,10 +48,18 @@ var Rhymer = function (cfg) {
           // console.log(`word: ${word} isalphs: ${isalpha(word)} stopword: ${contains(stopwords, word)} `);
           if (isalpha(word) && !contains(stopwords, word)) {
             let ro = rhymes(word)
-            r = ro.length === 0 ? `` : util.pick(ro.filter(w => w.word.toLowerCase() !== word.toLowerCase() &&
-              w.word.indexOf(word) === -1)).word + ` `
+            r =
+              ro.length === 0
+                ? ``
+                : util.pick(
+                    ro.filter(
+                      (w) =>
+                        w.word.toLowerCase() !== word.toLowerCase() &&
+                        w.word.indexOf(word) === -1
+                    )
+                  ).word + ` `
             // clean it
-            r = (r === ``) ? ` ` : `-` + r.replace(/\([0-9]\)/g, ``)
+            r = r === `` ? ` ` : `-` + r.replace(/\([0-9]\)/g, ``)
           }
           newwords += word + r
         }

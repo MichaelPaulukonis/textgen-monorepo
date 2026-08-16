@@ -3,11 +3,15 @@
 module.exports = function (config) {
   // throw error if not provided with config
   // OR use a default implementation... ???
-  if (config === undefined || config.util === undefined || config.util.pick === undefined) {
+  if (
+    config === undefined ||
+    config.util === undefined ||
+    config.util.pick === undefined
+  ) {
     throw Error(`util.pick must be supplied as part of config`)
   }
 
-  var pick = (arr) => [config.util.pick(arr)]// original implementation always returned array
+  var pick = (arr) => [config.util.pick(arr)] // original implementation always returned array
   return {
     firsts: [],
     middles: [],

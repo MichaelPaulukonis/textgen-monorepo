@@ -30,7 +30,7 @@ const prepForPublish = (poem) => {
   delete data.text
   delete data.lines
 
-  const clean = lines.map(line => {
+  const clean = lines.map((line) => {
     const matches = line.match(leadingspacere)
     const nbsps = matches[0].replace(/ /g, '&nbsp;')
     return line.replace(matches[0], nbsps)
@@ -72,16 +72,22 @@ async function generateAndProcessPoem(options = {}) {
         try {
           // Use NPF format for posting
           const npfPost = prepForNPF(poem)
-          const response = await client.createPost(config.posting.blogName, npfPost)
+          const response = await client.createPost(
+            config.posting.blogName,
+            npfPost
+          )
 
           logger('Posted successfully with NPF format')
           logger('Post ID: ' + response.id)
-          logger('Poem metadata: ' + JSON.stringify({
-            seed: poem.seed,
-            source: poem.source,
-            template: poem.template,
-            method: poem.method
-          }))
+          logger(
+            'Poem metadata: ' +
+              JSON.stringify({
+                seed: poem.seed,
+                source: poem.source,
+                template: poem.template,
+                method: poem.method
+              })
+          )
 
           result.posted = true
           result.postId = response.id
@@ -98,7 +104,12 @@ async function generateAndProcessPoem(options = {}) {
 
       return result
     } else {
-      return { poem: null, posted: false, postId: null, error: 'No poem generated' }
+      return {
+        poem: null,
+        posted: false,
+        postId: null,
+        error: 'No poem generated'
+      }
     }
   } catch (error) {
     logger('Error: ' + error.message)
@@ -123,33 +134,35 @@ exports.handler = async (event, context) => {
 async function runCLI() {
   console.log('🎭 PoeticalBot - Poetry Generation')
   console.log('==================================')
-  
+
   try {
-    const result = await generateAndProcessPoem({ skipPosting: !config.posting.enabled })
-    
+    const result = await generateAndProcessPoem({
+      skipPosting: !config.posting.enabled
+    })
+
     if (result.error) {
       console.error('❌ Error:', result.error)
       process.exit(1)
     }
-    
+
     if (!result.poem) {
       console.log('❌ No poem generated')
       process.exit(1)
     }
-    
+
     // Display the poem
     console.log('\n📝 Generated Poem:')
     console.log('==================')
     console.log(`Title: ${result.poem.title}`)
     console.log(`\n${result.poem.text}`)
-    
+
     // Display metadata
     console.log('\n📊 Metadata:')
     console.log(`Seed: ${result.poem.seed}`)
     console.log(`Source: ${result.poem.source}`)
     if (result.poem.template) console.log(`Template: ${result.poem.template}`)
     if (result.poem.method) console.log(`Method: ${result.poem.method}`)
-    
+
     // Display posting status
     if (result.posted) {
       console.log(`\n✅ Posted to Tumblr (ID: ${result.postId})`)
@@ -158,7 +171,6 @@ async function runCLI() {
     } else {
       console.log('\n💡 Posting disabled (set POST_LIVE=true to enable)')
     }
-    
   } catch (error) {
     console.error('❌ Unexpected error:', error.message)
     process.exit(1)

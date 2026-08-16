@@ -24,7 +24,9 @@ let Drone = function (config) {
     for (let i = 0; i < stanzaCount; i++) {
       lines = lines.concat(util.pickCount(sentences, stanzaLines - 1))
       lines.push(repeat)
-      if (i < stanzaCount - 1) { lines.push(``) }
+      if (i < stanzaCount - 1) {
+        lines.push(``)
+      }
     }
     return lines
   }
@@ -65,9 +67,7 @@ let Drone = function (config) {
 
     let lines = method()
 
-    let poem = { lines: lines,
-      text: lines.join(`\n`)
-    }
+    let poem = { lines: lines, text: lines.join(`\n`) }
 
     return poem
   }

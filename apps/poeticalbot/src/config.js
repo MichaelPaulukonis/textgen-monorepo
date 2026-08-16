@@ -57,7 +57,9 @@ class Config {
 
       // Posting configuration
       posting: {
-        enabled: process.env.POST_LIVE && process.env.POST_LIVE.toLowerCase() === 'true',
+        enabled:
+          process.env.POST_LIVE &&
+          process.env.POST_LIVE.toLowerCase() === 'true',
         blogName: process.env.BLOG_NAME || 'poeticalbot.tumblr.com'
       },
 
@@ -72,7 +74,9 @@ class Config {
       // Environment and logging
       environment: this.environment,
       logging: {
-        level: process.env.LOG_LEVEL || (this.environment === 'lambda' ? 'info' : 'debug'),
+        level:
+          process.env.LOG_LEVEL ||
+          (this.environment === 'lambda' ? 'info' : 'debug'),
         destination: this.environment === 'lambda' ? 'cloudwatch' : 'console'
       }
     }
@@ -90,7 +94,7 @@ class Config {
       'tumblr.accessSecret'
     ]
 
-    const missing = required.filter(key => {
+    const missing = required.filter((key) => {
       const value = this.getNestedValue(this.config, key)
       return !value || value.trim() === ''
     })
@@ -107,7 +111,9 @@ class Config {
    * @returns {any} Value at path
    */
   getNestedValue(obj, path) {
-    return path.split('.').reduce((current, key) => current && current[key], obj)
+    return path
+      .split('.')
+      .reduce((current, key) => current && current[key], obj)
   }
 
   /**
