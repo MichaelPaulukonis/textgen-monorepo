@@ -36,9 +36,10 @@ cd apps/poeticalbot && npx mocha --timeout 50000 test/util.tests.js
 nx run poeticalbot:test:unit          # excludes tests matching /integration/i
 nx run poeticalbot:test:integration
 
-# Lint (StandardJS, not ESLint)
+# Lint/format (Prettier — check-only via `nx lint`; semi:false, singleQuote:true, matching the prior StandardJS style)
 nx lint poeticalbot
 nx lint listmania
+nx lint common-corpus
 nx run-many --target=lint --all
 
 # Run the bots locally (CLI, no posting by default patterns vary — check flags)
@@ -56,7 +57,7 @@ nx run poeticalbot:deploy
 nx run listmania:deploy
 ```
 
-All three projects have `project.json` (`apps/poeticalbot`, `apps/listmania`, `libs/common-corpus`). `poeticalbot`/`listmania` define build/test/lint/deploy/deploy:plan/cli targets that shell out via `nx:run-commands`. `common-corpus`'s `project.json` only adds `build` (no-op placeholder), `test`, `build-layer`, `lint` (via `@nx/eslint:lint`, despite the rest of the repo using StandardJS) — its other `package.json` scripts (`cover`, `build:layer:prepare`, `build:layer:zip`) are still separately inferred as Nx targets.
+All three projects have `project.json` (`apps/poeticalbot`, `apps/listmania`, `libs/common-corpus`). `poeticalbot`/`listmania`/`common-corpus` all define a `lint` target that shells out to `prettier --check` via `nx:run-commands` (repo-wide config in root `.prettierrc.json`/`.prettierignore`; `common-corpus`'s target passes `--ignore-path ../../.prettierignore` explicitly since Prettier resolves `.prettierignore` relative to cwd, not the repo root, and its `cwd` is `libs/common-corpus` — that's what keeps `corpus/` out of formatting). `poeticalbot`/`listmania` also define build/test/deploy/deploy:plan/cli targets the same way. `common-corpus`'s `project.json` only adds `build` (no-op placeholder), `test`, `build-layer`, `lint` — its other `package.json` scripts (`cover`, `build:layer:prepare`, `build:layer:zip`) are still separately inferred as Nx targets.
 
 ## Architecture
 

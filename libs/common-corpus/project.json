@@ -25,9 +25,10 @@
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint",
+      "executor": "nx:run-commands",
       "options": {
-        "lintFilePatterns": ["libs/common-corpus/**/*.js"]
+        "command": "prettier --check \"**/*.js\" --ignore-path ../../.prettierignore",
+        "cwd": "libs/common-corpus"
       }
     }
   }

@@ -8,7 +8,7 @@
     "cover": "npm run clean:cover && npm run cover:js",
     "clean:cover": "rm -rf ./docs/coverage",
     "cover:js": "nyc mocha --recursive ./test/*.tests.js",
-    "test": "standard --fix && npm run test:js",
+    "test": "prettier --write \"**/*.js\" --ignore-path ../../.prettierignore && npm run test:js",
     "test:js": "mocha --timeout 50000 ./test/*.tests.js",
     "update": "npx npm-check -u"
   },
@@ -49,17 +49,7 @@
     "mocha": "^8.2.1",
     "nyc": "^15.1.0",
     "pre-commit": "^1.2.2",
-    "simple-timer": "0.0.5",
-    "standard": "^17.0.0"
-  },
-  "standard": {
-    "globals": [
-      "describe",
-      "it",
-      "before",
-      "beforeEach",
-      "after"
-    ]
+    "simple-timer": "0.0.5"
   },
   "engines": {
     "node": "22.x"

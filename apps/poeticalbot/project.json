@@ -75,7 +75,7 @@
     "lint": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "standard",
+        "command": "prettier --check \"**/*.js\" --ignore-path ../../.prettierignore",
         "cwd": "apps/poeticalbot"
       }
     }

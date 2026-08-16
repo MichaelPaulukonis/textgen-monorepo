@@ -15,7 +15,7 @@ Created `apps/listmania/project.json` with the following targets:
 - **test:unit**: Run unit tests only
 - **deploy**: Deploy via Terraform (placeholder for future terraform configuration)
 - **cli**: Run the CLI interface
-- **lint**: Run StandardJS linter
+- **lint**: Run Prettier in check mode
 - **lambda:test**: Test the Lambda handler locally
 
 ### 2. Workspace Dependency Configuration

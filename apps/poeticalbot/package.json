@@ -12,7 +12,7 @@
     "cover:js": "nyc mocha --recursive ./test/*.tests.js",
     "coretest": "mocha test/poetifier.tests.js",
     "test": "npm run test:js",
-    "test:fix": "standard --fix && npm run test:js",
+    "test:fix": "prettier --write \"**/*.js\" --ignore-path ../../.prettierignore && npm run test:js",
     "test:js": "mocha --timeout 50000 ./test/*.tests.js",
     "test:integration": "mocha --timeout 60000 ./test/*integration*.tests.js",
     "test:unit": "mocha --timeout 30000 ./test/*.tests.js --invert --grep 'integration|Integration'",
@@ -57,16 +57,6 @@
     "mocha": "^6.1.4",
     "nyc": "^13.3.0",
     "pre-commit": "^1.2.2",
-    "rimraf": "^2.6.3",
-    "standard": "^12.0.1"
-  },
-  "standard": {
-    "globals": [
-      "describe",
-      "it",
-      "before",
-      "beforeEach",
-      "after"
-    ]
+    "rimraf": "^2.6.3"
   }
 }

@@ -1,0 +1,11 @@
+node_modules
+**/node_modules
+**/build-lambda/
+**/*.zip
+libs/common-corpus/corpus
+**/coverage
+.nx
+.specstory
+.beads
+.taskmaster
+pnpm-lock.yaml
