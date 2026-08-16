@@ -41,7 +41,10 @@ describe('PoeticalBot Lambda Deployment Integration', () => {
         '../../../scripts/generate-lambda-package-json.js'
       )
       const sourcePackagePath = path.join(__dirname, '../package.json')
-      const outputPath = path.join(__dirname, '../.lambda-package-json.test.json')
+      const outputPath = path.join(
+        __dirname,
+        '../.lambda-package-json.test.json'
+      )
 
       execSync(
         `node "${generatorPath}" "${sourcePackagePath}" "${outputPath}" index.js`
