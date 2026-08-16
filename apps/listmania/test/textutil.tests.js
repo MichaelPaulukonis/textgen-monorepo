@@ -24,19 +24,19 @@ describe('textutil', function () {
   })
 
   describe('splitwords', function () {
-    const splits = textutils.splitwords('Hey we\'re the monkeys. Aren\'t we?')
+    const splits = textutils.splitwords("Hey we're the monkeys. Aren't we?")
     it('should return an array (of 6 words)', function () {
       expect(splits).to.be.instanceOf(Array)
       expect(splits.length).to.equal(6)
     })
-    it('should not split contractions (we\'re, aren\'t)', function () {
-      expect(splits[1]).to.equal('we\'re')
-      expect(splits[4]).to.equal('Aren\'t')
+    it("should not split contractions (we're, aren't)", function () {
+      expect(splits[1]).to.equal("we're")
+      expect(splits[4]).to.equal("Aren't")
     })
   })
 
   describe('wordbag', function () {
-    const bag = textutils.wordbag('Hey we\'re the monkeys. Aren\'t we?')
+    const bag = textutils.wordbag("Hey we're the monkeys. Aren't we?")
 
     const keys = Object.keys(bag)
 
@@ -44,9 +44,11 @@ describe('textutil', function () {
       expect(bag).to.be.an('object')
     })
 
-    it('should ignore common stop words(we\'re, the, aren\'t, we)', function () {
-      const commonStops = ['we\'re', 'the', 'aren\'t', 'we']
-      expect(commonStops.filter(sw => keys.indexOf('_' + sw) > -1).length).to.equal(0)
+    it("should ignore common stop words(we're, the, aren't, we)", function () {
+      const commonStops = ["we're", 'the', "aren't", 'we']
+      expect(
+        commonStops.filter((sw) => keys.indexOf('_' + sw) > -1).length
+      ).to.equal(0)
     })
 
     // this fails for 2 reasons

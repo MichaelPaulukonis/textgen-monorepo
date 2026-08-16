@@ -1,4 +1,4 @@
-const linify = prefFn => (line, index) => {
+const linify = (prefFn) => (line, index) => {
   const revised = `<div class='item'>${prefFn(index)}${line}</div>`
 
   return revised
@@ -6,10 +6,10 @@ const linify = prefFn => (line, index) => {
 
 const prefixifiers = {
   number: (index) => `${index + 1}. `,
-  bullet: _ => '&bull; ',
-  dash: _ => '- ',
-  none: _ => '',
-  diamond: _ => '&loz; '
+  bullet: (_) => '&bull; ',
+  dash: (_) => '- ',
+  none: (_) => '',
+  diamond: (_) => '&loz; '
 }
 
 const prepForPublish = (list, pfxFn = prefixifiers.number) => {

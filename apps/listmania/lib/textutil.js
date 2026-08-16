@@ -13,9 +13,10 @@ const textutils = function () {
   const wordbag = function (text) {
     const wb = {}
 
-    const splits = (Object.prototype.toString.call(text) === '[object Array]')
-      ? text // if it's an array keep it
-      : splitwords(text) // otherwise split it
+    const splits =
+      Object.prototype.toString.call(text) === '[object Array]'
+        ? text // if it's an array keep it
+        : splitwords(text) // otherwise split it
 
     for (let i = 0, len = splits.length; i < len; i++) {
       const word = splits[i]
@@ -34,7 +35,8 @@ const textutils = function () {
   }
 
   const sortedArray = function (wordbag) {
-    const words = Object.keys(wordbag).map(k => wordbag[k])
+    const words = Object.keys(wordbag)
+      .map((k) => wordbag[k])
       .sort(function (a, b) {
         if (a.count < b.count) {
           return 1
@@ -76,11 +78,11 @@ const textutils = function () {
 
       const leftbrackets = line.match(/\[/g)
 
-      const lbCount = (leftbrackets ? leftbrackets.length : 0)
+      const lbCount = leftbrackets ? leftbrackets.length : 0
 
       const rightbrackets = line.match(/\]/g)
 
-      const rbCount = (rightbrackets ? rightbrackets.length : 0)
+      const rbCount = rightbrackets ? rightbrackets.length : 0
 
       if ((leftbrackets || rightbrackets) && lbCount !== rbCount) {
         line = line.replace(/[[\]]/g, '')
@@ -88,11 +90,11 @@ const textutils = function () {
 
       const leftparens = line.match(/\(/g)
 
-      const lpCount = (leftparens ? leftparens.length : 0)
+      const lpCount = leftparens ? leftparens.length : 0
 
       const rightparens = line.match(/\)/g)
 
-      const rpCount = (rightparens ? rightparens.length : 0)
+      const rpCount = rightparens ? rightparens.length : 0
 
       if ((leftparens || rightparens) && lpCount !== rpCount) {
         line = line.replace(/[()]/g, '')
@@ -113,13 +115,11 @@ const textutils = function () {
     const debreak = require('../lib/debreak.js')
     const nlp = require('compromise')
 
-    const t = debreak(text)
-      .replace(/\t/g, ' ')
-      .replace(/^ +/g, '')
+    const t = debreak(text).replace(/\t/g, ' ').replace(/^ +/g, '')
 
     const s = nlp(t).sentences().out('array')
 
-    const sentences = s.sentences.map(s => s.str.trim())
+    const sentences = s.sentences.map((s) => s.str.trim())
     return sentences
   }
 

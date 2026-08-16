@@ -21,12 +21,15 @@ util.log = logger
 const getText = function () {
   const Corpora = require('common-corpus')
   const corpora = new Corpora()
-  const source = config.corporaFilter ? corpora.filter(config.corporaFilter) : corpora.texts
+  const source = config.corporaFilter
+    ? corpora.filter(config.corporaFilter)
+    : corpora.texts
   const chars = 50000
   const textObj = util.pick(source)
   const text = textObj.text()
   const startPos = util.randomInRange(0, text.length - chars)
-  const blob = (text.length <= chars ? text : text.slice(startPos, startPos + chars))
+  const blob =
+    text.length <= chars ? text : text.slice(startPos, startPos + chars)
 
   // console.log(`text.length: ${text.length} startPos: ${startPos} blob-borders: ${startPos+chars}`);
 
@@ -59,14 +62,16 @@ const teller = function () {
 
     // TODO: uh.... separate out posting from the listifier
     if (config.postLive) {
-      client.createTextPost('leanstooneside',
+      client.createTextPost(
+        'leanstooneside',
         { title: list.metadata.title, body: list.printable },
         (err, _) => {
           if (err) {
             logger(JSON.stringify(err))
             logger(err)
           }
-        })
+        }
+      )
     } else {
       logger(JSON.stringify(list, null, 2))
     }
@@ -78,8 +83,14 @@ const teller = function () {
 const program = require('commander')
 program
   .version('0.0.3')
-  .option('-c, --corporaFilter [string]', 'filename substring filter (non-case sensitive)')
-  .option('-p, --patternMatch [string]', 'nlp-compromise matchPattern for list elements')
+  .option(
+    '-c, --corporaFilter [string]',
+    'filename substring filter (non-case sensitive)'
+  )
+  .option(
+    '-p, --patternMatch [string]',
+    'nlp-compromise matchPattern for list elements'
+  )
   .option('-m, --method [string]', 'method-type (See index.js)')
   .parse(process.argv)
 

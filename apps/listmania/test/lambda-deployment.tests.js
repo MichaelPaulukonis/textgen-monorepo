@@ -25,7 +25,10 @@ describe('Lambda Deployment Configuration', function () {
     })
 
     it('should have terraform.tfvars.example file', function () {
-      const exampleVarsPath = path.join(__dirname, '../terraform/terraform.tfvars.example')
+      const exampleVarsPath = path.join(
+        __dirname,
+        '../terraform/terraform.tfvars.example'
+      )
       expect(fs.existsSync(exampleVarsPath)).to.be.true()
     })
 
@@ -66,7 +69,9 @@ describe('Lambda Deployment Configuration', function () {
       const mainTfPath = path.join(__dirname, '../terraform/main.tf')
       const content = fs.readFileSync(mainTfPath, 'utf8')
 
-      expect(content).to.include('resource "aws_cloudwatch_event_rule" "listmania_schedule"')
+      expect(content).to.include(
+        'resource "aws_cloudwatch_event_rule" "listmania_schedule"'
+      )
       expect(content).to.include('schedule_expression')
     })
 
@@ -74,7 +79,9 @@ describe('Lambda Deployment Configuration', function () {
       const mainTfPath = path.join(__dirname, '../terraform/main.tf')
       const content = fs.readFileSync(mainTfPath, 'utf8')
 
-      expect(content).to.include('resource "aws_cloudwatch_event_target" "lambda_target"')
+      expect(content).to.include(
+        'resource "aws_cloudwatch_event_target" "lambda_target"'
+      )
       expect(content).to.include('rule')
       expect(content).to.include('arn')
     })
@@ -83,7 +90,9 @@ describe('Lambda Deployment Configuration', function () {
       const mainTfPath = path.join(__dirname, '../terraform/main.tf')
       const content = fs.readFileSync(mainTfPath, 'utf8')
 
-      expect(content).to.include('resource "aws_lambda_permission" "allow_eventbridge"')
+      expect(content).to.include(
+        'resource "aws_lambda_permission" "allow_eventbridge"'
+      )
       expect(content).to.include('action        = "lambda:InvokeFunction"')
       expect(content).to.include('principal     = "events.amazonaws.com"')
     })
@@ -101,7 +110,9 @@ describe('Lambda Deployment Configuration', function () {
       const mainTfPath = path.join(__dirname, '../terraform/main.tf')
       const content = fs.readFileSync(mainTfPath, 'utf8')
 
-      expect(content).to.include('resource "aws_iam_role_policy_attachment" "lambda_basic"')
+      expect(content).to.include(
+        'resource "aws_iam_role_policy_attachment" "lambda_basic"'
+      )
       expect(content).to.include('AWSLambdaBasicExecutionRole')
     })
 
@@ -109,7 +120,9 @@ describe('Lambda Deployment Configuration', function () {
       const mainTfPath = path.join(__dirname, '../terraform/main.tf')
       const content = fs.readFileSync(mainTfPath, 'utf8')
 
-      expect(content).to.include('resource "aws_cloudwatch_log_group" "listmania_logs"')
+      expect(content).to.include(
+        'resource "aws_cloudwatch_log_group" "listmania_logs"'
+      )
       expect(content).to.include('retention_in_days')
     })
 
@@ -117,7 +130,9 @@ describe('Lambda Deployment Configuration', function () {
       const mainTfPath = path.join(__dirname, '../terraform/main.tf')
       const content = fs.readFileSync(mainTfPath, 'utf8')
 
-      expect(content).to.include('data "aws_lambda_layer_version" "common_corpus_layer"')
+      expect(content).to.include(
+        'data "aws_lambda_layer_version" "common_corpus_layer"'
+      )
       expect(content).to.include('layer_name = "common-corpus-layer-dev"')
     })
   })
@@ -138,7 +153,7 @@ describe('Lambda Deployment Configuration', function () {
         'log_retention_days'
       ]
 
-      requiredVars.forEach(varName => {
+      requiredVars.forEach((varName) => {
         expect(content).to.include(`variable "${varName}"`)
       })
     })
@@ -154,7 +169,7 @@ describe('Lambda Deployment Configuration', function () {
         'TOKEN_SECRET'
       ]
 
-      sensitiveVars.forEach(varName => {
+      sensitiveVars.forEach((varName) => {
         const varBlock = content.substring(
           content.indexOf(`variable "${varName}"`),
           content.indexOf('}', content.indexOf(`variable "${varName}"`))
@@ -189,7 +204,7 @@ describe('Lambda Deployment Configuration', function () {
         'METHOD'
       ]
 
-      requiredEnvVars.forEach(envVar => {
+      requiredEnvVars.forEach((envVar) => {
         expect(content).to.include(envVar)
       })
     })
@@ -361,7 +376,7 @@ describe('Lambda Deployment Configuration', function () {
         'log_group_name'
       ]
 
-      expectedOutputs.forEach(output => {
+      expectedOutputs.forEach((output) => {
         expect(content).to.include(`output "${output}"`)
       })
     })

@@ -15,40 +15,88 @@ const Listmania = function () {
   const wordCleaner = function (word) {
     // single-apostrophes left for now (posessive and contractions)
     // need a better algorithm....
-    const clean = word.trim().replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$|[()_,"]|-+/g, '').replace(/\s+/g, ' ')
+    const clean = word
+      .trim()
+      .replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$|[()_,"]|-+/g, '')
+      .replace(/\s+/g, ' ')
     return clean.trim()
   }
 
   // TODO: put all of the corpora and data-pull code into a separate module
-  const interjections = () => corpora.getFile('words', 'interjections').interjections
+  const interjections = () =>
+    corpora.getFile('words', 'interjections').interjections
 
-  const stations = () => corpora.getFile('geography', 'london_underground_stations').stations.map(s => s.name.trim())
+  const stations = () =>
+    corpora
+      .getFile('geography', 'london_underground_stations')
+      .stations.map((s) => s.name.trim())
 
-  const disappearance = () => ['lost', 'stolen', 'misplaced', 'missing', 'stray', 'mislaid', 'gone', 'sold', 'pawned', 'poker game', 'exchanged', 'contract revoked', 'loaned out', 'traded', 'destroyed', 'confiscated', 'forfeited', 'hijacked', 'misappropriated', 'snatched', 'ripped off', 'swiped', 'abducted', 'filched', 'returned', 'retained', 'embezzled', 'wandered off', 'buried at sea', 'broken', 'taken by magpie']
+  const disappearance = () => [
+    'lost',
+    'stolen',
+    'misplaced',
+    'missing',
+    'stray',
+    'mislaid',
+    'gone',
+    'sold',
+    'pawned',
+    'poker game',
+    'exchanged',
+    'contract revoked',
+    'loaned out',
+    'traded',
+    'destroyed',
+    'confiscated',
+    'forfeited',
+    'hijacked',
+    'misappropriated',
+    'snatched',
+    'ripped off',
+    'swiped',
+    'abducted',
+    'filched',
+    'returned',
+    'retained',
+    'embezzled',
+    'wandered off',
+    'buried at sea',
+    'broken',
+    'taken by magpie'
+  ]
 
-  const wine = () => corpora.getFile('foods', 'wine_descriptions').wine_descriptions
+  const wine = () =>
+    corpora.getFile('foods', 'wine_descriptions').wine_descriptions
 
   // NOTE: skips all one-word questions
   const jeopardy = function () {
     const t = corpora.getFile('games', 'jeopardy_questions').questions
-    return t.filter(o => o.category.indexOf(' ') > 0).map(o => o.category)
+    return t.filter((o) => o.category.indexOf(' ') > 0).map((o) => o.category)
   }
 
   const jeopardyAnswers = function () {
     const t = corpora.getFile('games', 'jeopardy_questions').questions
-    return t.map(o => o.answer)
+    return t.map((o) => o.answer)
   }
 
   const tarot = function () {
-    const t = corpora.getFile('divination', 'tarot_interpretations').tarot_interpretations
-    const r = t.reduce((p, c) => p.concat(c.fortune_telling, c.meanings.light, c.meanings.shadow), [])
+    const t = corpora.getFile(
+      'divination',
+      'tarot_interpretations'
+    ).tarot_interpretations
+    const r = t.reduce(
+      (p, c) =>
+        p.concat(c.fortune_telling, c.meanings.light, c.meanings.shadow),
+      []
+    )
     return r
   }
 
   const adjectives = () => corpora.getFile('words', 'adjs').adjs
   const bodyparts = () => corpora.getFile('humans', 'bodyParts').bodyParts
   const celebrities = () => corpora.getFile('humans', 'celebrities').celebrities
-  const nsaCodenames = () => corpora.getFile('governments', 'nsa_projects').codenames
+  const nsaCodenames = () =>
+    corpora.getFile('governments', 'nsa_projects').codenames
   const wrestlingMoves = () => corpora.getFile('games', 'wrestling_moves').moves
   const proverbs = function () {
     const t = corpora.getFile('words', 'proverbs').proverbs
@@ -57,14 +105,15 @@ const Listmania = function () {
   }
 
   const diagnoses = function () {
-    const t = corpora.getFile('medicine', 'diagnoses').codes.map(o => o.desc)
+    const t = corpora.getFile('medicine', 'diagnoses').codes.map((o) => o.desc)
     return t
   }
 
   // this is the core "listifier"
   // it's not the best name, since it also builds up lists from component parts
   const buildList = function (config) {
-    let targetPos; let template
+    let targetPos
+    let template
 
     const text = config.text.text
 
@@ -73,7 +122,10 @@ const Listmania = function () {
         const n = nlp(text)
         template = tmpl
         return {
-          filtered: n.match(template).out('array').map(n => wordCleaner(textutil.cleaner(n))),
+          filtered: n
+            .match(template)
+            .out('array')
+            .map((n) => wordCleaner(textutil.cleaner(n))),
           descr: `match: '${template}'`
         }
       }
@@ -81,16 +133,28 @@ const Listmania = function () {
 
     const posStrategy = function () {
       const n = nlp(text)
-      targetPos = util.pick(['nouns', 'adjectives', 'adverbs', 'places', 'verbs', 'values', 'people'])
+      targetPos = util.pick([
+        'nouns',
+        'adjectives',
+        'adverbs',
+        'places',
+        'verbs',
+        'values',
+        'people'
+      ])
       return {
-        filtered: n[targetPos]().out('array').map(n => wordCleaner(textutil.cleaner(n))),
+        filtered: n[targetPos]()
+          .out('array')
+          .map((n) => wordCleaner(textutil.cleaner(n))),
         descr: `pos: ${targetPos}`
       }
     }
 
     // buncha voodoo code....
     const posStrategyAdj = function () {
-      const n = nlp(text); let filtered; let descr
+      const n = nlp(text)
+      let filtered
+      let descr
 
       targetPos = util.pick(['nouns', 'places', 'people'])
       filtered = util.pickCount(n[targetPos]().out('array'), 50)
@@ -106,12 +170,12 @@ const Listmania = function () {
         filtered = filtered.map(() => util.pickRemove(adjs) + ` ${word}`)
         descr = `adjectives + single ${targetPos}`
       } else {
-        filtered = filtered.map(w => adj + ' ' + w)
+        filtered = filtered.map((w) => adj + ' ' + w)
         descr = `single adjective + ${targetPos}`
       }
 
       return {
-        filtered: filtered.map(n => wordCleaner(textutil.cleaner(n))),
+        filtered: filtered.map((n) => wordCleaner(textutil.cleaner(n))),
         descr
       }
     }
@@ -122,12 +186,22 @@ const Listmania = function () {
       // TODO: alternate name list
       const parts = bodyparts()
       const people = celebrities()
-      const suffixList = util.pick([diagnoses(), interjections(), stations(), disappearance(), wine()])
-      const chancer = util.coinflip(0.3) ? () => { return true } : () => util.coinflip(0.3)
+      const suffixList = util.pick([
+        diagnoses(),
+        interjections(),
+        stations(),
+        disappearance(),
+        wine()
+      ])
+      const chancer = util.coinflip(0.3)
+        ? () => {
+            return true
+          }
+        : () => util.coinflip(0.3)
       const adjs = util.pick([adjectives(), wine()])
       const adjective = util.pick(adjs)
       const part = util.pick(parts)
-      const followup = () => chancer() ? ` (${util.pick(suffixList)})` : ''
+      const followup = () => (chancer() ? ` (${util.pick(suffixList)})` : '')
 
       const party = util.pick([
         () => util.pick(parts), // different part for each item
@@ -148,22 +222,80 @@ const Listmania = function () {
     }
 
     const matchPatternFactory = function () {
-      const tags = ['Acronym', 'Adjective', 'Adverb', 'Auxillary', 'Cardinal', 'City',
-        'ClauseEnd', 'Comparative', 'Condition', 'Conjunction', 'Contraction',
-        'Copula', 'Country', 'Currency', 'Date', 'Demonym', 'Determiner',
-        'Duration', 'Expression', 'FemaleName', 'FirstName', 'FuturePerfect',
-        'Gerund', 'Holiday', 'Infinitive', 'LastName', 'MaleName', 'Modal',
-        'Money', 'Month', 'Negative', 'NiceNumber', 'Noun', 'NounPhrase+', 'NumberRange',
-        'NumericValue', 'Ordinal', 'Organization', 'Participle', 'Particle',
-        'PastTense', 'PerfectTense', 'Person', 'Place', 'Pluperfect',
-        'Plural', 'Possessive', 'Preposition', 'PresentTense', 'Pronoun',
-        'QuestionWord', 'Quotation', 'RelativeDay', 'Singular', 'Superlative',
-        'Time', 'Unit', 'Value', 'Verb', 'VerbPhrase+', 'WeekDay', 'Year']
+      const tags = [
+        'Acronym',
+        'Adjective',
+        'Adverb',
+        'Auxillary',
+        'Cardinal',
+        'City',
+        'ClauseEnd',
+        'Comparative',
+        'Condition',
+        'Conjunction',
+        'Contraction',
+        'Copula',
+        'Country',
+        'Currency',
+        'Date',
+        'Demonym',
+        'Determiner',
+        'Duration',
+        'Expression',
+        'FemaleName',
+        'FirstName',
+        'FuturePerfect',
+        'Gerund',
+        'Holiday',
+        'Infinitive',
+        'LastName',
+        'MaleName',
+        'Modal',
+        'Money',
+        'Month',
+        'Negative',
+        'NiceNumber',
+        'Noun',
+        'NounPhrase+',
+        'NumberRange',
+        'NumericValue',
+        'Ordinal',
+        'Organization',
+        'Participle',
+        'Particle',
+        'PastTense',
+        'PerfectTense',
+        'Person',
+        'Place',
+        'Pluperfect',
+        'Plural',
+        'Possessive',
+        'Preposition',
+        'PresentTense',
+        'Pronoun',
+        'QuestionWord',
+        'Quotation',
+        'RelativeDay',
+        'Singular',
+        'Superlative',
+        'Time',
+        'Unit',
+        'Value',
+        'Verb',
+        'VerbPhrase+',
+        'WeekDay',
+        'Year'
+      ]
 
       let tag = util.pick(tags)
-      if (util.coinflip()) { tag = tag.indexOf('+') > 0 ? tag : tag + '+' }
-      let template = util.pick([`#${tag}`, `. #${tag} .`,
-        `. (#${util.pick(tags)}|#${util.pick(tags)})+ .`])
+      if (util.coinflip()) {
+        tag = tag.indexOf('+') > 0 ? tag : tag + '+'
+      }
+      let template = util.pick([
+        `#${tag}`,
+        `. #${tag} .`,
+        `. (#${util.pick(tags)}|#${util.pick(tags)})+ .`
+      ])
       if (util.coinflip(0.75)) {
         const max = util.randomInRange(4, 10)
         template = template.replace(/\./g, `{1,${max}}`)
@@ -172,11 +304,14 @@ const Listmania = function () {
     }
 
     // looking at compromise tags @ https://github.com/nlp-compromise/compromise/blob/5596d9286e5228278dfcd956d5b98cf9adc0912c/src/sentence/pos/parts_of_speech.js
-    const matchStrats = [matchStrategyFactory('#Adjective #Noun . (are|is) . #Adjective #Noun'),
+    const matchStrats = [
+      matchStrategyFactory('#Adjective #Noun . (are|is) . #Adjective #Noun'),
       matchStrategyFactory('#Noun * are #Noun+'),
       matchStrategyFactory('#Noun .? are #Noun+'),
       matchStrategyFactory('#Adjective #Noun'),
-      matchStrategyFactory('#Adjective+? #Noun .? (are|is) .? (#Adjective|#Noun)+'),
+      matchStrategyFactory(
+        '#Adjective+? #Noun .? (are|is) .? (#Adjective|#Noun)+'
+      ),
       matchStrategyFactory('#Adjective? #Noun+ of #Adjective? #Noun'),
       matchStrategyFactory('#Adverb and #Adverb'),
       matchStrategyFactory('#Adverb+ #Verb+'),
@@ -211,15 +346,17 @@ const Listmania = function () {
       // looks like EVERYTHING _should be_ in https://github.com/nlp-compromise/compromise/blob/master/src/tags/tree.js
     ]
 
-    const posStrats = [posStrategy,
+    const posStrats = [
       posStrategy,
       posStrategy,
       posStrategy,
       posStrategy,
       posStrategy,
-      posStrategy]
+      posStrategy,
+      posStrategy
+    ]
 
-    const posStratAdjs = [posStrategyAdj,
+    const posStratAdjs = [
       posStrategyAdj,
       posStrategyAdj,
       posStrategyAdj,
@@ -228,13 +365,13 @@ const Listmania = function () {
       posStrategyAdj,
       posStrategyAdj,
       posStrategyAdj,
-      posStrategyAdj]
+      posStrategyAdj,
+      posStrategyAdj
+    ]
 
-    const weirdStrats = [weirdStrategy,
-      weirdStrategy,
-      weirdStrategy]
+    const weirdStrats = [weirdStrategy, weirdStrategy, weirdStrategy]
 
-    const patternStrats = [matchPatternFactory(),
+    const patternStrats = [
       matchPatternFactory(),
       matchPatternFactory(),
       matchPatternFactory(),
@@ -243,9 +380,16 @@ const Listmania = function () {
       matchPatternFactory(),
       matchPatternFactory(),
       matchPatternFactory(),
-      matchPatternFactory()]
+      matchPatternFactory(),
+      matchPatternFactory()
+    ]
 
-    const strategies = matchStrats.concat(posStrats, posStratAdjs, weirdStrats, patternStrats)
+    const strategies = matchStrats.concat(
+      posStrats,
+      posStratAdjs,
+      weirdStrats,
+      patternStrats
+    )
 
     // TODO: if type of strategy passed in, use it
     // if type is matchPattern and a pattern is passed in, use them
@@ -254,7 +398,13 @@ const Listmania = function () {
     if (config.method) {
       const FuzzyMatching = require('fuzzy-matching')
 
-      const buildMethods = ['matchStrats', 'posStrats', 'posStratAdjs', 'weirdStrats', 'patternStrats']
+      const buildMethods = [
+        'matchStrats',
+        'posStrats',
+        'posStratAdjs',
+        'weirdStrats',
+        'patternStrats'
+      ]
 
       // TODO: can this work if the above are the functions themselves?
       const fmMethods = new FuzzyMatching(buildMethods)
@@ -285,9 +435,11 @@ const Listmania = function () {
       }
     }
 
-    const list = (config.matchPattern
-      ? matchStrategyFactory(config.matchPattern)
-      : util.pick(strategy || strategies))()
+    const list = (
+      config.matchPattern
+        ? matchStrategyFactory(config.matchPattern)
+        : util.pick(strategy || strategies)
+    )()
 
     // TODO: return everything explicitly, instead of using globals...
     // er.... we do, don't we?
@@ -298,7 +450,16 @@ const Listmania = function () {
   }
 
   const titlifier = function () {
-    const source = util.pick([jeopardyAnswers(), wrestlingMoves(), proverbs(), proverbs(), jeopardy(), tarot(), jeopardy(), tarot()])
+    const source = util.pick([
+      jeopardyAnswers(),
+      wrestlingMoves(),
+      proverbs(),
+      proverbs(),
+      jeopardy(),
+      tarot(),
+      jeopardy(),
+      tarot()
+    ])
 
     let title = util.pick(source)
 
@@ -363,7 +524,7 @@ const Listmania = function () {
 
     const wordbag = textutil.wordbag(subset)
 
-    const cleaned = Object.keys(wordbag).map(k => wordbag[k].word)
+    const cleaned = Object.keys(wordbag).map((k) => wordbag[k].word)
 
     const sorter = util.pick([caseInsensitiveSort, lengthSort])
 
@@ -373,9 +534,12 @@ const Listmania = function () {
 
     const listMax = util.random(util.pick([20, 20, 25, 25, 25, 50, 50, 100]))
 
-    sorted = util.coinflip() ? sorted : sorted.map(w => w.toUpperCase())
+    sorted = util.coinflip() ? sorted : sorted.map((w) => w.toUpperCase())
 
-    sorted = util.pickCount(sorted, (listMax > sorted.length ? sorted.length : listMax))
+    sorted = util.pickCount(
+      sorted,
+      listMax > sorted.length ? sorted.length : listMax
+    )
 
     return {
       // TODO: sort options

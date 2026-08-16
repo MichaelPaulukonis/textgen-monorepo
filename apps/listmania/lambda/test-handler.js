@@ -12,7 +12,8 @@ const createMockContext = () => ({
   awsRequestId: 'test-request-' + Date.now(),
   functionName: 'listmania-test',
   functionVersion: '1',
-  invokedFunctionArn: 'arn:aws:lambda:us-east-1:123456789012:function:listmania-test',
+  invokedFunctionArn:
+    'arn:aws:lambda:us-east-1:123456789012:function:listmania-test',
   memoryLimitInMB: '512',
   getRemainingTimeInMillis: () => 30000
 })
@@ -57,7 +58,7 @@ const testScenarios = {
 }
 
 // Run a single test
-async function runTest (scenario) {
+async function runTest(scenario) {
   console.log('\n' + '='.repeat(80))
   console.log(`TEST: ${scenario.name}`)
   console.log('='.repeat(80))
@@ -95,7 +96,7 @@ async function runTest (scenario) {
 }
 
 // Run all tests
-async function runAllTests () {
+async function runAllTests() {
   console.log('\n' + '█'.repeat(80))
   console.log('LISTMANIA LAMBDA HANDLER TEST SUITE')
   console.log('█'.repeat(80))
@@ -107,7 +108,7 @@ async function runAllTests () {
     results.push({ name: scenario.name, ...result })
 
     // Wait a bit between tests
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
   }
 
   // Summary
@@ -115,12 +116,12 @@ async function runAllTests () {
   console.log('TEST SUMMARY')
   console.log('█'.repeat(80))
 
-  results.forEach(result => {
+  results.forEach((result) => {
     const status = result.success ? '✅ PASS' : '❌ FAIL'
     console.log(`${status} - ${result.name} (${result.duration}ms)`)
   })
 
-  const passCount = results.filter(r => r.success).length
+  const passCount = results.filter((r) => r.success).length
   const totalCount = results.length
   console.log(`\nTotal: ${passCount}/${totalCount} tests passed`)
   console.log('█'.repeat(80) + '\n')
@@ -132,7 +133,7 @@ const testName = process.argv[2]
 if (testName && testScenarios[testName]) {
   runTest(testScenarios[testName])
     .then(() => process.exit(0))
-    .catch(err => {
+    .catch((err) => {
       console.error('Test failed:', err)
       process.exit(1)
     })
@@ -143,7 +144,7 @@ if (testName && testScenarios[testName]) {
 } else {
   runAllTests()
     .then(() => process.exit(0))
-    .catch(err => {
+    .catch((err) => {
       console.error('Test suite failed:', err)
       process.exit(1)
     })

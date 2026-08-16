@@ -1,8 +1,8 @@
-'use strict';
+'use strict'
 
 // execute with `mocha test.js`
 
-(function () {
+;(function () {
   const chai = require('chai')
 
   const expect = chai.expect
@@ -68,4 +68,4 @@
       // TODO: okay, now actually test the methods!
     })
   })
-}())
+})()

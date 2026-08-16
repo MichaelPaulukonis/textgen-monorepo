@@ -6,7 +6,7 @@
 const config = require('../config.js')
 
 class LambdaHandler {
-  constructor () {
+  constructor() {
     this.config = config
     this.listifier = new (require('../lib/listify'))()
     this.util = require('../lib/util.js')({ statusVerbosity: 0 })
@@ -25,7 +25,7 @@ class LambdaHandler {
    * @param {object} context - Lambda context object
    * @returns {object} Lambda response
    */
-  async handle (event, context) {
+  async handle(event, context) {
     // Log request information
     this.logRequest(event, context)
 
@@ -34,7 +34,11 @@ class LambdaHandler {
       if (event.source === 'aws.events') {
         // EventBridge scheduled event
         return await this.processScheduledEvent(event, context)
-      } else if (event.Records && event.Records[0] && event.Records[0].eventSource === 'aws:sqs') {
+      } else if (
+        event.Records &&
+        event.Records[0] &&
+        event.Records[0].eventSource === 'aws:sqs'
+      ) {
         // SQS message event (future service separation)
         return await this.processSQSEvent(event, context)
       } else {
@@ -60,7 +64,7 @@ class LambdaHandler {
    * @param {object} context - Lambda context
    * @returns {object} Response
    */
-  async processScheduledEvent (event, context) {
+  async processScheduledEvent(event, context) {
     this.log('Processing scheduled event for list generation and posting')
 
     const result = await this.generateAndPostList()
@@ -80,7 +84,9 @@ class LambdaHandler {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: result.posted ? 'List generated and posted successfully' : 'List generated (posting disabled)',
+        message: result.posted
+          ? 'List generated and posted successfully'
+          : 'List generated (posting disabled)',
         postId: result.postId,
         listTitle: result.list?.metadata?.title,
         listLength: result.list?.list?.length,
@@ -95,7 +101,7 @@ class LambdaHandler {
    * @param {object} context - Lambda context
    * @returns {object} Response
    */
-  async processSQSEvent (event, context) {
+  async processSQSEvent(event, context) {
     this.log('Processing SQS event (future service separation)')
 
     const results = []
@@ -111,8 +117,14 @@ class LambdaHandler {
           const result = await this.processPostingRequest(message)
           results.push({ messageId: record.messageId, result })
         } else {
-          this.logError('Unknown SQS message type', new Error(`Unknown type: ${message.type}`))
-          results.push({ messageId: record.messageId, error: 'Unknown message type' })
+          this.logError(
+            'Unknown SQS message type',
+            new Error(`Unknown type: ${message.type}`)
+          )
+          results.push({
+            messageId: record.messageId,
+            error: 'Unknown message type'
+          })
         }
       } catch (error) {
         this.logError('SQS message processing error', error)
@@ -136,7 +148,7 @@ class LambdaHandler {
    * @param {object} context - Lambda context
    * @returns {object} Response
    */
-  async processDirectInvocation (event, context) {
+  async processDirectInvocation(event, context) {
     this.log('Processing direct invocation')
 
     // Parse CLI-style options from event
@@ -170,7 +182,9 @@ class LambdaHandler {
       return {
         statusCode: result.error ? 500 : 200,
         body: JSON.stringify({
-          message: result.posted ? 'List generated and posted' : 'List generated (posting disabled)',
+          message: result.posted
+            ? 'List generated and posted'
+            : 'List generated (posting disabled)',
           list: result.list,
           posted: result.posted,
           postId: result.postId,
@@ -187,7 +201,7 @@ class LambdaHandler {
    * @param {object} event - Lambda event
    * @returns {object} Parsed options
    */
-  parseEventOptions (event) {
+  parseEventOptions(event) {
     const options = {}
 
     // Map event parameters to CLI options
@@ -195,9 +209,17 @@ class LambdaHandler {
       options.corporaFilter = event.corporaFilter || event.corpora_filter
     }
 
-    if (event.matchPattern || event.match_pattern || event.patternMatch || event.pattern_match) {
-      options.matchPattern = event.matchPattern || event.match_pattern ||
-                            event.patternMatch || event.pattern_match
+    if (
+      event.matchPattern ||
+      event.match_pattern ||
+      event.patternMatch ||
+      event.pattern_match
+    ) {
+      options.matchPattern =
+        event.matchPattern ||
+        event.match_pattern ||
+        event.patternMatch ||
+        event.pattern_match
     }
 
     if (event.method) {
@@ -212,7 +234,7 @@ class LambdaHandler {
    * @param {object} message - Generation request message
    * @returns {object} Generation result
    */
-  async processGenerationRequest (message) {
+  async processGenerationRequest(message) {
     this.log('Processing generation request')
     return await this.generateList(message.options || {})
   }
@@ -222,7 +244,7 @@ class LambdaHandler {
    * @param {object} message - Posting request message
    * @returns {object} Posting result
    */
-  async processPostingRequest (message) {
+  async processPostingRequest(message) {
     this.log('Processing posting request')
     return await this.postList(message.list)
   }
@@ -232,7 +254,7 @@ class LambdaHandler {
    * @param {string} corporaFilter - Optional filter for corpus selection
    * @returns {object} Text object with text and source
    */
-  getText (corporaFilter) {
+  getText(corporaFilter) {
     const Corpora = require('common-corpus')
     const corpora = new Corpora()
     const source = corporaFilter ? corpora.filter(corporaFilter) : corpora.texts
@@ -240,7 +262,8 @@ class LambdaHandler {
     const textObj = this.util.pick(source)
     const text = textObj.text()
     const startPos = this.util.randomInRange(0, text.length - chars)
-    const blob = (text.length <= chars ? text : text.slice(startPos, startPos + chars))
+    const blob =
+      text.length <= chars ? text : text.slice(startPos, startPos + chars)
 
     return {
       text: blob,
@@ -253,7 +276,7 @@ class LambdaHandler {
    * @param {object} options - Generation options
    * @returns {object} Generation result
    */
-  async generateList (options = {}) {
+  async generateList(options = {}) {
     try {
       // Apply options to config
       const corporaFilter = options.corporaFilter || this.config.corporaFilter
@@ -282,7 +305,9 @@ class LambdaHandler {
         const pfx = this.util.pick(Object.keys(prefixifiers))
         list.printable = prepForPublish(list, prefixifiers[pfx])
 
-        this.log(`Generated list: "${list.metadata.title}" (${list.list.length} items)`)
+        this.log(
+          `Generated list: "${list.metadata.title}" (${list.list.length} items)`
+        )
         this.logListMetadata(list)
 
         return { list, error: null }
@@ -302,7 +327,7 @@ class LambdaHandler {
    * @param {object} list - List to post
    * @returns {object} Posting result
    */
-  async postList (list) {
+  async postList(list) {
     try {
       if (!list || !list.printable || !list.metadata || !list.metadata.title) {
         return {
@@ -313,7 +338,8 @@ class LambdaHandler {
       }
 
       return new Promise((resolve) => {
-        this.client.createTextPost('leanstooneside',
+        this.client.createTextPost(
+          'leanstooneside',
           {
             title: list.metadata.title,
             body: list.printable
@@ -352,7 +378,7 @@ class LambdaHandler {
    * @param {object} options - Generation options
    * @returns {object} Combined result
    */
-  async generateAndPostList (options = {}) {
+  async generateAndPostList(options = {}) {
     const generationResult = await this.generateList(options)
 
     if (generationResult.error || !generationResult.list) {
@@ -388,7 +414,7 @@ class LambdaHandler {
    * @param {object} event - Lambda event
    * @param {object} context - Lambda context
    */
-  logRequest (event, context) {
+  logRequest(event, context) {
     this.log(`Lambda invocation - RequestId: ${context.awsRequestId}`)
     this.log(`Function: ${context.functionName} v${context.functionVersion}`)
     this.log(`Event source: ${event.source || 'direct'}`)
@@ -398,7 +424,7 @@ class LambdaHandler {
    * Log list metadata
    * @param {object} list - List object
    */
-  logListMetadata (list) {
+  logListMetadata(list) {
     const metadata = {
       source: list.metadata.source,
       strategy: list.metadata.strategy,
@@ -413,7 +439,7 @@ class LambdaHandler {
    * @param {string} message - Log message
    * @param {any} data - Optional data to log
    */
-  log (message, data = null) {
+  log(message, data = null) {
     if (data) {
       console.log(`[Listmania] ${message}`, data)
     } else {
@@ -426,7 +452,7 @@ class LambdaHandler {
    * @param {string} message - Error message
    * @param {Error} error - Error object
    */
-  logError (message, error) {
+  logError(message, error) {
     console.error(`[Listmania ERROR] ${message}:`, error.message || error)
     if (error.stack) {
       console.error('Stack trace:', error.stack)

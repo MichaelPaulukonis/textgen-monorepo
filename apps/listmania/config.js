@@ -7,7 +7,7 @@ const config = {
   accessToken: process.env.TOKEN,
   accessSecret: process.env.TOKEN_SECRET,
 
-  postLive: ((process.env.POST_LIVE || '').toLowerCase() === 'true')
+  postLive: (process.env.POST_LIVE || '').toLowerCase() === 'true'
 }
 
 module.exports = config

@@ -59,7 +59,9 @@ describe('listifier', function () {
       it('and contain strings (or nothing)', function () {
         // if list.list has elements, they are all strings
         // OR it does not have elements
-        expect(list.list.filter(e => typeof e === 'string')).to.have.length(list.list.length)
+        expect(list.list.filter((e) => typeof e === 'string')).to.have.length(
+          list.list.length
+        )
       })
     })
     describe('that has metadata', function () {

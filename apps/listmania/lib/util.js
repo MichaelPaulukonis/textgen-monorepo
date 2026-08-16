@@ -32,7 +32,9 @@ const Util = function (options) {
     let count = 0
     for (const prop in obj) {
       if (prop !== 'id') {
-        if (math.random() < 1 / ++count) { result = obj[prop] }
+        if (math.random() < 1 / ++count) {
+          result = obj[prop]
+        }
       }
     }
     return result
@@ -44,7 +46,7 @@ const Util = function (options) {
   this.pick = pick
 
   this.random = function (max) {
-    return (max !== undefined ? randomInRange(0, max) : math.random())
+    return max !== undefined ? randomInRange(0, max) : math.random()
   }
 
   const randomInRange = function (min, max) {
@@ -54,8 +56,10 @@ const Util = function (options) {
   this.randomInRange = randomInRange
 
   this.coinflip = function (chance) {
-    if (!chance) { chance = 0.5 }
-    return (math.floatBetween(0, 1) < chance)
+    if (!chance) {
+      chance = 0.5
+    }
+    return math.floatBetween(0, 1) < chance
   }
 
   // return random element
@@ -70,10 +74,13 @@ const Util = function (options) {
   // clone incoming so we can destructively remove
   // (to guarantee unique selections)
   this.pickCount = function (arr, count) {
-    const poparr = []; let clone = arr.slice()
+    const poparr = []
+    let clone = arr.slice()
     for (let i = 0; i < count; i++) {
       poparr.push(this.pickRemove(clone))
-      if (clone.length === 0) { clone = arr.slice() }
+      if (clone.length === 0) {
+        clone = arr.slice()
+      }
     }
     return poparr
   }

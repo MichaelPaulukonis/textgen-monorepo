@@ -16,8 +16,8 @@ const altmethod = function (text) {
       curline = []
     } else {
       // drop ending hyphen (NOTE: false loss 5% of time, [citation])
-      const endsWithHyphen = (line.slice(line.length - 1) === '-')
-      curline.push((endsWithHyphen ? line.slice(0, line.length - 1) : line + ' '))
+      const endsWithHyphen = line.slice(line.length - 1) === '-'
+      curline.push(endsWithHyphen ? line.slice(0, line.length - 1) : line + ' ')
       if (i === lineslength - 1) {
         newlines.push(curline.join('').trim())
       }
