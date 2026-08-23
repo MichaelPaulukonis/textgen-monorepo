@@ -85,7 +85,6 @@ node util.js --text "neuromancer"
 
 ### Project Information
 - [Project Structure](docs/PROJECT_STRUCTURE.md) - Complete project organization
-- [Repository Analysis](docs/REPOSITORY_ANALYSIS.md) - Comprehensive project overview
 - [Product Requirements](docs/requirements/PRD.md) - Project goals and requirements
 - [Changelog](CHANGELOG.md) - Version history
 

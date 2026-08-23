@@ -45,8 +45,7 @@ common-corpus/
 │   │   └── DEPLOYMENT_OPTIONS.md # Deployment options guide
 │   ├── requirements/            # Product requirements
 │   ├── corpus-guide.md          # Text collection guide
-│   ├── PROJECT_STRUCTURE.md     # This file
-│   └── REPOSITORY_ANALYSIS.md   # Project analysis
+│   └── PROJECT_STRUCTURE.md     # This file
 │
 ├── 📂 test/                     # Test suite
 │   └── corpora.provider.tests.js
