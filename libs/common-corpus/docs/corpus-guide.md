@@ -7,10 +7,10 @@ The Common Corpus library contains 100+ carefully curated texts spanning multipl
 ## Corpus Statistics
 
 - **Total Texts**: ~100+ individual documents
-- **Total Size**: ~75MB uncompressed, ~25MB compressed
+- **Total Size**: ~89MB
 - **Categories**: 9 major categories plus individual texts
 - **Languages**: Primarily English
-- **Formats**: Plain text (.txt), compressed archives (.zip), sentence arrays (.js)
+- **Formats**: Plain text (.txt), sentence arrays (.js)
 - **Encoding**: Standardized to UTF-8 (converted from various source encodings)
 
 ## Text Categories
@@ -352,7 +352,6 @@ function safeTextAccess(corpus, pattern) {
 ### Planned Improvements
 - **Metadata Addition**: Author, year, genre, word count
 - **Search Enhancement**: Full-text search capabilities
-- **Compression**: Reduce corpus size through better compression
 - **Streaming**: Support for processing large texts in chunks
 - **Database Integration**: SQLite for faster text discovery
 
