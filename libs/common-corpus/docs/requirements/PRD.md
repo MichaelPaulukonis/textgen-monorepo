@@ -106,7 +106,7 @@ So that I can study linguistic patterns in different domains.
 #### F1: Text Collection Management
 - **F1.1**: Maintain curated collection of 100+ texts
 - **F1.2**: Support multiple text categories (literature, cyberpunk, film scripts, etc.)
-- **F1.3**: Handle various file formats (txt, zip, compressed archives)
+- **F1.3**: ~~Handle various file formats (txt, zip, compressed archives)~~ Superseded: corpus ships as plain text only (see [Decided Against](../../README.md#decided-against))
 - **F1.4**: Automatic encoding detection and conversion
 
 #### F2: Text Access API
@@ -165,7 +165,7 @@ So that I can study linguistic patterns in different domains.
 
 ### 5.4 Security Requirements
 - **SEC1**: Input validation for all user-provided patterns
-- **SEC2**: Safe handling of zip file extraction (no zip bombs)
+- **SEC2**: ~~Safe handling of zip file extraction (no zip bombs)~~ N/A: no zip extraction occurs (corpus ships as plain text)
 - **SEC3**: Path traversal protection
 - **SEC4**: No execution of untrusted code from corpus files
 
@@ -249,7 +249,6 @@ So that I can study linguistic patterns in different domains.
 - **Node.js Runtime**: Version 14+ for modern JavaScript features
 - **File System**: Native fs module for file operations
 - **NLP Library**: Modern compromise library (migration from nlp_compromise)
-- **Compression**: Native or lightweight zip handling
 
 ### 9.2 Development Dependencies
 - **Testing**: Mocha/Chai or Jest for comprehensive testing
