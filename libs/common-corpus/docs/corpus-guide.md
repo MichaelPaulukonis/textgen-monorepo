@@ -8,7 +8,7 @@ The Common Corpus library contains 100+ carefully curated texts spanning multipl
 
 - **Total Texts**: ~100+ individual documents
 - **Total Size**: ~89MB
-- **Categories**: 9 major categories plus individual texts
+- **Categories**: 10 major categories plus individual texts
 - **Languages**: Primarily English
 - **Formats**: Plain text (.txt), sentence arrays (.js)
 - **Encoding**: Standardized to UTF-8 (converted from various source encodings)
@@ -183,6 +183,10 @@ Holiday-related texts and stories.
 - Cultural studies
 - Holiday-themed applications
 - Sentiment analysis of celebratory texts
+
+### Excluded Directories
+
+Any `corpus/` subdirectory with `###` in its name is skipped entirely by the scanner (see `index.js`'s directory filter) and never served through the library. `corpus/###gutencorpus/` is one such directory -- a raw, unprocessed Gutenberg text dump kept as staging material, not a browsable category.
 
 ## Individual Root-Level Texts
 
