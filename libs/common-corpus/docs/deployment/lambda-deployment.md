@@ -407,7 +407,7 @@ aws lambda get-layer-version \
     --query 'Content.Location' \
     --output text | xargs curl -o layer-check.zip
 
-unzip -l layer-check.zip | grep corpus-extracted
+unzip -l layer-check.zip | grep node_modules/common-corpus
 ```
 
 ### Debug Mode
