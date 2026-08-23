@@ -6,7 +6,7 @@ This document describes the current project structure after cleanup and organiza
 
 ```
 common-corpus/
-├── 📂 corpus/                    # Text collection (75MB)
+├── 📂 corpus/                    # Text collection (89MB)
 │   ├── literature/               # Literary works
 │   ├── cyberpunk/               # Science fiction
 │   ├── filmscripts/             # Movie screenplays
@@ -51,8 +51,7 @@ common-corpus/
 ├── 📂 test/                     # Test suite
 │   └── corpora.provider.tests.js
 │
-├── 📄 index.js                  # Original library entry point
-├── 📄 lambda-index.js           # Lambda-optimized version
+├── 📄 index.js                  # Library entry point (local + Lambda, unified)
 ├── 📄 util.js                   # CLI interface
 ├── 📄 package.json              # Project configuration
 ├── 📄 README.md                 # Main project documentation
@@ -66,8 +65,7 @@ common-corpus/
 
 ### **Core Library Files**
 
-- `index.js` - Original Heroku-optimized version
-- `lambda-index.js` - Lambda-optimized version (no zip extraction)
+- `index.js` - Unified entry point, used both as a local/CLI require and (via the Lambda layer) in production Lambda functions -- no separate Lambda-specific version
 - `util.js` - Command-line interface
 - `lib/` - Core text processing utilities
 
@@ -99,7 +97,6 @@ The following files/directories are generated during build/deployment and are ig
 
 - `common-corpus-layer.zip` - Built Lambda layer
 - `lambda-layer/` - Temporary build directory
-- `unzip-temp/` - Text extraction directory
 
 ### **Terraform Artifacts**
 
@@ -122,11 +119,8 @@ The following files/directories are generated during build/deployment and are ig
 ### **For Library Usage**
 
 ```javascript
-// Original version (Heroku-optimized)
+// Same entry point locally and in Lambda
 const Corpora = require("common-corpus");
-
-// Lambda-optimized version
-const Corpora = require("./lambda-index.js");
 ```
 
 ### **For CLI Usage**
