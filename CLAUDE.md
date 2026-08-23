@@ -65,7 +65,7 @@ All three projects have `project.json` (`apps/poeticalbot`, `apps/listmania`, `l
 
 Both `poeticalbot` and `listmania` run as either a local CLI process or an AWS Lambda function from the *same* `src/`/`lambda/` codebase, not separate builds — `build-lambda.sh` copies source into a temp dir, writes a Lambda-specific `package.json` (drops workspace deps, pins versions), installs production deps, and zips it into `terraform/<app>-lambda.zip`, which Terraform then deploys.
 
-`poeticalbot` in particular is mid-migration to a single `src/` source of truth (see `apps/poeticalbot/.kiro/specs/codebase-consolidation/design.md`). **`apps/poeticalbot/lambda/` currently contains a stale duplicate of `src/lib/`** — the build script packages from `src/`, so `lambda/` is legacy and edits there won't reach production. When fixing a bug, edit `src/`, and check whether `lambda/` needs the same fix mirrored (or is dead weight) rather than assuming it's live.
+`poeticalbot`'s consolidation to a single `src/` source of truth is complete: the old duplicate `lib/`, `lambda/`, and root `filter/` trees, plus the dead root `index.js`/`config.js`/`Procfile` (Heroku-era), were deleted in full. **`apps/poeticalbot/lambda/` no longer exists** — `src/` is the only copy. `build-lambda.sh` builds the deployable zip by copying `src/*` into a temp dir and regenerating `package.json` via `scripts/generate-lambda-package-json.js`, not by packaging a separate `lambda/` tree.
 
 ### common-corpus as a shared lib + Lambda layer
 
