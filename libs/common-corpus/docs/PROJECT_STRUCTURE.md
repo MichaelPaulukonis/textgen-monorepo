@@ -107,8 +107,7 @@ The following files/directories are generated during build/deployment and are ig
 - `terraform/terraform.tfstate*` - Terraform state files
 - `terraform/terraform.tfvars` - User configuration (contains secrets)
 - `terraform/tfplan` - Terraform execution plans
-- `terraform/layer-only/` - Generated deployment directory
-- `terraform/full-api/` - Generated deployment directory
+- `terraform/layer-only/` - Generated deployment directory (via deploy-layer-only.sh)
 
 ### **Standard Artifacts**
 
