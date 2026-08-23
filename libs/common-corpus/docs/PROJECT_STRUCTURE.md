@@ -23,9 +23,6 @@ common-corpus/
 │   ├── debreak.js               # Text paragraph reconstruction
 │   └── textutil.js              # Text analysis utilities
 │
-├── 📂 scripts/                  # Build and deployment scripts
-│   └── build-lambda-layer.sh    # Lambda layer builder
-│
 ├── 📂 terraform/                # Infrastructure as Code
 │   ├── main.tf                  # Full API infrastructure
 │   ├── variables.tf             # Configuration variables
@@ -73,7 +70,7 @@ common-corpus/
 
 ### **Infrastructure & Deployment**
 
-- `scripts/build-lambda-layer.sh` - Builds Lambda layer with pre-extracted texts
+- `package.json`'s `build:layer` script - Builds the Lambda layer (`build:layer:prepare` + `build:layer:zip`)
 - `terraform/` - Complete infrastructure as code for AWS deployment
 - `examples/lambda-function.js` - Example Lambda function using the layer
 
@@ -136,7 +133,7 @@ node util.js --text "neuromancer"
 
 ```bash
 # Build layer
-./scripts/build-lambda-layer.sh
+npm run build:layer
 
 # Deploy layer-only
 cd terraform/
@@ -158,7 +155,7 @@ terraform init && terraform apply
 
 ### **Build Process**
 
-1. Text changes → Run `./scripts/build-lambda-layer.sh`
+1. Text changes → Run `npm run build:layer`
 2. Code changes → Test with `npm test`
 3. Infrastructure changes → Plan with `terraform plan`
 

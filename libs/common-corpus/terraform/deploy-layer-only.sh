@@ -12,7 +12,7 @@ echo ""
 if [ ! -f "../common-corpus-layer.zip" ]; then
     echo "❌ Layer zip not found. Building layer first..."
     cd ..
-    ./scripts/build-lambda-layer.sh
+    npm run build:layer
     cd terraform
     echo "✅ Layer built successfully"
 fi

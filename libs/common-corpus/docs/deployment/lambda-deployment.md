@@ -7,15 +7,10 @@ This guide provides step-by-step instructions for deploying Common Corpus as AWS
 ### 1. Build the Lambda Layer
 
 ```bash
-# Make the build script executable
-chmod +x scripts/build-lambda-layer.sh
-
-# Build the layer
-./scripts/build-lambda-layer.sh
-
-# Or build and deploy in one step
-./scripts/build-lambda-layer.sh deploy
+npm run build:layer
 ```
+
+Terraform (step 2 below) handles publishing the built layer -- no separate deploy step needed here.
 
 ### 2. Deploy with Terraform
 
@@ -95,7 +90,7 @@ Your AWS user/role needs these permissions:
 
 ```bash
 # Build the layer
-./scripts/build-lambda-layer.sh
+npm run build:layer
 
 # Upload via AWS CLI
 aws lambda publish-layer-version \
@@ -107,14 +102,7 @@ aws lambda publish-layer-version \
 # Note the returned LayerVersionArn
 ```
 
-### Option 2: Automated Deployment
-
-```bash
-# Build and deploy in one step
-./scripts/build-lambda-layer.sh deploy
-```
-
-### Option 3: Terraform Infrastructure
+### Option 2: Terraform Infrastructure
 
 ```hcl
 # terraform/main.tf

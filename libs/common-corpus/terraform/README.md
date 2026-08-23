@@ -27,7 +27,7 @@ aws configure
 
 # Build the Lambda layer
 cd ..
-./scripts/build-lambda-layer.sh
+npm run build:layer
 cd terraform
 ```
 
@@ -272,10 +272,9 @@ For production deployments:
 ```bash
 # Check layer size
 ls -lh ../common-corpus-layer.zip
-
-# Reduce size by removing unnecessary files
-./scripts/build-lambda-layer.sh
 ```
+
+`npm run build:layer` doesn't prune anything -- if the layer is too large, trim `corpus/` content directly and rebuild.
 
 #### Function Timeout
 ```bash
