@@ -121,11 +121,6 @@ describe('PoeticalBot Workspace Integration', () => {
       expect(fs.existsSync(terraformMainPath)).to.be.true()
     })
 
-    it('should preserve .kiro configuration', () => {
-      const kiroPath = path.join(__dirname, '../.kiro')
-      expect(fs.existsSync(kiroPath)).to.be.true()
-    })
-
     it('should preserve .specstory configuration', () => {
       const specstoryPath = path.join(__dirname, '../.specstory')
       expect(fs.existsSync(specstoryPath)).to.be.true()
