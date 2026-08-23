@@ -107,6 +107,10 @@ node util.js --text "neuromancer"
 - **Gitenberg Integration**: Automated text retrieval
 
 
+## Contributing
+
+This package lives inside the `textgen-monorepo` workspace -- see the [root README's Contributing section](../../README.md#contributing) for the fork/branch/PR process.
+
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
