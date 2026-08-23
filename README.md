@@ -29,6 +29,7 @@ This monorepo houses a collection of applications and libraries focused on algor
   - [Building](#building)
   - [Deployment](#deployment)
 - [Features](#features)
+- [Documentation](#documentation)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -40,7 +41,7 @@ This monorepo is managed by [Nx](https://nx.dev). Here is an overview of the key
 /
 ├── apps/
 │   ├── poeticalbot/      # Algorithmic poetry generator (AWS Lambda)
-│   └── listmania/        # Generative list maker (Heroku)
+│   └── listmania/        # Generative list maker (AWS Lambda)
 ├── libs/
 │   └── common-corpus/    # Shared library of text corpora
 ├── tools/                # Shared tooling and scripts
@@ -50,7 +51,7 @@ This monorepo is managed by [Nx](https://nx.dev). Here is an overview of the key
 
 - **`apps/`**: Contains the individual applications.
   - `poeticalbot`: A sophisticated poetry generation bot with multiple algorithms.
-  - `listmania`: A bot that generates and posts lists.
+  - `listmania`: A bot that generates and posts lists, deployed to AWS Lambda.
 - **`libs/`**: Contains shared libraries used by the applications.
   - `common-corpus`: A library of text corpora for generation.
 - **`tools/`**: Shared scripts and tooling for the monorepo.
@@ -163,7 +164,25 @@ nx deploy listmania
 - **Text Transformations**: Apply stylistic modifications to generated poems, such as misspelling, sorting, and spacing adjustments.
 - **Shared Corpus**: A common library of text corpora provides the source material for generation.
 - **Monorepo Management**: `nx` and `pnpm` provide a robust framework for managing the monorepo.
-- **CI/CD**: The project is set up for CI/CD with GitHub Actions.
+
+## Documentation
+
+This README covers the monorepo as a whole. Each project keeps its own deeper docs -- start here, then follow the trail:
+
+- **Monorepo-wide**
+  - [Deployment Guide](docs/DEPLOYMENT.md) -- shared Lambda deployment architecture across apps
+  - [Deployment Standardization Summary](docs/deployment-standardization-summary.md) -- why deploys are standardized through Nx
+- **poeticalbot**
+  - [Documentation Index](apps/poeticalbot/docs/README.md) -- architecture, analysis, recommendations, Tumblr config, NPF migration
+- **listmania**
+  - [Monorepo Integration Notes](apps/listmania/MONOREPO_INTEGRATION.md)
+  - [Migration Analysis](apps/listmania/MIGRATION_ANALYSIS.md) -- the Heroku-to-Lambda move
+  - [Deployment](apps/listmania/DEPLOYMENT.md)
+  - [Lambda Implementation Notes](apps/listmania/lambda/IMPLEMENTATION.md)
+- **common-corpus**
+  - [Library README](libs/common-corpus/README.md) -- indexes its own `docs/` tree (API reference, architecture, corpus guide, deployment options, PRD)
+
+`CLAUDE.md` at the repo root is a separate, agent-facing reference (for Claude Code and similar tools) -- this section is the human entry point into the same territory.
 
 ## Contributing
 
