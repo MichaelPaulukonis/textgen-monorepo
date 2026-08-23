@@ -142,7 +142,6 @@ The library currently has minimal error handling. Common issues:
 - **File not found**: No explicit error thrown, may return undefined
 - **Encoding issues**: Some texts may have encoding problems
 - **Memory usage**: Large texts loaded entirely into memory
-- **Zip extraction**: Temporary files created in `unzip-temp/` directory
 
 ## Performance Considerations
 
