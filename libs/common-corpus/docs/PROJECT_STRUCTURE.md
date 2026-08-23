@@ -16,6 +16,7 @@ common-corpus/
 │   ├── sentences/               # Pre-processed sentences
 │   ├── spam/                    # Spam samples
 │   ├── western/                 # Western genre
+│   ├── holidays/                # Holiday-related texts
 │   └── [individual texts]       # Root-level texts
 │
 ├── 📂 lib/                      # Core utilities
@@ -48,15 +49,17 @@ common-corpus/
 │   └── PROJECT_STRUCTURE.md     # This file
 │
 ├── 📂 test/                     # Test suite
-│   └── corpora.provider.tests.js
+│   ├── corpora.provider.tests.js
+│   ├── corpus-loader.tests.js
+│   ├── util-cli.tests.js
+│   └── workspace-integration.tests.js
 │
 ├── 📄 index.js                  # Library entry point (local + Lambda, unified)
 ├── 📄 util.js                   # CLI interface
 ├── 📄 package.json              # Project configuration
+├── 📄 project.json              # Nx project configuration
 ├── 📄 README.md                 # Main project documentation
-├── 📄 CONTRIBUTING.md           # Contribution guidelines
 ├── 📄 CHANGELOG.md              # Version history
-├── 📄 SECURITY.md               # Security policy
 └── 📄 LICENSE                   # MIT License
 ```
 
@@ -84,7 +87,7 @@ common-corpus/
 ### **Configuration**
 
 - `package.json` - NPM package configuration
-- `.eslintrc` - Code linting rules
+- `project.json` - Nx project configuration (build/test/lint targets)
 - `.gitignore` - Git ignore patterns
 - `terraform/terraform.tfvars.example` - Infrastructure configuration template
 
