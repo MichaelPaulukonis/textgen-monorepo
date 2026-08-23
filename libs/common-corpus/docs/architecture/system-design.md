@@ -30,11 +30,10 @@ The `common-corpus` library is designed as a lightweight Node.js module that pro
                       │
 ┌─────────────────────▼───────────────────────────────────────┐
 │                File System Layer                            │
-│  ┌─────────────┐ ┌──────────────┐ ┌─────────────────────┐   │
-│  │   Corpus    │ │ Zip Handler  │ │  Encoding Convert   │   │
-│  │ Directory   │ │(node-zipkit) │ │   (iconv-lite)      │   │
-│  │   Scanner   │ │              │ │                     │   │
-│  └─────────────┘ └──────────────┘ └─────────────────────┘   │
+│  ┌───────────────────────┐ ┌─────────────────────────────┐  │
+│  │  Corpus Directory      │ │      Encoding Convert       │  │
+│  │      Scanner           │ │        (iconv-lite)         │  │
+│  └───────────────────────┘ └─────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -64,7 +63,7 @@ class Corpora {
   
   scanCorpus() {
     // Recursive file discovery
-    // Format detection (txt, zip, js)
+    // Format detection (txt, js)
     // Metadata extraction
   }
   
@@ -101,7 +100,7 @@ class Corpora {
 
 **Process**:
 1. Recursive traversal of `/corpus` directory
-2. File type detection (`.txt`, `.zip`, `.js`)
+2. File type detection (`.txt`, `.js`)
 3. Path normalization and cleaning
 4. Exclusion of system directories (marked with `###`)
 
@@ -111,11 +110,6 @@ class Corpora {
 - Encoding conversion (ISO8859-1 → UTF-8)
 - BOM removal
 - Debreak processing
-
-**Zip Files (`.zip`, `.7z`)**:
-- Automatic extraction to `unzip-temp/`
-- Cached extraction (don't re-extract existing files)
-- Path mapping from archive to filesystem
 
 **Sentence Files (`.js`)**:
 - Direct require() of JavaScript arrays
@@ -165,22 +159,11 @@ Sentence Array
 corpus/
 ├── [category]/          # Organized by genre/type
 │   ├── text1.txt       # Individual text files
-│   ├── text2.zip       # Compressed texts
 │   └── ...
 ├── sentences/          # Pre-processed sentences
 │   ├── dataset1.js     # JavaScript arrays
 │   └── ...
 └── individual_texts.txt # Root-level texts
-```
-
-### Temporary Storage
-
-```
-unzip-temp/             # Temporary extraction directory
-├── [category]/         # Mirrors corpus structure
-│   ├── extracted1.txt  # Extracted from zip files
-│   └── ...
-└── ...
 ```
 
 ## Memory Management
@@ -214,19 +197,11 @@ Peak Usage: Potentially 100MB+ with multiple large texts
 ## Security Considerations
 
 ### Current Vulnerabilities
-1. **Zip Bomb**: No size limits on zip extraction
-2. **Path Traversal**: No validation of zip entry paths
-3. **Regex DoS**: User-provided regex patterns not validated
-4. **File System Access**: No sandboxing of file operations
+1. **Regex DoS**: User-provided regex patterns not validated
+2. **File System Access**: No sandboxing of file operations
 
 ### Mitigation Strategies (Recommended)
 ```javascript
-// Path validation for zip extraction
-function validatePath(entryPath) {
-  const normalized = path.normalize(entryPath);
-  return !normalized.includes('..') && !path.isAbsolute(normalized);
-}
-
 // Regex timeout protection
 function safeRegex(pattern, timeout = 1000) {
   // Implementation with timeout mechanism
@@ -252,11 +227,9 @@ function safeRegex(pattern, timeout = 1000) {
 ### External Dependencies
 ```javascript
 {
-  "nlp_compromise": "6.5.3",    // NLP processing (deprecated)
+  "nlp_compromise": "6.5.3",    // NLP processing (deprecated, migration to compromise planned)
   "iconv-lite": "0.4.15",       // Character encoding
-  "node-zipkit": "0.1.2",       // Zip file handling
-  "mkdirp": "0.5.1",           // Directory creation
-  "rimraf": "2.6.1"            // Directory removal
+  "commander": "^7.0.0"         // CLI argument parsing
 }
 ```
 
