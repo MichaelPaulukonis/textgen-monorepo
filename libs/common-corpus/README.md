@@ -80,7 +80,7 @@ node util.js --text "neuromancer"
 
 ### Development
 - [Architecture Overview](docs/architecture/system-design.md) - System design
-- [Deployment Guide](docs/deployment/README.md) - Publishing and deployment
+- [Lambda Deployment Guide](docs/deployment/lambda-deployment.md) - Building and deploying the Lambda layer
 - [Deployment Options](docs/deployment/DEPLOYMENT_OPTIONS.md) - Layer vs Full API deployment
 
 ### Project Information
