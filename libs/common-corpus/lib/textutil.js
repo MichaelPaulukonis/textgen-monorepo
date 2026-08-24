@@ -111,11 +111,9 @@ var textutils = function () {
     }
 
     let debreak = require(`../lib/debreak.js`),
-      nlp = require(`nlp_compromise`),
-      t = debreak(text).replace(/\t/g, ` `).replace(/^ +/g, ``),
-      s = nlp.text(t),
-      sentences = s.sentences.map((s) => s.str.trim())
-    return sentences
+      nlp = require(`compromise`),
+      t = debreak(text).replace(/\t/g, ` `).replace(/^ +/g, ``)
+    return nlp(t).sentences().out(`array`)
   }
 
   return {
