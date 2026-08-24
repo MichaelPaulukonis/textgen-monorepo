@@ -43,7 +43,14 @@ nx lint common-corpus
 nx run-many --target=lint --all
 
 # Run the bots locally (CLI, no posting by default patterns vary — check flags)
-nx cli:sample poeticalbot     # queneau-buckets method, --no-post
+nx cli:sample poeticalbot     # --verbose, no --post. Doubles as the common-corpus
+                               # smoke test: the printed "Source:" metadata line
+                               # lists the corpus files actually pulled, proving the
+                               # corpus pipeline (common-corpus -> poeticalbot) is
+                               # intact end-to-end. NOTE: --method/--corpora-filter/
+                               # --seed/--transform CLI flags are currently no-ops
+                               # (see textgen-monorepo-cai) — method and corpus are
+                               # always randomized, not selectable yet.
 nx cli:help poeticalbot
 nx start listmania -- -m weird
 
