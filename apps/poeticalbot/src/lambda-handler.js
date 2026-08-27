@@ -216,23 +216,19 @@ class LambdaHandler {
       const generationConfig = { ...this.config }
 
       // Override config with options
+      // NOTE: Poetifier reads these top-level (config.method/seed/corporaFilter/transform),
+      // not nested under config.poetry — see textgen-monorepo-cai / textgen-monorepo-nwh.
       if (options.method) {
-        generationConfig.poetry = {
-          ...generationConfig.poetry,
-          method: options.method
-        }
+        generationConfig.method = options.method
       }
       if (options.seed) {
-        generationConfig.poetry = {
-          ...generationConfig.poetry,
-          seed: options.seed
-        }
+        generationConfig.seed = options.seed
       }
       if (options.corporaFilter) {
-        generationConfig.poetry = {
-          ...generationConfig.poetry,
-          corporaFilter: options.corporaFilter
-        }
+        generationConfig.corporaFilter = options.corporaFilter
+      }
+      if (options.transform !== undefined) {
+        generationConfig.transform = options.transform
       }
 
       const poetifier = new (require('./lib/poetifier.js'))({
