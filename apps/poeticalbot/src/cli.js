@@ -114,29 +114,19 @@ Environment Variables:
       const generationConfig = { ...this.config }
 
       // Override config with CLI options
+      // NOTE: Poetifier reads these top-level (config.method/seed/corporaFilter/transform),
+      // not nested under config.poetry — see textgen-monorepo-cai.
       if (options.method) {
-        generationConfig.poetry = {
-          ...generationConfig.poetry,
-          method: options.method
-        }
+        generationConfig.method = options.method
       }
       if (options.seed) {
-        generationConfig.poetry = {
-          ...generationConfig.poetry,
-          seed: options.seed
-        }
+        generationConfig.seed = options.seed
       }
       if (options.corporaFilter) {
-        generationConfig.poetry = {
-          ...generationConfig.poetry,
-          corporaFilter: options.corporaFilter
-        }
+        generationConfig.corporaFilter = options.corporaFilter
       }
       if (options.transform !== null) {
-        generationConfig.poetry = {
-          ...generationConfig.poetry,
-          transform: options.transform
-        }
+        generationConfig.transform = options.transform
       }
 
       // Generate poem

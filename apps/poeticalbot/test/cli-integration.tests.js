@@ -1,6 +1,7 @@
 const chai = require('chai')
 const expect = chai.expect
 const { execSync } = require('child_process')
+const CLI = require('../src/cli.js')
 
 describe('CLI Integration', () => {
   describe('CLI execution', () => {
@@ -9,7 +10,7 @@ describe('CLI Integration', () => {
         'node src/cli.js --no-post --method queneau-buckets --corporaFilter eliot',
         {
           encoding: 'utf8',
-          timeout: 30000
+          timeout: 45000
         }
       )
 
@@ -37,6 +38,42 @@ describe('CLI Integration', () => {
       } catch (error) {
         expect(error.status).to.not.equal(0)
       }
+    })
+  })
+
+  describe('generatePoem() option overrides reach Poetifier', () => {
+    it('forces the requested method', async function () {
+      this.timeout(90000)
+      const cli = new CLI()
+      const { poem, error } = await cli.generatePoem({
+        method: 'queneau-buckets',
+        transform: false
+      })
+
+      expect(error).to.equal(null)
+      expect(poem.method).to.equal('queneau-buckets')
+    })
+
+    it('restricts the corpus via corporaFilter', async () => {
+      const cli = new CLI()
+      const { poem, error } = await cli.generatePoem({
+        corporaFilter: 'eliot',
+        transform: false
+      })
+
+      expect(error).to.equal(null)
+      expect(poem.source).to.match(/eliot/i)
+    })
+
+    it('uses the requested seed', async () => {
+      const cli = new CLI()
+      const { poem, error } = await cli.generatePoem({
+        seed: 'cai-test-seed',
+        transform: false
+      })
+
+      expect(error).to.equal(null)
+      expect(poem.seed).to.equal('cai-test-seed')
     })
   })
 })

@@ -197,7 +197,6 @@ class Poetifier {
         let texts
         let drone = () => `drone`
         // redefined below, but needed for comparisons
-        let strategies = [queneaubuckets, jgnoetry, drone]
         if (config.file) {
           // TODO: if file does not exist.... do something else
           // end, I Guess.
@@ -210,22 +209,32 @@ class Poetifier {
         } else {
           texts = reduceCorpora(corpora.texts)
         }
+        let methodName
         if (config.method) {
           let method = fmMethods.get(config.method).value
           switch (method) {
             case `jgnoetry`:
               strategy = jgnoetry
+              methodName = `jgnoetry`
               break
             case `queneau-buckets`:
               strategy = queneaubuckets
+              methodName = `queneau-buckets`
               break
             case `drone`:
               strategy = drone
+              methodName = `drone`
               break
           }
         }
         if (!strategy) {
-          strategy = util.pick(strategies)
+          let picked = util.pick([
+            { name: `queneau-buckets`, fn: queneaubuckets },
+            { name: `jgnoetry`, fn: jgnoetry },
+            { name: `drone`, fn: drone }
+          ])
+          strategy = picked.fn
+          methodName = picked.name
         }
         let source = texts
         // TODO: THIS IS A HORRIBLE NAME
@@ -290,6 +299,7 @@ class Poetifier {
           poem.text = textutils.cleaner(poem.text)
         }
         poem.seed = util.seed
+        poem.method = methodName
         poem.source = texts.reduce((p, c) => p + ` ` + c.name, ``)
         return poem
       } catch (ex) {
