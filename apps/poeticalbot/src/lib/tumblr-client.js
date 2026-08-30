@@ -4,7 +4,7 @@
  */
 
 const { convertPoemToNPF } = require('./npf-formatter')
-const { postWithClient } = require('tumblr-poster')
+const { createClient, postWithClient } = require('tumblr-poster')
 
 class TumblrClient {
   constructor(credentials) {
@@ -23,15 +23,7 @@ class TumblrClient {
     }
 
     try {
-      const tumblr = require('tumblr.js')
-
-      this.client = tumblr.createClient({
-        consumer_key: this.credentials.consumerKey,
-        consumer_secret: this.credentials.consumerSecret,
-        token: this.credentials.accessToken,
-        token_secret: this.credentials.accessSecret
-      })
-
+      this.client = createClient(this.credentials)
       this.initialized = true
     } catch (error) {
       throw new Error(`Failed to initialize Tumblr client: ${error.message}`)
@@ -88,27 +80,37 @@ class TumblrClient {
    * @returns {Promise<object>} Posting result
    */
   async postPoem(poem, blogName) {
-    this.initialize()
+    try {
+      this.initialize()
 
-    const npfPost = convertPoemToNPF(poem)
-    const options = {}
-    if (npfPost.tags) {
-      options.tags = npfPost.tags
-    }
+      const npfPost = convertPoemToNPF(poem)
+      const options = {}
+      if (npfPost.tags) {
+        options.tags = npfPost.tags
+      }
 
-    const result = await postWithClient(
-      this.client,
-      blogName,
-      npfPost.content,
-      options
-    )
+      const result = await postWithClient(
+        this.client,
+        blogName,
+        npfPost.content,
+        options
+      )
 
-    return {
-      success: result.success,
-      postId: result.postId,
-      url: result.url,
-      npfPost: result.success ? npfPost : null,
-      error: result.error
+      return {
+        success: result.success,
+        postId: result.postId,
+        url: result.url,
+        npfPost: result.success ? npfPost : null,
+        error: result.error
+      }
+    } catch (error) {
+      return {
+        success: false,
+        postId: null,
+        url: null,
+        npfPost: null,
+        error: error.message
+      }
     }
   }
 

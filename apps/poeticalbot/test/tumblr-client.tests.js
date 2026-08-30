@@ -137,5 +137,25 @@ describe('Tumblr Client', () => {
       expect(result.npfPost).to.equal(null)
       expect(result.error).to.equal('Tumblr API down')
     })
+
+    it('postPoem resolves (does not reject) when convertPoemToNPF throws', async () => {
+      const client = new TumblrClient({
+        consumerKey: 'k',
+        consumerSecret: 's',
+        accessToken: 't',
+        accessSecret: 'ts'
+      })
+      client.client = {
+        createPost: async () => ({ id: 1 })
+      }
+      client.initialized = true
+
+      const result = await client.postPoem(null, 'testblog.tumblr.com')
+
+      expect(result.success).to.equal(false)
+      expect(result.postId).to.equal(null)
+      expect(result.npfPost).to.equal(null)
+      expect(result.error).to.be.a('string')
+    })
   })
 })
