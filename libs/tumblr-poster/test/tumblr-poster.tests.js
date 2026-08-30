@@ -38,4 +38,70 @@ describe('tumblr-poster', () => {
       expect(tumblrPoster.validateNPF(npfPost)).to.equal(false)
     })
   })
+
+  describe('postWithClient', () => {
+    const fakeClient = (impl) => ({
+      createPost: async (blogName, npfPost) => impl(blogName, npfPost)
+    })
+
+    it('returns success shape on a successful post', async () => {
+      const client = fakeClient(async () => ({ id: 123 }))
+      const result = await tumblrPoster.postWithClient(
+        client,
+        'testblog.tumblr.com',
+        [{ type: 'text', text: 'hi' }]
+      )
+      expect(result).to.deep.equal({
+        success: true,
+        postId: 123,
+        url: 'https://testblog.tumblr.com/post/123',
+        error: null
+      })
+    })
+
+    it('rejects invalid content without calling the client', async () => {
+      let called = false
+      const client = fakeClient(() => {
+        called = true
+        return { id: 1 }
+      })
+      const result = await tumblrPoster.postWithClient(client, 'testblog', [])
+      expect(result.success).to.equal(false)
+      expect(result.error).to.equal('Generated NPF structure is invalid')
+      expect(called).to.equal(false)
+    })
+
+    it('returns failure shape when the client throws', async () => {
+      const client = fakeClient(async () => {
+        throw new Error('Tumblr API down')
+      })
+      const result = await tumblrPoster.postWithClient(
+        client,
+        'testblog',
+        [{ type: 'text', text: 'hi' }]
+      )
+      expect(result).to.deep.equal({
+        success: false,
+        postId: null,
+        url: null,
+        error: 'Tumblr API down'
+      })
+    })
+
+    it('passes tags and title through to the client call', async () => {
+      let received
+      const client = fakeClient(async (blogName, npfPost) => {
+        received = npfPost
+        return { id: 1 }
+      })
+      await tumblrPoster.postWithClient(
+        client,
+        'testblog',
+        [{ type: 'text', text: 'hi' }],
+        { tags: ['poetry', 'generative'], title: 'A Title' }
+      )
+      expect(received.tags).to.deep.equal(['poetry', 'generative'])
+      expect(received.title).to.equal('A Title')
+    })
+  })
 })
