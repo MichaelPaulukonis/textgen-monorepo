@@ -133,6 +133,9 @@ importers:
       tagspewer:
         specifier: 0.3.1
         version: 0.3.1
+      tumblr-poster:
+        specifier: workspace:*
+        version: link:../../libs/tumblr-poster
       tumblr.js:
         specifier: ^5.0.0
         version: 5.0.1

@@ -46,6 +46,7 @@
     "rhymes": "^1.0.2",
     "simple-timer": "0.0.5",
     "tagspewer": "0.3.1",
+    "tumblr-poster": "workspace:*",
     "tumblr.js": "^5.0.0"
   },
   "engines": {
