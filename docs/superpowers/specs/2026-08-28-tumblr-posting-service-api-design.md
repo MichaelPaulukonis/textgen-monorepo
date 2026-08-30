@@ -1,112 +1,109 @@
-# Tumblr Posting Service — API Contract Design
+# Tumblr Posting — Shared Lib Design
 
 **Bead**: tg-1 (Set up Separation Architecture for Tumblr Posting Service) — first sub-project.
 
+**Revision note (2026-08-30)**: Original draft of this spec proposed a standalone
+network service (HTTP API, static-key auth, own deploy/monitoring/hosting). On
+review that's over-architected for the actual requirement — two (soon three)
+Lambda callers in one AWS account, one user, no need to post from outside AWS.
+Superseded below with a shared lib, following the same lib+Lambda-layer pattern
+`libs/common-corpus` already uses for both apps. See bead's decision log for
+the rejected service version if needed for reference.
+
 ## Scope
 
-tg-1 as filed bundles multiple independent subsystems: API design, tech/hosting
-choice, repo setup, data migration, monitoring strategy, load testing, security
-review. This spec covers **only the API contract** between poeticalbot/listmania
-and a future standalone Tumblr posting service. All other pieces are deferred to
-follow-up beads once this contract is settled.
+Extract Tumblr NPF-posting into `libs/tumblr-poster`, consumed by poeticalbot
+and listmania (and future callers) as a workspace dependency + Lambda layer —
+not a network service. This spec covers the lib's function contract and
+packaging. Data migration, and listmania's NPF adapter are deferred to
+follow-up beads.
 
-## Current state (as of 2026-08-28)
+## Current state (as of 2026-08-30)
 
-- **poeticalbot**: posts via NPF (Neue Post Format) through
-  `apps/poeticalbot/src/lib/tumblr-client.js`. `postPoem(poem, blogName)` takes
-  a caller-supplied `blogName` (not hardcoded) and returns
-  `{success, postId, error}` shaped by `client.createPost(blogName, npfPost)`.
-  poeticalbot's consolidation to `src/` is complete (see project CLAUDE.md);
-  there is no separate `lambda/` tree.
+- **poeticalbot**: posts via NPF through `apps/poeticalbot/src/lib/tumblr-client.js`.
+  `TumblrClient#postPoem(poem, blogName)` initializes `tumblr.js` from
+  caller-supplied credentials, converts the poem to NPF, calls
+  `client.createPost(blogName, npfPost)`, and returns
+  `{success, postId, url, npfPost, error}`.
 - **listmania**: still on the pre-consolidation `lambda/` + `lib/` split. Posts
-  via the legacy Tumblr API shape — `apps/listmania/lambda/index.js` calls
+  via the legacy Tumblr API — `apps/listmania/lambda/index.js` calls
   `this.client.createTextPost('leanstooneside', {title, body}, callback)`, a
   deprecated (non-NPF) endpoint, and resolves `{success, postId, error}`.
-
-These two callers currently speak different post formats to Tumblr directly.
-The new service unifies that.
+- **common-corpus** already demonstrates the target pattern: a plain
+  `libs/<name>` package consumed as `"common-corpus": "workspace:*"` for
+  CLI/local use, and separately packaged as a Lambda layer
+  (`npm run build:layer` → `layer/nodejs/node_modules/common-corpus/` →
+  zipped). Callers load it via `layerRequire('common-corpus')`
+  (`apps/poeticalbot/src/lib/layer-require.js`), which picks
+  `/opt/nodejs/node_modules/<name>` under Lambda and falls back to normal
+  `require` for CLI/test. `tumblr-poster` reuses this exact mechanism —
+  `layerRequire('tumblr-poster')` — no new loader needed.
 
 ## Decisions
 
-1. **Invocation style: synchronous request/response.** The calling app
-   generates content, calls the service, and gets the post result inline
-   (postId or error) in the same call. Matches the current
-   Lambda-cron-generates-then-posts flow in both apps — least behavior change.
-   Async enqueue/poll was considered and rejected: neither app needs the
-   service to own scheduling, and polling adds complexity with no current
-   requirement driving it.
-2. **Content format: NPF only.** The service accepts NPF content blocks
-   exclusively. Rejected accepting both NPF and legacy `{title, body}` —
-   Tumblr's legacy text-post API is deprecated, and dual-format support would
-   be permanent service-side complexity for a caller-side conversion that only
-   listmania needs, once.
-   - **Consequence**: listmania needs a small adapter to convert its printable
-     list text into one NPF text block before calling `/post`. That adapter is
-     listmania's responsibility, not the service's — out of scope here, but
-     should be filed as a follow-up bead.
-3. **Endpoint surface: `POST /post` only.** No `/schedule`, no `/status` yet —
-   both are only needed under the async model, which was rejected above. If a
-   future need for post-lookup-by-id emerges (e.g. retry tooling), add
-   `GET /status/:id` then as its own bead.
-4. **Auth: static API key per client.** Each app holds its own key (Lambda env
-   var / Secrets Manager) and sends it as `x-api-key`. Rejected AWS IAM/SigV4
-   — fewer moving parts for two known, small, internal Lambda callers; no
-   signing code needed on either caller.
+1. **Invocation style: direct function call, in-process.** No HTTP, no
+   network hop. Matches how `common-corpus` is already consumed by both apps.
+   Rejected standalone service — same-account, same-user, Lambda-to-Lambda
+   traffic doesn't need a network boundary; a network boundary only adds
+   deploy/monitoring/auth surface with nothing on the other side of it to
+   protect against.
+2. **Packaging: workspace lib + Lambda layer, common-corpus pattern.**
+   `libs/tumblr-poster/package.json` with a `build:layer` script identical in
+   shape to `common-corpus`'s; `project.json` with `build`, `test`,
+   `build-layer`, `lint` targets. Each app's `build-lambda.sh` attaches the
+   layer the same way it already does (or will do, once listmania catches up)
+   for `common-corpus`.
+3. **Content format: NPF only.** Unchanged from the original draft — Tumblr's
+   legacy text-post API is deprecated, and dual-format support is permanent
+   lib-side complexity for a caller-side conversion only listmania needs,
+   once.
+   - **Consequence**: listmania needs a small adapter converting its printable
+     list text into one NPF text block before calling the lib. Still listmania's
+     responsibility, not the lib's — file as a follow-up bead.
+4. **Auth: none — unchanged from today.** No API key, no service to
+   authenticate against. Each app keeps holding its own Tumblr OAuth
+   credentials (Lambda env var / Secrets Manager) exactly as poeticalbot does
+   now via `TumblrClient.fromConfig(config)`, and passes them into the lib
+   call. The lib never stores or transmits credentials anywhere; it's a
+   function, not a boundary.
+5. **Extraction surface: posting only, not the whole `TumblrClient` class.**
+   Move just the NPF-posting path (`initialize` + `convertPoemToNPF` +
+   `validateNPF` + `client.createPost`) into the lib. Leave
+   `getBlogInfo`/`getRecentPosts`/`deletePost`/`validateCredentials` in
+   poeticalbot's `tumblr-client.js` for now — nothing currently needs them
+   shared. Pull them into the lib later, if/when a second caller actually
+   needs one, rather than speculatively.
 
-## API Contract
+## Lib Contract
 
-### `POST /post`
+```js
+const postToTumblr = require('tumblr-poster')
 
-**Request**
-```
-Headers:
-  x-api-key: <per-client static key>
-  content-type: application/json
-
-Body:
-{
-  "blogName": "poeticalbot.tumblr.com",
-  "content": [ /* NPF content blocks */ ],
-  "tags": ["poetry", "generative"],   // optional
-  "title": "..."                       // optional, NPF title block data
-}
+const result = await postToTumblr(credentials, blogName, content, options)
 ```
 
-`blogName` is caller-supplied per request (not configured service-side),
-matching poeticalbot's existing `postPoem(poem, blogName)` pattern.
+**`credentials`** — `{ consumerKey, consumerSecret, accessToken, accessSecret }`
+(same shape `TumblrClient` already takes).
 
-**Response — success (200)**
-```json
-{
-  "success": true,
-  "postId": "123456789",
-  "url": "https://poeticalbot.tumblr.com/post/123456789"
-}
-```
+**`blogName`** — e.g. `'poeticalbot.tumblr.com'`, caller-supplied per call.
 
-**Response — failure (4xx/5xx)**
-```json
-{
-  "success": false,
-  "error": "message",
-  "code": "TUMBLR_API_ERROR" | "INVALID_CONTENT" | "UNAUTHORIZED" | "INTERNAL"
-}
-```
+**`content`** — NPF content blocks array.
 
-The `{success, postId, error}` shape mirrors both apps' current result objects
-(poeticalbot's `tumblr-client.js`, listmania's `postList`), minimizing the
-adapter work each caller needs to integrate.
+**`options`** *(optional)* — `{ tags: string[], title: string }`.
+
+**Returns** — `Promise<{ success, postId, url, error }>`, same shape both
+apps' current result objects already use, so integrating either caller is a
+require-path change plus dropping the credentials/blogName in — not a rewrite.
 
 ## Explicitly out of scope for this spec
 
-- Rate limiting enforcement (documenting limits is a separate concern from
-  this contract)
-- `/schedule`, `/status` endpoints
+- listmania's NPF adapter (printable list → NPF text block) — follow-up bead
+- Migrating listmania off `lambda/`+`lib/` split onto `src/` (separate,
+  pre-existing consolidation gap — see project CLAUDE.md)
+- Extracting `getBlogInfo`/`getRecentPosts`/`deletePost`/`validateCredentials`
+  into the shared lib (only if/when a second caller needs them)
 - Data migration of existing scheduled posts
-- Monitoring/logging strategy
-- Tech/hosting selection (Lambda vs container, etc.)
-- Repository structure for the new service
-- Load testing, security review of the auth mechanism
-
-Each should become its own follow-up bead once this contract is implemented
-and both callers are adapted to it.
+- Rate limiting, monitoring/logging strategy, security review of an auth
+  mechanism — **not applicable**, not deferred: there's no network boundary
+  and no auth mechanism in this design, so these costs don't exist rather than
+  being pushed to a follow-up bead.
