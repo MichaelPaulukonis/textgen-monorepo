@@ -1,0 +1,28 @@
+{
+  "name": "tumblr-poster",
+  "sourceRoot": "libs/tumblr-poster",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'Build complete - tumblr-poster is ready'",
+        "cwd": "libs/tumblr-poster"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm test",
+        "cwd": "libs/tumblr-poster"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prettier --check \"**/*.js\" --ignore-path ../../.prettierignore",
+        "cwd": "libs/tumblr-poster"
+      }
+    }
+  }
+}

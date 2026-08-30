@@ -178,6 +178,19 @@ importers:
         specifier: 3.2.0
         version: 3.2.0
 
+  libs/tumblr-poster:
+    dependencies:
+      tumblr.js:
+        specifier: ^5.0.0
+        version: 5.0.1
+    devDependencies:
+      chai:
+        specifier: ^4.2.0
+        version: 4.5.0
+      mocha:
+        specifier: ^6.1.4
+        version: 6.2.3
+
 packages:
 
   '@babel/code-frame@7.27.1':
