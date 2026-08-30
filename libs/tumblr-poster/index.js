@@ -1,5 +1,7 @@
 'use strict'
 
+const tumblr = require('tumblr.js')
+
 function validateNPF(npfPost) {
   if (
     !npfPost.content ||
@@ -69,7 +71,25 @@ async function postWithClient(client, blogName, content, options = {}) {
   }
 }
 
+function createClient(credentials) {
+  return tumblr.createClient({
+    consumer_key: credentials.consumerKey,
+    consumer_secret: credentials.consumerSecret,
+    token: credentials.accessToken,
+    token_secret: credentials.accessSecret
+  })
+}
+
+// Calls module.exports.* (not bare local references) so tests can monkeypatch
+// createClient without a mocking library.
+async function postToTumblr(credentials, blogName, content, options = {}) {
+  const client = module.exports.createClient(credentials)
+  return module.exports.postWithClient(client, blogName, content, options)
+}
+
 module.exports = {
   validateNPF,
-  postWithClient
+  createClient,
+  postWithClient,
+  postToTumblr
 }

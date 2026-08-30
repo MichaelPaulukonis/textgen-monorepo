@@ -75,11 +75,9 @@ describe('tumblr-poster', () => {
       const client = fakeClient(async () => {
         throw new Error('Tumblr API down')
       })
-      const result = await tumblrPoster.postWithClient(
-        client,
-        'testblog',
-        [{ type: 'text', text: 'hi' }]
-      )
+      const result = await tumblrPoster.postWithClient(client, 'testblog', [
+        { type: 'text', text: 'hi' }
+      ])
       expect(result).to.deep.equal({
         success: false,
         postId: null,
@@ -102,6 +100,44 @@ describe('tumblr-poster', () => {
       )
       expect(received.tags).to.deep.equal(['poetry', 'generative'])
       expect(received.title).to.equal('A Title')
+    })
+  })
+
+  describe('createClient', () => {
+    it('builds a tumblr.js client from credentials without making a network call', () => {
+      const client = tumblrPoster.createClient({
+        consumerKey: 'test_key',
+        consumerSecret: 'test_secret',
+        accessToken: 'test_token',
+        accessSecret: 'test_token_secret'
+      })
+      expect(client.createPost).to.be.a('function')
+    })
+  })
+
+  describe('postToTumblr', () => {
+    it('composes createClient and postWithClient', async () => {
+      const originalCreateClient = tumblrPoster.createClient
+      tumblrPoster.createClient = () => ({
+        createPost: async () => ({ id: 999 })
+      })
+
+      try {
+        const result = await tumblrPoster.postToTumblr(
+          {
+            consumerKey: 'k',
+            consumerSecret: 's',
+            accessToken: 't',
+            accessSecret: 'ts'
+          },
+          'testblog.tumblr.com',
+          [{ type: 'text', text: 'hi' }]
+        )
+        expect(result.success).to.equal(true)
+        expect(result.postId).to.equal(999)
+      } finally {
+        tumblrPoster.createClient = originalCreateClient
+      }
     })
   })
 })
