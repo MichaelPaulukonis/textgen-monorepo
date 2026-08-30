@@ -88,5 +88,74 @@ describe('Tumblr Client', () => {
       expect(client.initialize).to.be.a('function')
       expect(client.validateCredentials).to.be.a('function')
     })
+
+    it('postPoem returns success shape on a successful post', async () => {
+      const client = new TumblrClient({
+        consumerKey: 'k',
+        consumerSecret: 's',
+        accessToken: 't',
+        accessSecret: 'ts'
+      })
+      client.client = {
+        createPost: async () => ({ id: 42 })
+      }
+      client.initialized = true
+
+      const result = await client.postPoem(
+        { title: 'A Poem', text: 'line one' },
+        'testblog.tumblr.com'
+      )
+
+      expect(result.success).to.equal(true)
+      expect(result.postId).to.equal(42)
+      expect(result.url).to.equal('https://testblog.tumblr.com/post/42')
+      expect(result.npfPost).to.be.an('object')
+      expect(result.error).to.equal(null)
+    })
+
+    it('postPoem returns failure shape when the client throws', async () => {
+      const client = new TumblrClient({
+        consumerKey: 'k',
+        consumerSecret: 's',
+        accessToken: 't',
+        accessSecret: 'ts'
+      })
+      client.client = {
+        createPost: async () => {
+          throw new Error('Tumblr API down')
+        }
+      }
+      client.initialized = true
+
+      const result = await client.postPoem(
+        { title: 'A Poem', text: 'line one' },
+        'testblog.tumblr.com'
+      )
+
+      expect(result.success).to.equal(false)
+      expect(result.postId).to.equal(null)
+      expect(result.npfPost).to.equal(null)
+      expect(result.error).to.equal('Tumblr API down')
+    })
+
+    it('postPoem resolves (does not reject) when convertPoemToNPF throws', async () => {
+      const client = new TumblrClient({
+        consumerKey: 'k',
+        consumerSecret: 's',
+        accessToken: 't',
+        accessSecret: 'ts'
+      })
+      client.client = {
+        createPost: async () => ({ id: 1 })
+      }
+      client.initialized = true
+
+      const result = await client.postPoem(null, 'testblog.tumblr.com')
+
+      expect(result.success).to.equal(false)
+      expect(result.postId).to.equal(null)
+      expect(result.npfPost).to.equal(null)
+      expect(result.error).to.be.a('string')
+    })
   })
 })

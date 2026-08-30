@@ -3,7 +3,8 @@
  * Abstracts tumblr.js library with NPF support and error handling
  */
 
-const { convertPoemToNPF, validateNPF } = require('./npf-formatter')
+const { convertPoemToNPF } = require('./npf-formatter')
+const { createClient, postWithClient } = require('tumblr-poster')
 
 class TumblrClient {
   constructor(credentials) {
@@ -22,15 +23,7 @@ class TumblrClient {
     }
 
     try {
-      const tumblr = require('tumblr.js')
-
-      this.client = tumblr.createClient({
-        consumer_key: this.credentials.consumerKey,
-        consumer_secret: this.credentials.consumerSecret,
-        token: this.credentials.accessToken,
-        token_secret: this.credentials.accessSecret
-      })
-
+      this.client = createClient(this.credentials)
       this.initialized = true
     } catch (error) {
       throw new Error(`Failed to initialize Tumblr client: ${error.message}`)
@@ -90,23 +83,25 @@ class TumblrClient {
     try {
       this.initialize()
 
-      // Convert poem to NPF format
       const npfPost = convertPoemToNPF(poem)
-
-      // Validate NPF structure
-      if (!validateNPF(npfPost)) {
-        throw new Error('Generated NPF structure is invalid')
+      const options = {}
+      if (npfPost.tags) {
+        options.tags = npfPost.tags
       }
 
-      // Post to Tumblr
-      const response = await this.client.createPost(blogName, npfPost)
+      const result = await postWithClient(
+        this.client,
+        blogName,
+        npfPost.content,
+        options
+      )
 
       return {
-        success: true,
-        postId: response.id,
-        url: `https://${blogName}/post/${response.id}`,
-        npfPost: npfPost,
-        error: null
+        success: result.success,
+        postId: result.postId,
+        url: result.url,
+        npfPost: result.success ? npfPost : null,
+        error: result.error
       }
     } catch (error) {
       return {

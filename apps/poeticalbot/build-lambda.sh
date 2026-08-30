@@ -34,6 +34,16 @@ echo "Installing production dependencies..."
 cd $BUILD_DIR
 npm install --production --silent
 
+# Bundle tumblr-poster directly into node_modules - no Lambda layer.
+# Unlike common-corpus (~75MB of corpus text, which is why *that* one
+# needs a layer), this lib is a couple hundred lines with no bulk payload,
+# so a layer would only add AWS infra ceremony for no size benefit.
+echo "Bundling tumblr-poster..."
+mkdir -p node_modules/tumblr-poster
+cp "$SCRIPT_DIR/../../libs/tumblr-poster/package.json" \
+   "$SCRIPT_DIR/../../libs/tumblr-poster/index.js" \
+   node_modules/tumblr-poster/
+
 # Create deployment package
 echo "Creating deployment package..."
 zip -r ../terraform/poeticalbot-lambda.zip . -x "node_modules/.cache/*" "*.test.js" "test/*" > /dev/null
