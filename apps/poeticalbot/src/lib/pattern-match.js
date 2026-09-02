@@ -83,7 +83,13 @@ let PatternMatcher = function () {
     return new PatternMatcher()
   }
 
-  const getPatterns = ({ lines, selectedMethod, matchPattern, nlpObj }) => {
+  const getPatterns = ({
+    lines,
+    selectedMethod,
+    matchPattern,
+    posTag,
+    nlpObj
+  }) => {
     const matchStrategyFactory = (template) => (n) => {
       return {
         filtered: n.match(template).out(`array`),
@@ -91,16 +97,18 @@ let PatternMatcher = function () {
       }
     }
 
-    let posStrategy = () => (n) => {
-      const targetPos = util.pick([
-        `nouns`,
-        `adjectives`,
-        `adverbs`,
-        `places`,
-        `verbs`,
-        `values`,
-        `people`
-      ])
+    let posStrategy = (fixedTag) => (n) => {
+      const targetPos =
+        fixedTag ||
+        util.pick([
+          `nouns`,
+          `adjectives`,
+          `adverbs`,
+          `places`,
+          `verbs`,
+          `values`,
+          `people`
+        ])
       return {
         filtered: n[targetPos]()
           .out(`array`)
@@ -219,7 +227,9 @@ let PatternMatcher = function () {
 
     const matcherFunc = matchPattern
       ? matchStrategyFactory(matchPattern)
-      : util.pick(strategy || strategies)
+      : posTag
+        ? posStrategy(posTag)
+        : util.pick(strategy || strategies)
     // const matchedLines = matcherFunc(lines.join(' '))
     const matchedLines = matcherFunc(nlpObj)
 

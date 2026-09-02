@@ -72,6 +72,13 @@
         "cwd": "apps/poeticalbot"
       }
     },
+    "repl": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run repl",
+        "cwd": "apps/poeticalbot"
+      }
+    },
     "lint": {
       "executor": "nx:run-commands",
       "options": {

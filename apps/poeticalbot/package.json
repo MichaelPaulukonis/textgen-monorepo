@@ -18,6 +18,7 @@
     "test:unit": "mocha --timeout 30000 ./test/*.tests.js --invert --grep 'integration|Integration'",
     "cli:run": "node src/cli.js",
     "cli:sample": "node src/cli.js --verbose",
+    "repl": "node scripts/pattern-repl.js",
     "cli:help": "node src/cli.js --help",
     "update": "npx npm-check -u",
     "heroku:login": "heroku login",
