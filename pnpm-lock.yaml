@@ -98,8 +98,11 @@ importers:
         specifier: workspace:*
         version: link:../../libs/common-corpus
       compromise:
-        specifier: ^11.13.2
-        version: 11.14.3
+        specifier: ^14.16.0
+        version: 14.16.0
+      compromise-stats:
+        specifier: ^0.1.1
+        version: 0.1.1(compromise@14.16.0)
       dotenv:
         specifier: ^7.0.0
         version: 7.0.0
@@ -1267,8 +1270,10 @@ packages:
   commondir@1.0.1:
     resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
 
-  compromise@11.14.3:
-    resolution: {integrity: sha512-d+DA2l/M6l/Af9a2xXh3QBVQUqZvwPk2JamaCKJwPxO8VI3HvSeYK1ICAXI72FgXbx12mAkTucauhxol07k0/A==}
+  compromise-stats@0.1.1:
+    resolution: {integrity: sha512-3tbdgKed2yo/KNNqWLgqMtAdns0dTS+HPf7yE0THDUr4U2ZMj9NL34zVsRNUhEd0Q9SiRYcUJmbmhnUGjI+apw==}
+    peerDependencies:
+      compromise: '>=14.0.0'
 
   compromise@13.11.4:
     resolution: {integrity: sha512-nBITcNdqIHSVDDluaG6guyFFCSNXN+Hu87fU8VlhkE5Z0PwTZN1nro2O7a8JcUH88nB5EOzrxd9zKfXLSNFqcg==}
@@ -4644,9 +4649,10 @@ snapshots:
 
   commondir@1.0.1: {}
 
-  compromise@11.14.3:
+  compromise-stats@0.1.1(compromise@14.16.0):
     dependencies:
-      efrt-unpack: 2.2.0
+      compromise: 14.16.0
+      efrt: 2.7.0
 
   compromise@13.11.4:
     dependencies:

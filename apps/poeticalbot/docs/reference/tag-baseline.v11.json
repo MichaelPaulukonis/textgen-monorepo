@@ -1,0 +1,608 @@
+{
+  "compromiseVersion": "11.14.3",
+  "sourceFiles": [
+    "Technical Manifesto of Futurist Painting",
+    "The Futurist Manifesto",
+    "allen.ginsberg.howl",
+    "karl.marx.frederick.engels.manifesto.of.the.communist.party",
+    "lawrence.lessig.free.culture",
+    "tristan.tzara.to.make.a.dadaist.poem"
+  ],
+  "sentenceCount": 1157,
+  "tags": [
+    {
+      "tag": "Acronym",
+      "matchCount": 158,
+      "sample": [
+        "f",
+        "t",
+        "x"
+      ]
+    },
+    {
+      "tag": "Adjective",
+      "matchCount": 2419,
+      "sample": [
+        "technical",
+        "public",
+        "violent"
+      ]
+    },
+    {
+      "tag": "Adverb",
+      "matchCount": 1026,
+      "sample": [
+        "all",
+        "that",
+        "then"
+      ]
+    },
+    {
+      "tag": "Auxillary",
+      "matchCount": 0,
+      "sample": []
+    },
+    {
+      "tag": "Cardinal",
+      "matchCount": 240,
+      "sample": [
+        "1910",
+        "three",
+        "thousand"
+      ]
+    },
+    {
+      "tag": "City",
+      "matchCount": 54,
+      "sample": [
+        "turin",
+        "turin",
+        "milan"
+      ]
+    },
+    {
+      "tag": "ClauseEnd",
+      "matchCount": 1995,
+      "sample": [
+        "boccioni",
+        "russolo",
+        "balla"
+      ]
+    },
+    {
+      "tag": "Comparative",
+      "matchCount": 61,
+      "sample": [
+        "earlier",
+        "better",
+        "decker"
+      ]
+    },
+    {
+      "tag": "Condition",
+      "matchCount": 150,
+      "sample": [
+        "unless",
+        "it",
+        "if"
+      ]
+    },
+    {
+      "tag": "Conjunction",
+      "matchCount": 1829,
+      "sample": [
+        "to",
+        "and",
+        "and"
+      ]
+    },
+    {
+      "tag": "Contraction",
+      "matchCount": 206,
+      "sample": [
+        "cannot",
+        "",
+        "cannot"
+      ]
+    },
+    {
+      "tag": "Copula",
+      "matchCount": 674,
+      "sample": [
+        "was",
+        "is",
+        "was"
+      ]
+    },
+    {
+      "tag": "Country",
+      "matchCount": 93,
+      "sample": [
+        "italy",
+        "italy",
+        "italy"
+      ]
+    },
+    {
+      "tag": "Currency",
+      "matchCount": 8,
+      "sample": [
+        "dollar",
+        "dollars",
+        "c"
+      ]
+    },
+    {
+      "tag": "Date",
+      "matchCount": 255,
+      "sample": [
+        "the",
+        "18th",
+        "of"
+      ]
+    },
+    {
+      "tag": "Demonym",
+      "matchCount": 91,
+      "sample": [
+        "italian",
+        "indian",
+        "indian"
+      ]
+    },
+    {
+      "tag": "Determiner",
+      "matchCount": 3456,
+      "sample": [
+        "the",
+        "the",
+        "the"
+      ]
+    },
+    {
+      "tag": "Duration",
+      "matchCount": 58,
+      "sample": [
+        "year",
+        "years",
+        "years"
+      ]
+    },
+    {
+      "tag": "Expression",
+      "matchCount": 45,
+      "sample": [
+        "no",
+        "no",
+        "no"
+      ]
+    },
+    {
+      "tag": "FemaleName",
+      "matchCount": 16,
+      "sample": [
+        "harmony",
+        "laurel",
+        "madison"
+      ]
+    },
+    {
+      "tag": "FirstName",
+      "matchCount": 87,
+      "sample": [
+        "luigi",
+        "gino",
+        "harmony"
+      ]
+    },
+    {
+      "tag": "FuturePerfect",
+      "matchCount": 0,
+      "sample": []
+    },
+    {
+      "tag": "Gerund",
+      "matchCount": 452,
+      "sample": [
+        "changing",
+        "moving",
+        "painting"
+      ]
+    },
+    {
+      "tag": "Holiday",
+      "matchCount": 0,
+      "sample": []
+    },
+    {
+      "tag": "Infinitive",
+      "matchCount": 1102,
+      "sample": [
+        "need",
+        "have",
+        "be"
+      ]
+    },
+    {
+      "tag": "LastName",
+      "matchCount": 55,
+      "sample": [
+        "russolo",
+        "severini",
+        "joll"
+      ]
+    },
+    {
+      "tag": "MaleName",
+      "matchCount": 64,
+      "sample": [
+        "luigi",
+        "gino",
+        "james"
+      ]
+    },
+    {
+      "tag": "Modal",
+      "matchCount": 249,
+      "sample": [
+        "would",
+        "shall",
+        "shall"
+      ]
+    },
+    {
+      "tag": "Money",
+      "matchCount": 11,
+      "sample": [
+        "5",
+        "cents",
+        "5"
+      ]
+    },
+    {
+      "tag": "Month",
+      "matchCount": 20,
+      "sample": [
+        "march",
+        "may",
+        "november"
+      ]
+    },
+    {
+      "tag": "Negative",
+      "matchCount": 153,
+      "sample": [
+        "never",
+        "not",
+        "not"
+      ]
+    },
+    {
+      "tag": "NiceNumber",
+      "matchCount": 2,
+      "sample": [
+        "20000",
+        "45000"
+      ]
+    },
+    {
+      "tag": "Noun",
+      "matchCount": 9421,
+      "sample": [
+        "manifesto",
+        "futurist",
+        "painting"
+      ]
+    },
+    {
+      "tag": "NounPhrase+",
+      "matchCount": 0,
+      "sample": []
+    },
+    {
+      "tag": "NumberRange",
+      "matchCount": 3,
+      "sample": [
+        "1862-64",
+        "",
+        ""
+      ]
+    },
+    {
+      "tag": "NumericValue",
+      "matchCount": 109,
+      "sample": [
+        "18th",
+        "1910",
+        "1909"
+      ]
+    },
+    {
+      "tag": "Ordinal",
+      "matchCount": 58,
+      "sample": [
+        "18th",
+        "first",
+        "first"
+      ]
+    },
+    {
+      "tag": "Organization",
+      "matchCount": 154,
+      "sample": [
+        "x",
+        "canada",
+        "&"
+      ]
+    },
+    {
+      "tag": "Participle",
+      "matchCount": 87,
+      "sample": [
+        "come",
+        "run",
+        "chosen"
+      ]
+    },
+    {
+      "tag": "Particle",
+      "matchCount": 95,
+      "sample": [
+        "out",
+        "back",
+        "down"
+      ]
+    },
+    {
+      "tag": "PastTense",
+      "matchCount": 1046,
+      "sample": [
+        "launched",
+        "was",
+        "displayed"
+      ]
+    },
+    {
+      "tag": "PerfectTense",
+      "matchCount": 0,
+      "sample": []
+    },
+    {
+      "tag": "Person",
+      "matchCount": 227,
+      "sample": [
+        "luigi",
+        "russolo",
+        "giacomo"
+      ]
+    },
+    {
+      "tag": "Place",
+      "matchCount": 173,
+      "sample": [
+        "turin",
+        "turin",
+        "milan"
+      ]
+    },
+    {
+      "tag": "Pluperfect",
+      "matchCount": 0,
+      "sample": []
+    },
+    {
+      "tag": "Plural",
+      "matchCount": 1867,
+      "sample": [
+        "we",
+        "peopleaartists",
+        "men"
+      ]
+    },
+    {
+      "tag": "Possessive",
+      "matchCount": 563,
+      "sample": [
+        "our",
+        "our",
+        "our"
+      ]
+    },
+    {
+      "tag": "Preposition",
+      "matchCount": 3675,
+      "sample": [
+        "of",
+        "of",
+        "in"
+      ]
+    },
+    {
+      "tag": "PresentTense",
+      "matchCount": 1930,
+      "sample": [
+        "need",
+        "have",
+        "be"
+      ]
+    },
+    {
+      "tag": "Pronoun",
+      "matchCount": 870,
+      "sample": [
+        "we",
+        "it",
+        "we"
+      ]
+    },
+    {
+      "tag": "QuestionWord",
+      "matchCount": 362,
+      "sample": [
+        "which",
+        "which",
+        "which"
+      ]
+    },
+    {
+      "tag": "Quotation",
+      "matchCount": 552,
+      "sample": [
+        "come",
+        "my",
+        "friends"
+      ]
+    },
+    {
+      "tag": "RelativeDay",
+      "matchCount": 0,
+      "sample": []
+    },
+    {
+      "tag": "Singular",
+      "matchCount": 5470,
+      "sample": [
+        "manifesto",
+        "futurist",
+        "painting"
+      ]
+    },
+    {
+      "tag": "Superlative",
+      "matchCount": 11,
+      "sample": [
+        "deepest",
+        "oldest",
+        "oldest"
+      ]
+    },
+    {
+      "tag": "Time",
+      "matchCount": 62,
+      "sample": [
+        "now",
+        "now",
+        "night"
+      ]
+    },
+    {
+      "tag": "Unit",
+      "matchCount": 112,
+      "sample": [
+        "manifesto",
+        "peopleaartists",
+        "legs"
+      ]
+    },
+    {
+      "tag": "Value",
+      "matchCount": 366,
+      "sample": [
+        "18th",
+        "1910",
+        "first"
+      ]
+    },
+    {
+      "tag": "Verb",
+      "matchCount": 4306,
+      "sample": [
+        "launched",
+        "was",
+        "displayed"
+      ]
+    },
+    {
+      "tag": "VerbPhrase+",
+      "matchCount": 3311,
+      "sample": [
+        "launched",
+        "was",
+        "displayed"
+      ]
+    },
+    {
+      "tag": "WeekDay",
+      "matchCount": 5,
+      "sample": [
+        "sun",
+        "sun",
+        "sat"
+      ]
+    },
+    {
+      "tag": "Year",
+      "matchCount": 25,
+      "sample": [
+        "1910",
+        "1909",
+        "1908"
+      ]
+    }
+  ],
+  "posAccessors": [
+    {
+      "accessor": "nouns",
+      "matchCount": 5857,
+      "sample": [
+        "manifesto of futurist painting umberto boccioni",
+        "carlo carra",
+        "luigi russolo"
+      ]
+    },
+    {
+      "accessor": "adjectives",
+      "matchCount": 2419,
+      "sample": [
+        "technical",
+        "public",
+        "violent"
+      ]
+    },
+    {
+      "accessor": "adverbs",
+      "matchCount": 905,
+      "sample": [
+        "all that",
+        "then",
+        "almost"
+      ]
+    },
+    {
+      "accessor": "places",
+      "matchCount": 150,
+      "sample": [
+        "turin",
+        "turin",
+        "milan"
+      ]
+    },
+    {
+      "accessor": "verbs",
+      "matchCount": 3323,
+      "sample": [
+        "launched",
+        "was",
+        "displayed"
+      ]
+    },
+    {
+      "accessor": "values",
+      "matchCount": 348,
+      "sample": [
+        "18th",
+        "1910",
+        "first manifesto"
+      ]
+    },
+    {
+      "accessor": "people",
+      "matchCount": 140,
+      "sample": [
+        "luigi russolo",
+        "giacomo balla",
+        "gino severini on"
+      ]
+    }
+  ]
+}

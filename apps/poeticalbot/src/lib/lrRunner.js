@@ -2,6 +2,9 @@
 // need to modify this a bit
 
 const nlp = require('compromise')
+// compromise@14 dropped .ngrams() from core; it now lives in this
+// first-party plugin (textgen-monorepo-57w, compromise v11->14 bump).
+nlp.extend(require('compromise-stats'))
 const { types } = require(`../lib/linereduce.js`)
 const LR = require(`../lib/linereduce.js`)
 
@@ -59,7 +62,7 @@ const Runner = function (config) {
 
     case types.search:
     default:
-      const ngrams = nlp(sents.join('\n')).ngrams().data()
+      const ngrams = nlp(sents.join('\n')).ngrams()
 
       if (ngrams.length === 0) {
         selection = { lines: [], text: sents.join('\n') }

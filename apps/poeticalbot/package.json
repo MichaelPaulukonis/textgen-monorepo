@@ -35,7 +35,8 @@
   "dependencies": {
     "commander": "^6.2.1",
     "common-corpus": "workspace:*",
-    "compromise": "^11.13.2",
+    "compromise": "^14.16.0",
+    "compromise-stats": "^0.1.1",
     "dotenv": "^7.0.0",
     "fuzzy-matching": "0.4.3",
     "in-a-nutshell": "0.1.2",

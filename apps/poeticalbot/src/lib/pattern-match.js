@@ -1,18 +1,23 @@
 let util = new (require(`./util`))()
 let textutil = require(`./textutil.js`)
 
+// Audited against compromise@14.16.0 in textgen-monorepo-57w: every tag here
+// is confirmed to match something on a real sample corpus. Removed 11 that
+// matched nothing (Auxillary was a typo for Auxiliary, fixed instead of
+// dropped; ClauseEnd/Contraction/FuturePerfect/Holiday/NiceNumber/
+// NounPhrase+/PerfectTense/Pluperfect/Quotation/RelativeDay/VerbPhrase+ were
+// dead — some already dead under v11, some killed by the bump). See
+// docs/reference/tag-baseline.v11.json / .v14.json for the raw counts.
 const tags = [
   `Acronym`,
   `Adjective`,
   `Adverb`,
-  `Auxillary`,
+  `Auxiliary`,
   `Cardinal`,
   `City`,
-  `ClauseEnd`,
   `Comparative`,
   `Condition`,
   `Conjunction`,
-  `Contraction`,
   `Copula`,
   `Country`,
   `Currency`,
@@ -23,9 +28,7 @@ const tags = [
   `Expression`,
   `FemaleName`,
   `FirstName`,
-  `FuturePerfect`,
   `Gerund`,
-  `Holiday`,
   `Infinitive`,
   `LastName`,
   `MaleName`,
@@ -33,9 +36,7 @@ const tags = [
   `Money`,
   `Month`,
   `Negative`,
-  `NiceNumber`,
   `Noun`,
-  `NounPhrase+`,
   `NumberRange`,
   `NumericValue`,
   `Ordinal`,
@@ -43,25 +44,20 @@ const tags = [
   `Participle`,
   `Particle`,
   `PastTense`,
-  `PerfectTense`,
   `Person`,
   `Place`,
-  `Pluperfect`,
   `Plural`,
   `Possessive`,
   `Preposition`,
   `PresentTense`,
   `Pronoun`,
   `QuestionWord`,
-  `Quotation`,
-  `RelativeDay`,
   `Singular`,
   `Superlative`,
   `Time`,
   `Unit`,
   `Value`,
   `Verb`,
-  `VerbPhrase+`,
   `WeekDay`,
   `Year`
 ]
@@ -177,14 +173,18 @@ let PatternMatcher = function () {
       // looks like EVERYTHING _should be_ in https://github.com/nlp-compromise/compromise/blob/master/src/tags/tree.js
     ]
 
+    // Must be invoked (posStrategy()) not bare references — the random
+    // strategy picker below calls each entry as (n) => {...} directly, and
+    // an un-invoked curried reference silently swallows `n` as `fixedTag`
+    // instead (textgen-monorepo-p8t).
     let posStrats = [
-      posStrategy,
-      posStrategy,
-      posStrategy,
-      posStrategy,
-      posStrategy,
-      posStrategy,
-      posStrategy
+      posStrategy(),
+      posStrategy(),
+      posStrategy(),
+      posStrategy(),
+      posStrategy(),
+      posStrategy(),
+      posStrategy()
     ]
 
     let patternStrats = [
@@ -259,5 +259,7 @@ let PatternMatcher = function () {
 
   return { getMatchingLines }
 }
+
+PatternMatcher.tags = tags
 
 module.exports = PatternMatcher
