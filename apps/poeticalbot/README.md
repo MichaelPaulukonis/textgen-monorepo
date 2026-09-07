@@ -27,6 +27,26 @@ There's also `node test/manual-runners/writepoem.js`, an older, more minimal run
 
 TODO: some things log, some things don't - it's erratic and the logs can be confusing
 
+## pattern-match REPL
+
+`scripts/pattern-repl.js` is a Node REPL for trying `compromise` match templates and POS accessors (`src/lib/pattern-match.js`) against real corpus text, without running a full generation cycle. Run it from `apps/poeticalbot`, not via `nx` — nx's `run-commands` executor buffers stdio and hangs an interactive REPL:
+
+```bash
+npm run repl
+# or: node scripts/pattern-repl.js
+```
+
+Commands, once inside:
+
+```
+load(source)     load a corpus — file path, or a common-corpus filter regex string
+match(template)  run a compromise match template, e.g. match('#Adjective #Noun of #Noun')
+pos(tag)         run a fixed POS accessor: nouns, adjectives, adverbs, places, verbs, values, people
+help()           print this summary
+```
+
+`n` (the live compromise doc for whatever's loaded) is also exposed on the REPL context, for anything the helpers above don't cover — e.g. `n.match('#Gerund #Noun').out('array')`. See `docs/superpowers/specs/2026-08-30-pattern-repl-design.md` for the full design/behavior spec. Still WIP — concepts here may shift.
+
 ## testing
 
 `npm t`
@@ -74,27 +94,27 @@ token_secret=foo
 
 ## titles
 
- - first/last/random line
- - random-selection from most common words in poem
- - summary sentence (summary algorithm picks sentence)
-  -  fails poorly when there aren't enough sentences
+- first/last/random line
+- random-selection from most common words in poem
+- summary sentence (summary algorithm picks sentence)
+- fails poorly when there aren't enough sentences
 
 ## corpus
 
- - lots of texts
- - sorted into folders
- - select with regex
- - a number of pre-selected combinations, plus random collections
- - randomize percentages for the jGnoetry model
+- lots of texts
+- sorted into folders
+- select with regex
+- a number of pre-selected combinations, plus random collections
+- randomize percentages for the jGnoetry model
 
 ## Plans
 
- - Hybridizer
- - heijinian leading spaces
- - mesostics
- - news-text importer (one of the original ideas)
- - (optionally) replace the syllable-detection algorithm in jgnoetry
-  - at a minimum, extract it for unit-testing
+- Hybridizer
+- heijinian leading spaces
+- mesostics
+- news-text importer (one of the original ideas)
+- (optionally) replace the syllable-detection algorithm in jgnoetry
+- at a minimum, extract it for unit-testing
 
 Boringly, I continue to work with unit-tests and code-coverage, and other dull things instead of the "cool" poetry generation _all the time_. So sue me.
 
@@ -102,20 +122,20 @@ It usually pays off in the long run, when I return to a project after a while no
 
 ### some things to look at
 
- - https://github.com/rossgoodwin/poetry-solver
- - https://github.com/rossgoodwin/poetizer
- - https://github.com/rossgoodwin/sonnetizer
- - https://github.com/rossgoodwin/lyricist
- - https://github.com/rossgoodwin/wikipoet (30 minutes to gen a poem!!!)
- - https://www.npmjs.com/package/syllable
- - https://github.com/nlp-compromise - what else can it do that would be... interesting?
- - better text cleanup - see [ebook_ebooks](https://github.com/scotthammack/ebook_ebooks/blob/master/ebook_ebooks.py) - _a few features to improve readability, such as chapter numbering, paragraph breaks, and parenthesis/quotation mark balancing_
- - https://github.com/matthewsklar/PoetryBot
- - aparrish's [linear-systems poetry](https://github.com/aparrish/linear-lsystem-poetry) Hard to get good results, butwith practice, weird things can emerge.
- - topic analysis? I played around with a lib, but the results were not promising. these "poems" are too weird to be coherent for topics, usually. And not sure what to do with the output.
- - I tried using nlp-compromise's simple-english module, but it didn't do much, very often
- - more meta-data on the poems/words/etc. So transforms can be done with more granularity?
-  - at the very least, try to keep re-processing the texts and poems into sentences and words multiple times.
+- <https://github.com/rossgoodwin/poetry-solver>
+- <https://github.com/rossgoodwin/poetizer>
+- <https://github.com/rossgoodwin/sonnetizer>
+- <https://github.com/rossgoodwin/lyricist>
+- <https://github.com/rossgoodwin/wikipoet> (30 minutes to gen a poem!!!)
+- <https://www.npmjs.com/package/syllable>
+- <https://github.com/nlp-compromise> - what else can it do that would be... interesting?
+- better text cleanup - see [ebook_ebooks](https://github.com/scotthammack/ebook_ebooks/blob/master/ebook_ebooks.py) - _a few features to improve readability, such as chapter numbering, paragraph breaks, and parenthesis/quotation mark balancing_
+- <https://github.com/matthewsklar/PoetryBot>
+- aparrish's [linear-systems poetry](https://github.com/aparrish/linear-lsystem-poetry) Hard to get good results, butwith practice, weird things can emerge.
+- topic analysis? I played around with a lib, but the results were not promising. these "poems" are too weird to be coherent for topics, usually. And not sure what to do with the output.
+- I tried using nlp-compromise's simple-english module, but it didn't do much, very often
+- more meta-data on the poems/words/etc. So transforms can be done with more granularity?
+- at the very least, try to keep re-processing the texts and poems into sentences and words multiple times.
 
 ## Original ideas that did and did not work
 
@@ -129,7 +149,6 @@ So, I'm going to do the Simplest Thing That Could Possibly Work.
 1. text generator becomes non-static
 1. elaborate and iterate on step 2
 1. end-goal includes ingestion of source material from online news
-
 
 SO 1-3 HAPPENED THAT'S GOOD
 And 3 continues to happen....
