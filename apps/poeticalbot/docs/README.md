@@ -5,7 +5,9 @@ This directory contains comprehensive documentation for the PoeticalBot project,
 ## Documentation Overview
 
 ### 📋 [Analysis Report](analysis.md)
+
 Complete repository analysis covering:
+
 - Project overview and technology stack
 - Architecture and system design
 - Feature analysis and capabilities
@@ -15,7 +17,9 @@ Complete repository analysis covering:
 - Prioritized recommendations and roadmap
 
 ### 🏗️ [Architecture Documentation](architecture.md)
+
 Detailed technical architecture including:
+
 - System design and component relationships
 - Data flow and processing pipelines
 - Deployment architectures (local, Lambda, Heroku)
@@ -23,7 +27,9 @@ Detailed technical architecture including:
 - Performance characteristics and scalability considerations
 
 ### 🎯 [Recommendations & Action Plan](recommendations.md)
+
 Actionable improvement roadmap with:
+
 - Prioritized critical issues and fixes
 - Documentation improvement plans
 - Code quality enhancement strategies
@@ -33,14 +39,21 @@ Actionable improvement roadmap with:
 ## Additional Documentation
 
 ### 📁 [plans/](plans/)
+
 - **[NPF Migration Plan](plans/npf-migration-plan.md)**: Detailed migration to Tumblr's Neue Post Format
 
 ### 📁 [reference/](reference/)
+
 - **[Sample Metadata](reference/metadata.sample.00.json)**: Example poem metadata structure
 - **[Sample HTML Post](reference/post.sample.html.00.txt)**: Example Tumblr post HTML
 
 ### 🔧 [Tumblr Configuration](tumblr-config.md)
+
 Complete guide for setting up Tumblr API authentication and configuration.
+
+### 🧩 [pattern-match.js](pattern-match.md)
+
+Preliminary notes on the compromise-based pattern/POS matcher behind the pattern-match REPL and the `pattern` line-reduce strategy — strategy families and known quirks. Subject to revision after the compromise v11→14 audit.
 
 ## Quick Start
 
@@ -54,18 +67,22 @@ For new contributors or maintainers:
 ## Documentation Standards
 
 ### File Organization
+
 - Use descriptive filenames with `.md` extension
 - Group related documents in subdirectories
 - Include table of contents for documents >5 sections
 
 ### Content Guidelines
+
 - Use consistent Markdown formatting
 - Include code examples where relevant
 - Add last-updated timestamps to living documents
 - Cross-reference related documentation
 
 ### Templates
+
 When creating new documentation, reference existing files for:
+
 - Header structure and formatting
 - Code block usage and syntax highlighting
 - Table and list formatting
@@ -74,6 +91,7 @@ When creating new documentation, reference existing files for:
 ## Contributing to Documentation
 
 ### Process
+
 1. Identify documentation gaps from [analysis](analysis.md) or [recommendations](recommendations.md)
 2. Create or update documents following established patterns
 3. Ensure cross-references are updated
@@ -81,6 +99,7 @@ When creating new documentation, reference existing files for:
 5. Update this README if adding new top-level documents
 
 ### Standards
+
 - Keep language clear and accessible
 - Use active voice and present tense
 - Include practical examples and code snippets
@@ -89,9 +108,9 @@ When creating new documentation, reference existing files for:
 ## Related Resources
 
 - **Main README**: `../README.md` - Basic project information
-- **Repository**: https://github.com/MichaelPaulukonis/napogenmo2016
-- **Live Demo**: https://poeticalbot.tumblr.com/
-- **Tumblr API Docs**: https://www.tumblr.com/docs/en/api/v2
+- **Repository**: <https://github.com/MichaelPaulukonis/napogenmo2016>
+- **Live Demo**: <https://poeticalbot.tumblr.com/>
+- **Tumblr API Docs**: <https://www.tumblr.com/docs/en/api/v2>
 
 ---
 

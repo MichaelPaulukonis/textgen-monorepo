@@ -45,7 +45,7 @@ pos(tag)         run a fixed POS accessor: nouns, adjectives, adverbs, places, v
 help()           print this summary
 ```
 
-`n` (the live compromise doc for whatever's loaded) is also exposed on the REPL context, for anything the helpers above don't cover — e.g. `n.match('#Gerund #Noun').out('array')`. See `docs/superpowers/specs/2026-08-30-pattern-repl-design.md` for the full design/behavior spec. Still WIP — concepts here may shift.
+`n` (the live compromise doc for whatever's loaded) is also exposed on the REPL context, for anything the helpers above don't cover — e.g. `n.match('#Gerund #Noun').out('array')`. See [`docs/superpowers/specs/2026-08-30-pattern-repl-design.md`](../../docs/superpowers/specs/2026-08-30-pattern-repl-design.md) for the full design/behavior spec, and [`docs/pattern-match.md`](docs/pattern-match.md) for what `pattern-match.js` itself is doing under the hood (strategy families, known quirks). Still WIP — concepts here may shift.
 
 ## testing
 
