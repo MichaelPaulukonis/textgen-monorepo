@@ -52,8 +52,8 @@ importers:
         specifier: workspace:*
         version: link:../../libs/common-corpus
       compromise:
-        specifier: ^13.8.0
-        version: 13.11.4
+        specifier: ^14.16.0
+        version: 14.16.0
       corpora-project:
         specifier: ^0.2.0
         version: 0.2.0

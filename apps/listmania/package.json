@@ -36,7 +36,7 @@
   "dependencies": {
     "commander": "^7.0.0",
     "common-corpus": "workspace:*",
-    "compromise": "^13.8.0",
+    "compromise": "^14.16.0",
     "corpora-project": "^0.2.0",
     "dotenv": "^8.2.0",
     "fuzzy-matching": "0.4.3",
