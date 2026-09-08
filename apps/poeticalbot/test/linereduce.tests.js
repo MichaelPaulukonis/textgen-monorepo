@@ -89,11 +89,15 @@ This is probably not.`
 
       expect(lasts.lines.length).to.be.greaterThan(0)
 
-      const lastWord = lasts.lines[0].split(' ').slice(-1)[0]
-      const allSame = lasts.lines.reduce(
-        (p, line) => p && line.endsWith(lastWord),
-        true
+      const lastWord = linereduce.stripPunct(
+        lasts.lines[0].split(' ').slice(-1)[0]
       )
+      const allSame = lasts.lines.reduce((p, line) => {
+        const lineLastWord = linereduce.stripPunct(
+          line.split(' ').slice(-1)[0]
+        )
+        return p && lineLastWord.toLowerCase() === lastWord.toLowerCase()
+      }, true)
       expect(allSame).to.be.true()
     })
 
