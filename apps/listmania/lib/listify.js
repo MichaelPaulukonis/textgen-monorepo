@@ -226,7 +226,7 @@ const Listmania = function () {
         'Acronym',
         'Adjective',
         'Adverb',
-        'Auxillary',
+        'Auxiliary',
         'Cardinal',
         'City',
         'ClauseEnd',
