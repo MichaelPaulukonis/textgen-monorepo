@@ -94,16 +94,20 @@ program
   .option('-m, --method [string]', 'method-type (See index.js)')
   .parse(process.argv)
 
-if (program.corporaFilter) {
-  config.corporaFilter = program.corporaFilter
+// commander@7 stopped exposing parsed flags as program.X properties by
+// default (textgen-monorepo-tg-3) — must read them via .opts() now.
+const opts = program.opts()
+
+if (opts.corporaFilter) {
+  config.corporaFilter = opts.corporaFilter
 }
 
-if (program.patternMatch) {
-  config.matchPattern = program.patternMatch
+if (opts.patternMatch) {
+  config.matchPattern = opts.patternMatch
 }
 
-if (program.method) {
-  config.method = program.method
+if (opts.method) {
+  config.method = opts.method
 }
 
 teller()
