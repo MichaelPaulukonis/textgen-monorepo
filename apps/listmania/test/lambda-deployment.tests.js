@@ -183,7 +183,7 @@ describe('Lambda Deployment Configuration', function () {
       const content = fs.readFileSync(variablesTfPath, 'utf8')
 
       expect(content).to.include('default     = "us-east-1"')
-      expect(content).to.include('default     = "rate(6 hours)"')
+      expect(content).to.include('default     = "rate(1 hour)"')
       expect(content).to.include('default     = 7')
     })
   })
