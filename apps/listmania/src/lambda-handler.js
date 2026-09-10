@@ -4,6 +4,8 @@
  */
 
 const config = require('./config.js')
+const { postToTumblr } = require('tumblr-poster')
+const { toNPFContent } = require('./lib/npf-adapter')
 
 class LambdaHandler {
   constructor() {
@@ -325,9 +327,6 @@ class LambdaHandler {
           error: 'Invalid list object'
         }
       }
-
-      const { postToTumblr } = require('tumblr-poster')
-      const { toNPFContent } = require('./lib/npf-adapter')
 
       const result = await postToTumblr(
         this.config,

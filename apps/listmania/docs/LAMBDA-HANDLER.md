@@ -45,6 +45,7 @@ Generates and posts a list with default settings.
 ```
 
 Supported options:
+
 - `corporaFilter` / `corpora_filter`: Filter corpus by filename substring
 - `matchPattern` / `match_pattern` / `patternMatch` / `pattern_match`: NLP pattern for list elements
 - `method`: Generation method (matchStrats, posStrats, posStratAdjs, weirdStrats, patternStrats)
@@ -126,15 +127,16 @@ Test the handler locally using the test script:
 
 ```bash
 # Run all tests
-node lambda/test-handler.js
+node scripts/test-handler.js
 
 # Run specific test
-node lambda/test-handler.js scheduledEvent
-node lambda/test-handler.js directInvocation
-node lambda/test-handler.js generateOnly
+node scripts/test-handler.js scheduledEvent
+node scripts/test-handler.js directInvocation
+node scripts/test-handler.js generateOnly
 ```
 
 Available test scenarios:
+
 - `scheduledEvent` - Simulates EventBridge scheduled event
 - `directInvocation` - Default direct invocation
 - `directInvocationWithOptions` - Direct invocation with custom options

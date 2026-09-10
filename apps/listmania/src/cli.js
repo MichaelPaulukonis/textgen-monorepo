@@ -76,7 +76,7 @@ program
     '-p, --patternMatch [string]',
     'nlp-compromise matchPattern for list elements'
   )
-  .option('-m, --method [string]', 'method-type (See index.js)')
+  .option('-m, --method [string]', 'method-type (See cli.js)')
   .parse(process.argv)
 
 // commander@7 stopped exposing parsed flags as program.X properties by
