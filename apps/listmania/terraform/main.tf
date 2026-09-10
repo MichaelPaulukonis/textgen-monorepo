@@ -22,7 +22,7 @@ resource "aws_lambda_function" "listmania" {
   filename         = "listmania-lambda.zip"
   function_name    = "listmania"
   role            = aws_iam_role.lambda_role.arn
-  handler         = "lambda/index.handler"
+  handler         = "lambda-handler.handler"
   source_code_hash = filebase64sha256("listmania-lambda.zip")
   runtime         = "nodejs22.x"
   timeout         = 60

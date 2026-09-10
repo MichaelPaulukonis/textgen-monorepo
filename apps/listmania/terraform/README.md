@@ -13,6 +13,7 @@ This directory contains Terraform configuration for deploying Listmania as an AW
 ## Configuration
 
 1. Copy the example variables file:
+
    ```bash
    cp terraform.tfvars.example terraform.tfvars
    ```
@@ -29,36 +30,36 @@ This directory contains Terraform configuration for deploying Listmania as an AW
 Before deploying, you need to create the Lambda deployment package:
 
 ```bash
-# From the apps/listmania directory
-cd apps/listmania
+# From the repo root
+nx build listmania
 
-# Install dependencies
-npm install --production
-
-# Create deployment package
-zip -r terraform/listmania-lambda.zip \
-  lambda/ \
-  lib/ \
-  config.js \
-  node_modules/ \
-  package.json \
-  -x "*.git*" "*.DS_Store" "test/*"
+# or equivalently, from apps/listmania:
+./build-lambda.sh
 ```
+
+This copies `src/*` into a temp build directory, regenerates a Lambda-safe
+`package.json` (drops workspace deps, pins versions), bundles `tumblr-poster`
+directly into `node_modules/` (no Lambda layer - it's small), installs
+production dependencies, and zips the result into
+`terraform/listmania-lambda.zip`.
 
 ## Deployment
 
 1. Initialize Terraform:
+
    ```bash
    cd terraform
    terraform init
    ```
 
 2. Review the planned changes:
+
    ```bash
    terraform plan
    ```
 
 3. Apply the configuration:
+
    ```bash
    terraform apply
    ```
@@ -70,11 +71,13 @@ zip -r terraform/listmania-lambda.zip \
 The Lambda function is triggered by EventBridge (CloudWatch Events) on a schedule. You can configure the schedule using the `schedule_expression` variable:
 
 ### Rate Expressions
+
 - `rate(1 hour)` - Every hour
 - `rate(6 hours)` - Every 6 hours (default)
 - `rate(1 day)` - Once per day
 
 ### Cron Expressions
+
 - `cron(0 12 * * ? *)` - Daily at noon UTC
 - `cron(0 */6 * * ? *)` - Every 6 hours
 - `cron(0 9 ? * MON-FRI *)` - Weekdays at 9 AM UTC
@@ -133,6 +136,7 @@ aws logs filter-log-events \
 ## Monitoring
 
 CloudWatch metrics are automatically collected for:
+
 - Invocation count
 - Error count
 - Duration
@@ -167,6 +171,7 @@ terraform destroy
 ### Debugging
 
 Enable detailed logging by checking CloudWatch Logs:
+
 ```bash
 aws logs tail /aws/lambda/listmania --follow
 ```
@@ -186,6 +191,7 @@ Tumblr API
 ## Cost Estimation
 
 Approximate monthly costs (as of 2024):
+
 - Lambda: ~$0.20 per million requests + compute time
 - EventBridge: First 1M events free
 - CloudWatch Logs: ~$0.50 per GB ingested
