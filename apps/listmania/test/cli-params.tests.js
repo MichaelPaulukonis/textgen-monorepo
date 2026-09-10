@@ -24,7 +24,7 @@ describe('index.js CLI parameter passing', function () {
 
   const run = (args) =>
     JSON.parse(
-      execSync(`node index.js ${args}`, {
+      execSync(`node src/cli.js ${args}`, {
         encoding: 'utf8',
         cwd: path.join(__dirname, '..'),
         env: Object.assign({}, process.env, fakeEnv)

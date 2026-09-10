@@ -2,9 +2,9 @@
   "name": "listmania",
   "version": "0.1.0",
   "description": "maker of lists",
-  "main": "index.js",
+  "main": "src/cli.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/cli.js",
     "cover": "npm run clean:cover && npm run cover:js",
     "clean:cover": "rm -rf ./docs/coverage",
     "cover:js": "nyc mocha --recursive ./test/*.tests.js",

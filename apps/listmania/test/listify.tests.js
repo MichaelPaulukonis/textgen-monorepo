@@ -1,5 +1,5 @@
 const expect = require('chai').expect
-const Listifier = require('../lib/listify')
+const Listifier = require('../src/lib/listify')
 const newlistifier = new Listifier()
 const Corpora = require('common-corpus')
 

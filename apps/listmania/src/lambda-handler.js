@@ -3,13 +3,13 @@
  * Handles Lambda-specific execution logic for list generation and posting
  */
 
-const config = require('../config.js')
+const config = require('./config.js')
 
 class LambdaHandler {
   constructor() {
     this.config = config
-    this.listifier = new (require('../lib/listify'))()
-    this.util = require('../lib/util.js')({ statusVerbosity: 0 })
+    this.listifier = new (require('./lib/listify'))()
+    this.util = require('./lib/util.js')({ statusVerbosity: 0 })
     this.tumblr = require('tumblr.js')
     this.client = this.tumblr.createClient({
       consumer_key: this.config.consumerKey,
@@ -301,7 +301,7 @@ class LambdaHandler {
       }
 
       if (list.list && list.list.length > 0) {
-        const { prepForPublish, prefixifiers } = require('../lib/prep')
+        const { prepForPublish, prefixifiers } = require('./lib/prep')
         const pfx = this.util.pick(Object.keys(prefixifiers))
         list.printable = prepForPublish(list, prefixifiers[pfx])
 
