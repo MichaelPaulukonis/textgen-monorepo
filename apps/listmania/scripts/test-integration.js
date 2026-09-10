@@ -2,14 +2,14 @@
  * Quick integration test to verify Lambda handler and common-corpus integration
  */
 
-require('dotenv').config({ path: require('path').join(__dirname, '.env') })
+require('dotenv').config({ path: require('path').join(__dirname, '../.env') })
 
 console.log('Testing Listmania Lambda Integration...\n')
 
 try {
   // Test 1: Load Lambda handler
   console.log('1. Loading Lambda handler...')
-  const { LambdaHandler } = require('./lambda/index.js')
+  const { LambdaHandler } = require('../src/lambda-handler.js')
   console.log('   ✅ Lambda handler loaded successfully')
 
   // Test 2: Instantiate handler
@@ -21,7 +21,6 @@ try {
   console.log('\n3. Verifying configuration...')
   console.log('   Config loaded:', !!handler.config)
   console.log('   Listifier loaded:', !!handler.listifier)
-  console.log('   Tumblr client loaded:', !!handler.client)
   console.log('   ✅ Configuration verified')
 
   // Test 4: Test common-corpus integration

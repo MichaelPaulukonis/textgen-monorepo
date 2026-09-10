@@ -75,7 +75,7 @@
     "lambda:test": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node lambda/test-handler.js",
+        "command": "node scripts/test-handler.js",
         "cwd": "apps/listmania"
       }
     }

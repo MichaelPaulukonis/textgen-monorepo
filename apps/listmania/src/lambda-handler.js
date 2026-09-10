@@ -3,20 +3,15 @@
  * Handles Lambda-specific execution logic for list generation and posting
  */
 
-const config = require('../config.js')
+const config = require('./config.js')
+const { postToTumblr } = require('tumblr-poster')
+const { toNPFContent } = require('./lib/npf-adapter')
 
 class LambdaHandler {
   constructor() {
     this.config = config
-    this.listifier = new (require('../lib/listify'))()
-    this.util = require('../lib/util.js')({ statusVerbosity: 0 })
-    this.tumblr = require('tumblr.js')
-    this.client = this.tumblr.createClient({
-      consumer_key: this.config.consumerKey,
-      consumer_secret: this.config.consumerSecret,
-      token: this.config.accessToken,
-      token_secret: this.config.accessSecret
-    })
+    this.listifier = new (require('./lib/listify'))()
+    this.util = require('./lib/util.js')({ statusVerbosity: 0 })
   }
 
   /**
@@ -301,10 +296,6 @@ class LambdaHandler {
       }
 
       if (list.list && list.list.length > 0) {
-        const { prepForPublish, prefixifiers } = require('../lib/prep')
-        const pfx = this.util.pick(Object.keys(prefixifiers))
-        list.printable = prepForPublish(list, prefixifiers[pfx])
-
         this.log(
           `Generated list: "${list.metadata.title}" (${list.list.length} items)`
         )
@@ -329,7 +320,7 @@ class LambdaHandler {
    */
   async postList(list) {
     try {
-      if (!list || !list.printable || !list.metadata || !list.metadata.title) {
+      if (!list || !list.list || !list.metadata || !list.metadata.title) {
         return {
           success: false,
           postId: null,
@@ -337,32 +328,23 @@ class LambdaHandler {
         }
       }
 
-      return new Promise((resolve) => {
-        this.client.createTextPost(
-          'leanstooneside',
-          {
-            title: list.metadata.title,
-            body: list.printable
-          },
-          (err, data) => {
-            if (err) {
-              this.logError('Tumblr posting error', err)
-              resolve({
-                success: false,
-                postId: null,
-                error: err.message || JSON.stringify(err)
-              })
-            } else {
-              this.log(`Posted list successfully: ${data.id}`)
-              resolve({
-                success: true,
-                postId: data.id,
-                error: null
-              })
-            }
-          }
-        )
-      })
+      const result = await postToTumblr(
+        this.config,
+        'leanstooneside',
+        toNPFContent(list)
+      )
+
+      if (result.success) {
+        this.log(`Posted list successfully: ${result.postId}`)
+      } else {
+        this.logError('Tumblr posting error', new Error(result.error))
+      }
+
+      return {
+        success: result.success,
+        postId: result.postId,
+        error: result.error
+      }
     } catch (error) {
       this.logError('List posting error', error)
       return {

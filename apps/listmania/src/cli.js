@@ -1,17 +1,10 @@
 const listifier = new (require('./lib/listify'))()
 const util = require('./lib/util.js')({ statusVerbosity: 0 })
 const config = require('./config.js')
-const tumblr = require('tumblr.js')
+const { postToTumblr } = require('tumblr-poster')
+const { toNPFContent } = require('./lib/npf-adapter')
 
 const ALWAYS_PRINT = 0
-const { prepForPublish, prefixifiers } = require('./lib/prep')
-
-const client = tumblr.createClient({
-  consumer_key: config.consumerKey,
-  consumer_secret: config.consumerSecret,
-  token: config.accessToken,
-  token_secret: config.accessSecret
-})
 
 const logger = function (msg) {
   util.debug(msg, ALWAYS_PRINT)
@@ -31,15 +24,13 @@ const getText = function () {
   const blob =
     text.length <= chars ? text : text.slice(startPos, startPos + chars)
 
-  // console.log(`text.length: ${text.length} startPos: ${startPos} blob-borders: ${startPos+chars}`);
-
   return {
     text: blob,
     source: textObj.name
   }
 }
 
-const teller = function () {
+const teller = async function () {
   const text = getText(config.corporaFilter)
   let list = {}
   let attempt = 0
@@ -57,21 +48,15 @@ const teller = function () {
   }
 
   if (list.list && list.list.length > 0) {
-    const pfx = util.pick(Object.keys(prefixifiers))
-    list.printable = prepForPublish(list, prefixifiers[pfx])
-
-    // TODO: uh.... separate out posting from the listifier
     if (config.postLive) {
-      client.createTextPost(
+      const result = await postToTumblr(
+        config,
         'leanstooneside',
-        { title: list.metadata.title, body: list.printable },
-        (err, _) => {
-          if (err) {
-            logger(JSON.stringify(err))
-            logger(err)
-          }
-        }
+        toNPFContent(list)
       )
+      if (result.error) {
+        logger(result.error)
+      }
     } else {
       logger(JSON.stringify(list, null, 2))
     }
@@ -91,7 +76,7 @@ program
     '-p, --patternMatch [string]',
     'nlp-compromise matchPattern for list elements'
   )
-  .option('-m, --method [string]', 'method-type (See index.js)')
+  .option('-m, --method [string]', 'method-type (See cli.js)')
   .parse(process.argv)
 
 // commander@7 stopped exposing parsed flags as program.X properties by

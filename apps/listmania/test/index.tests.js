@@ -26,7 +26,7 @@ describe('index.js CLI', function () {
   }
 
   it('never prints the configured Tumblr credentials to stdout', function () {
-    const result = execSync('node index.js', {
+    const result = execSync('node src/cli.js', {
       encoding: 'utf8',
       cwd: path.join(__dirname, '..'),
       env: Object.assign({}, process.env, fakeSecrets)

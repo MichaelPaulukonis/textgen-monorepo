@@ -65,18 +65,20 @@ This monorepo is managed by [Nx](https://nx.dev). Here is an overview of the key
 
 ### Installation
 
-1.  **Clone the repository:**
+1. **Clone the repository:**
+
     ```bash
     git clone https://github.com/MichaelPaulukonis/textgen-monorepo.git
     cd textgen-monorepo
     ```
 
-2.  **Install dependencies:**
+2. **Install dependencies:**
+
     ```bash
     pnpm install
     ```
 
-3.  **Set up environment variables:**
+3. **Set up environment variables:**
     Each app uses a `.env` file for configuration, primarily for Tumblr API keys. Copy the `.env.example` in each app's directory to `.env` and fill in your credentials.
 
     - `apps/poeticalbot/.env.example`
@@ -178,7 +180,7 @@ This README covers the monorepo as a whole. Each project keeps its own deeper do
   - [Monorepo Integration Notes](apps/listmania/MONOREPO_INTEGRATION.md)
   - [Migration Analysis](apps/listmania/MIGRATION_ANALYSIS.md) -- the Heroku-to-Lambda move
   - [Deployment](apps/listmania/DEPLOYMENT.md)
-  - [Lambda Implementation Notes](apps/listmania/lambda/IMPLEMENTATION.md)
+  - [Lambda Handler Notes](apps/listmania/docs/LAMBDA-HANDLER.md)
 - **common-corpus**
   - [Library README](libs/common-corpus/README.md) -- indexes its own `docs/` tree (API reference, architecture, corpus guide, deployment options, PRD)
 
@@ -190,13 +192,13 @@ Contributions are welcome! Please feel free to open an issue or submit a pull re
 
 ### Contribution Guidelines
 
-1.  **Fork the repository.**
-2.  **Create a new branch:** `git checkout -b my-feature-branch`
-3.  **Make your changes.**
-4.  **Run tests and linting:** `pnpm test` and `pnpm lint`
-5.  **Commit your changes:** `git commit -m "feat: add new feature"`
-6.  **Push to your branch:** `git push origin my-feature-branch`
-7.  **Open a pull request.**
+1. **Fork the repository.**
+2. **Create a new branch:** `git checkout -b my-feature-branch`
+3. **Make your changes.**
+4. **Run tests and linting:** `pnpm test` and `pnpm lint`
+5. **Commit your changes:** `git commit -m "feat: add new feature"`
+6. **Push to your branch:** `git push origin my-feature-branch`
+7. **Open a pull request.**
 
 ## License
 

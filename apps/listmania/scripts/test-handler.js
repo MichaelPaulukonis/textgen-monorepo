@@ -5,7 +5,7 @@
 
 require('dotenv').config({ path: require('path').join(__dirname, '../.env') })
 
-const { LambdaHandler } = require('./index.js')
+const { LambdaHandler } = require('../src/lambda-handler.js')
 
 // Mock Lambda context
 const createMockContext = () => ({

@@ -7,7 +7,7 @@
 
   const expect = chai.expect
 
-  const Util = require('../lib/util.js')
+  const Util = require('../src/lib/util.js')
 
   const util = new Util()
 

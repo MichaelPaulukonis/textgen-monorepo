@@ -20,21 +20,29 @@ BUILD_DIR="build-lambda"
 rm -rf $BUILD_DIR
 mkdir -p $BUILD_DIR
 
-# Copy necessary files to build directory
+# Copy src files to build directory
 echo "Copying source files..."
-cp -r lambda $BUILD_DIR/
-cp -r lib $BUILD_DIR/
-cp config.js $BUILD_DIR/
+cp -r src/* $BUILD_DIR/
 
 # Create Lambda-specific package.json (without workspace dependencies),
 # derived from the real package.json so versions/engines can't drift (textgen-monorepo-213)
 echo "Creating Lambda package.json..."
-node "$SCRIPT_DIR/../../scripts/generate-lambda-package-json.js" package.json "$BUILD_DIR/package.json" lambda/index.js
+node "$SCRIPT_DIR/../../scripts/generate-lambda-package-json.js" package.json "$BUILD_DIR/package.json" lambda-handler.js
 
 # Install production dependencies
 echo "Installing production dependencies..."
 cd $BUILD_DIR
 npm install --production --silent
+
+# Bundle tumblr-poster directly into node_modules - no Lambda layer.
+# Unlike common-corpus (~75MB of corpus text, which is why *that* one
+# needs a layer), this lib is a couple hundred lines with no bulk payload,
+# so a layer would only add AWS infra ceremony for no size benefit.
+echo "Bundling tumblr-poster..."
+mkdir -p node_modules/tumblr-poster
+cp "$SCRIPT_DIR/../../libs/tumblr-poster/package.json" \
+   "$SCRIPT_DIR/../../libs/tumblr-poster/index.js" \
+   node_modules/tumblr-poster/
 
 # Create deployment package
 echo "Creating deployment package..."

@@ -2,7 +2,7 @@ const chai = require('chai')
 const dirtyChai = require('dirty-chai')
 chai.use(dirtyChai)
 const expect = chai.expect
-const textutils = require('../lib/textutil.js')
+const textutils = require('../src/lib/textutil.js')
 
 describe('textutil', function () {
   describe('API', function () {

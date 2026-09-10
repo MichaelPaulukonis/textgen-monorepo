@@ -223,18 +223,18 @@ describe('Lambda Deployment Configuration', function () {
 
   describe('Lambda Handler Configuration', function () {
     it('Lambda handler file should exist', function () {
-      const handlerPath = path.join(__dirname, '../lambda/index.js')
+      const handlerPath = path.join(__dirname, '../src/lambda-handler.js')
       expect(fs.existsSync(handlerPath)).to.be.true()
     })
 
     it('Lambda handler should export handler function', function () {
-      const handler = require('../lambda/index.js')
+      const handler = require('../src/lambda-handler.js')
       expect(handler).to.have.property('handler')
       expect(handler.handler).to.be.a('function')
     })
 
     it('Lambda handler should export LambdaHandler class', function () {
-      const handler = require('../lambda/index.js')
+      const handler = require('../src/lambda-handler.js')
       expect(handler).to.have.property('LambdaHandler')
       expect(handler.LambdaHandler).to.be.a('function')
     })
@@ -251,7 +251,7 @@ describe('Lambda Deployment Configuration', function () {
       process.env.TOKEN_SECRET = 'test-TOKEN-secret'
       process.env.POST_LIVE = 'false'
 
-      const handler = require('../lambda/index.js')
+      const handler = require('../src/lambda-handler.js')
       LambdaHandler = handler.LambdaHandler
     })
 
