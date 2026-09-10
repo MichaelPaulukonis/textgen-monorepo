@@ -18,6 +18,7 @@ apps/listmania/
       npf-adapter.js   <- NEW
   scripts/
     test-handler.js, example-invocations.json   <- moved from lambda/ (manual invoke harness)
+    test-integration.js   <- moved from root (manual smoke-test script, not wired into any npm/nx target)
   docs/
     LAMBDA-HANDLER.md  <- moved from lambda/README.md
 ```
@@ -49,20 +50,24 @@ const result = await postToTumblr(config, 'leanstooneside', toNPFContent(list))
 
 `config` already has the flat `{ consumerKey, consumerSecret, accessToken, accessSecret }` shape `tumblr-poster`'s `createClient` expects - no config restructuring needed.
 
-`postList`/`postingResult` handling in `lambda-handler.js` adapts to `tumblr-poster`'s return shape (`{ success, postId, url, error }` instead of the raw `(err, data)` callback).
+`postList`/`postingResult` handling in `lambda-handler.js` adapts to `tumblr-poster`'s return shape (`{ success, postId, url, error }` instead of the raw `(err, data)` callback). `LambdaHandler` drops its constructor-built `this.client` (`tumblr.js`'s client) entirely, since posting no longer needs a client held on the instance - `postToTumblr` builds its own internally. `scripts/test-integration.js`'s `handler.client` truthiness check is removed accordingly (its `handler.config`/`handler.listifier` checks are unaffected).
 
 ## Dependencies
 
 - `package.json`: add `"tumblr-poster": "workspace:*"`. Keep `"tumblr.js"` as a direct dependency (poeticalbot keeps it too even though it no longer calls it directly - not cleaning that up here, out of scope).
 - `main`/`start` -> `src/cli.js`.
 
-## Build (`build-lambda.sh`)
+## Build (`build-lambda.sh`) and Lambda entry point
 
 Mirror poeticalbot's script:
 
-- Copy `src/*` wholesale into the build dir (replaces the current `cp -r lambda`, `cp -r lib`, `cp config.js` steps).
+- Copy `src/*` wholesale into the build dir, flattened to the build/zip root (replaces the current `cp -r lambda`, `cp -r lib`, `cp config.js` steps) - so `src/lambda-handler.js` lands at the zip root as `lambda-handler.js`.
 - Entry file for `generate-lambda-package-json.js` becomes `lambda-handler.js` (was `lambda/index.js`).
 - Bundle `tumblr-poster` directly into `node_modules/tumblr-poster` (copy its `package.json` + `index.js`) - same as poeticalbot, no Lambda layer needed for a lib this small.
+
+**No `src/index.js`.** poeticalbot has one because its `build-lambda.sh` also flattens `src/*` to the zip root, and AWS's `handler` config string (`<file>.<exportedFn>`, relative to zip root) has to point at *some* real file there - poeticalbot uses `index.js` for that, which is why it exists despite `cli.js` being the actual local-dev entry (that overlap is poeticalbot's own debt, not a convention worth copying - see `textgen-monorepo-xze`). `src/lambda-handler.js` already exports `exports.handler` at the bottom (carried over from the current `lambda/index.js`), so it can be the zip-root entry directly - no extra dispatch file needed.
+
+- `apps/listmania/terraform/main.tf`: `handler = "lambda/index.handler"` -> `handler = "lambda-handler.handler"`.
 
 ## project.json
 
