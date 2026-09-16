@@ -19,3 +19,7 @@ Options:
 ```
 
 `method` uses fuzzy matching, so `node src/cli.js -m weird` will match up to `node src/cli.js -m weirdStrats` etc.
+
+# credits
+
+Listed as a notable project in [compromise](https://github.com/spencermountain/compromise)'s own README, the nlp library this project's pattern matching is built on.

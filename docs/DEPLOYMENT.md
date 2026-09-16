@@ -7,7 +7,7 @@ This monorepo contains multiple NLP applications deployed as AWS Lambda function
 ## Applications
 
 | Application | Description | Deployment Target |
-|-------------|-------------|-------------------|
+| ------------- | ------------- | ------------------- |
 | **poeticalbot** | Poetry generation bot | AWS Lambda |
 | **listmania** | List generation bot | AWS Lambda |
 | **common-corpus** | Shared text corpus library | Lambda Layer |
@@ -40,8 +40,8 @@ npm run deploy:listmania
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
 │  │ poeticalbot  │  │  listmania   │  │common-corpus │    │
 │  │              │  │              │  │              │    │
-│  │  src/        │  │  lambda/     │  │  corpus/     │    │
-│  │              │  │  lib/        │  │  index.js    │    │
+│  │  src/        │  │  src/        │  │  corpus/     │    │
+│  │              │  │              │  │  index.js    │    │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘    │
 │         │                 │                 │             │
 │         │                 │                 │             │
@@ -179,6 +179,7 @@ Each application has a `project.json` file defining Nx targets:
 ### Target Dependencies
 
 The `deploy` target automatically depends on `build`, ensuring:
+
 1. Lambda package is built before deployment
 2. Nx caching optimizes repeated builds
 3. Proper task ordering across applications
@@ -194,10 +195,7 @@ nx reset
 
 ## Application-Specific Guides
 
-For detailed deployment instructions for each application:
-
-- [PoeticalBot Deployment Guide](../apps/poeticalbot/DEPLOYMENT.md)
-- [Listmania Deployment Guide](../apps/listmania/DEPLOYMENT.md)
+Both apps deploy through the same Nx `build` -> `deploy` flow described above; there are no separate per-app deployment guides. See `apps/listmania/terraform/README.md` for Terraform-specific details (poeticalbot's `terraform/` has no equivalent README yet).
 
 ## Common Deployment Scenarios
 
@@ -250,11 +248,13 @@ nx run <app>:deploy
 #### Build Failures
 
 **Problem**: Permission denied on build script
+
 ```bash
 chmod +x apps/*/build-lambda.sh
 ```
 
 **Problem**: npm install fails
+
 ```bash
 # Clear npm cache
 npm cache clean --force
@@ -266,6 +266,7 @@ pnpm install
 #### Deployment Failures
 
 **Problem**: AWS authentication fails
+
 ```bash
 # Verify credentials
 aws sts get-caller-identity
@@ -275,6 +276,7 @@ aws configure
 ```
 
 **Problem**: Terraform state lock
+
 ```bash
 cd apps/<app>/terraform
 terraform force-unlock <LOCK_ID>
@@ -283,6 +285,7 @@ terraform force-unlock <LOCK_ID>
 #### Runtime Issues
 
 **Problem**: Lambda function errors
+
 ```bash
 # View logs
 aws logs tail /aws/lambda/<function-name> --follow
@@ -361,6 +364,7 @@ jobs:
 ### CloudWatch Dashboards
 
 Create dashboards to monitor:
+
 - Lambda invocation counts
 - Error rates
 - Function durations
@@ -369,6 +373,7 @@ Create dashboards to monitor:
 ### Alarms
 
 Set up alarms for:
+
 - High error rates (> 5%)
 - Long execution times (> 30s)
 - Throttling events
@@ -410,6 +415,7 @@ For deployment issues:
 ## Changelog
 
 ### 2024-11-17
+
 - Standardized deployment process across applications
 - Integrated Nx build system
 - Created comprehensive deployment documentation

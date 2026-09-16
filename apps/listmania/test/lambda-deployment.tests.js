@@ -3,6 +3,7 @@ const chai = require('chai')
 const dirtyChai = require('dirty-chai')
 const fs = require('fs')
 const path = require('path')
+const tumblrPoster = require('tumblr-poster')
 
 chai.use(dirtyChai)
 const { expect } = chai
@@ -283,6 +284,64 @@ describe('Lambda Deployment Configuration', function () {
     it('should have postList method', function () {
       const handler = new LambdaHandler()
       expect(handler.postList).to.be.a('function')
+    })
+
+    describe('postList', function () {
+      const originalCreateClient = tumblrPoster.createClient
+      const validList = {
+        list: ['first', 'second'],
+        metadata: { title: 'A List' }
+      }
+
+      afterEach(function () {
+        tumblrPoster.createClient = originalCreateClient
+      })
+
+      it('maps a successful post to success:true with a postId', async function () {
+        tumblrPoster.createClient = () => ({
+          createPost: async () => ({ id: 42 })
+        })
+
+        const handler = new LambdaHandler()
+        const result = await handler.postList(validList)
+
+        expect(result).to.deep.equal({ success: true, postId: 42, error: null })
+      })
+
+      it('maps a failed post to success:false with the error message', async function () {
+        tumblrPoster.createClient = () => ({
+          createPost: async () => {
+            throw new Error('Tumblr API down')
+          }
+        })
+
+        const handler = new LambdaHandler()
+        const result = await handler.postList(validList)
+
+        expect(result).to.deep.equal({
+          success: false,
+          postId: null,
+          error: 'Tumblr API down'
+        })
+      })
+
+      it('short-circuits on an invalid list without calling tumblr-poster', async function () {
+        let called = false
+        tumblrPoster.createClient = () => {
+          called = true
+          return { createPost: async () => ({ id: 1 }) }
+        }
+
+        const handler = new LambdaHandler()
+        const result = await handler.postList({ list: [] })
+
+        expect(result).to.deep.equal({
+          success: false,
+          postId: null,
+          error: 'Invalid list object'
+        })
+        expect(called).to.equal(false)
+      })
     })
 
     it('should parse event options correctly', function () {

@@ -175,11 +175,8 @@ This README covers the monorepo as a whole. Each project keeps its own deeper do
   - [Deployment Guide](docs/DEPLOYMENT.md) -- shared Lambda deployment architecture across apps
   - [Deployment Standardization Summary](docs/deployment-standardization-summary.md) -- why deploys are standardized through Nx
 - **poeticalbot**
-  - [Documentation Index](apps/poeticalbot/docs/README.md) -- architecture, analysis, recommendations, Tumblr config, NPF migration
+  - [Documentation Index](apps/poeticalbot/docs/README.md) -- architecture, Tumblr config, NPF migration
 - **listmania**
-  - [Monorepo Integration Notes](apps/listmania/MONOREPO_INTEGRATION.md)
-  - [Migration Analysis](apps/listmania/MIGRATION_ANALYSIS.md) -- the Heroku-to-Lambda move
-  - [Deployment](apps/listmania/DEPLOYMENT.md)
   - [Lambda Handler Notes](apps/listmania/docs/LAMBDA-HANDLER.md)
 - **common-corpus**
   - [Library README](libs/common-corpus/README.md) -- indexes its own `docs/` tree (API reference, architecture, corpus guide, deployment options, PRD)

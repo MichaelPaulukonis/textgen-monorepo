@@ -22,14 +22,29 @@ describe('index.js CLI parameter passing', function () {
     POST_LIVE: 'false'
   }
 
-  const run = (args) =>
-    JSON.parse(
-      execSync(`node src/cli.js ${args}`, {
-        encoding: 'utf8',
-        cwd: path.join(__dirname, '..'),
-        env: Object.assign({}, process.env, fakeEnv)
-      })
-    )
+  // teller() picks one random text chunk per process and retries the same
+  // chunk against the match pattern up to 5x; if that chunk has zero matches
+  // it prints a plain-text "NO LIST FOR TEXT..." fallback instead of JSON.
+  // Re-running gets a fresh random chunk, same mitigation the CLI itself
+  // already relies on - not a race, just content-dependent match failure.
+  const run = (args, retriesLeft = 5) => {
+    const stdout = execSync(`node src/cli.js ${args}`, {
+      encoding: 'utf8',
+      cwd: path.join(__dirname, '..'),
+      env: Object.assign({}, process.env, fakeEnv)
+    })
+
+    if (!stdout.trim().startsWith('{')) {
+      if (retriesLeft <= 0) {
+        throw new Error(
+          `cli.js never produced a list after retries; last output: ${stdout}`
+        )
+      }
+      return run(args, retriesLeft - 1)
+    }
+
+    return JSON.parse(stdout)
+  }
 
   it('-c/--corporaFilter restricts the source corpus', () => {
     const result = run('-c cyberpunk')
