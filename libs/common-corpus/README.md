@@ -74,16 +74,20 @@ node util.js --text "neuromancer"
 ## Documentation
 
 ### Getting Started
+
 - [API Reference](docs/api/README.md) - Complete API documentation
 - [Usage Examples](docs/api/examples.md) - Practical code examples
 - [Corpus Guide](docs/corpus-guide.md) - Detailed text collection overview
 
 ### Development
+
 - [Architecture Overview](docs/architecture/system-design.md) - System design
 - [Lambda Deployment Guide](docs/deployment/lambda-deployment.md) - Building and deploying the Lambda layer
 - [Deployment Options](docs/deployment/DEPLOYMENT_OPTIONS.md) - Layer vs Full API deployment
+- `python3 scripts/scan-encoding.py` - Scan `corpus/` for encoding problems (mixed encodings, BOMs, double-encoded UTF-8); run after adding or re-pulling texts
 
 ### Project Information
+
 - [Project Structure](docs/PROJECT_STRUCTURE.md) - Complete project organization
 - [Product Requirements](docs/requirements/PRD.md) - Project goals and requirements
 - [Changelog](CHANGELOG.md) - Version history
@@ -91,20 +95,22 @@ node util.js --text "neuromancer"
 ## Roadmap
 
 ### Version 1.0 (Planned)
+
 - **Modern Dependencies**: Migrate from `nlp_compromise` to `compromise`; update mocha/chai/nyc off their long-EOL pinned versions
 - **Performance**: Async/await API and caching improvements
 - **Security**: Input validation and safe file handling
 - **Documentation**: Comprehensive guides and examples
 
 ### Decided Against
+
 - **Zip/archive corpus compression** — the original zip-on-disk strategy (unzip-on-first-read, cache to disk) was built for Heroku's persistent, writable dyno filesystem. It cannot work under AWS Lambda: the layer mount (`/opt`) is read-only, so even a single invocation hitting that code path would fail, not just after the dyno's session ended. Corpus now ships as plain text (~89MB, well under Lambda's 250MB unzipped layer limit) and the zip-handling code (`node-zipkit`, `mkdirp`) has been removed.
 
 ### Future Enhancements
+
 - **Streaming**: Support for large text processing
 - **Metadata**: Rich text information (author, year, genre)
 - **Search**: Full-text search capabilities
 - **Gitenberg Integration**: Automated text retrieval
-
 
 ## Contributing
 
