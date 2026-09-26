@@ -146,6 +146,50 @@
       })
     })
 
+    describe('text encoding detection', function () {
+      var tmpDir, corpora
+
+      beforeEach(function () {
+        tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'common-corpus-enc-'))
+        corpora = new Corpora()
+      })
+
+      afterEach(function () {
+        fs.rmSync(tmpDir, { recursive: true, force: true })
+      })
+
+      var write = function (name, buf) {
+        var file = path.join(tmpDir, name)
+        fs.writeFileSync(file, buf)
+        return file
+      }
+
+      it('decodes UTF-8 without mojibake', function () {
+        var file = write('utf8.txt', Buffer.from('café — “naïve”', 'utf8'))
+        expect(corpora.readFile(file)).to.equal('café — “naïve”')
+      })
+
+      it('strips a UTF-8 BOM', function () {
+        var file = write(
+          'bom.txt',
+          Buffer.concat([
+            Buffer.from([0xef, 0xbb, 0xbf]),
+            Buffer.from('café', 'utf8')
+          ])
+        )
+        expect(corpora.readFile(file)).to.equal('café')
+      })
+
+      it('falls back to windows-1252 for invalid UTF-8', function () {
+        // "café" in Latin-1, plus 0x93/0x94 curly quotes (cp1252-only)
+        var file = write(
+          'latin1.txt',
+          Buffer.from([0x93, 0x63, 0x61, 0x66, 0xe9, 0x94])
+        )
+        expect(corpora.readFile(file)).to.equal('“café”')
+      })
+    })
+
     describe('readFile error handling', function () {
       it('throws a descriptive error for a missing file', function () {
         var corpora = new Corpora()

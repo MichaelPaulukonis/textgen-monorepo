@@ -6,6 +6,21 @@ const fs = require(`fs`),
   debreak = require(`./lib/debreak`),
   textutil = require(`./lib/textutil`)
 
+// Corpus is mixed UTF-8 (some with BOM), Latin-1 and ASCII. Strict UTF-8 throws
+// on invalid bytes, so any legacy 8-bit file falls through to windows-1252
+// (a Latin-1 superset that also maps 0x80-0x9F smart quotes/dashes).
+// Fallback uses iconv-lite, not TextDecoder: Node 22's `windows-1252`
+// TextDecoder silently decodes as ISO-8859-1, losing those 0x80-0x9F chars.
+const utf8 = new TextDecoder(`utf-8`, { fatal: true }) // strips BOM by default
+
+const decode = function (buf) {
+  try {
+    return utf8.decode(buf)
+  } catch (error) {
+    return iconv.decode(buf, `windows-1252`)
+  }
+}
+
 let Corpora = function (options = {}) {
   if (!(this instanceof Corpora)) {
     return new Corpora(options)
@@ -58,13 +73,7 @@ let Corpora = function (options = {}) {
         .replace(/^[/\\]/, ``),
     gettext = function (filename) {
       try {
-        let text = fs.readFileSync(filename),
-          book = iconv.decode(Buffer.from(text), `ISO8859-1`)
-        // discard windows encoding thingy
-        if (book.charCodeAt(0) === 0xfeff) {
-          book = book.slice(1)
-        }
-        return debreak(book)
+        return debreak(decode(fs.readFileSync(filename)))
       } catch (error) {
         console.error(`Error reading file ${filename}:`, error.message)
         throw new Error(`Failed to read text file: ${path.basename(filename)}`)
