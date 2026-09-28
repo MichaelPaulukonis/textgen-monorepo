@@ -7,9 +7,7 @@
     "test": "mocha test/",
     "start": "node index.js",
     "cover": "istanbul cover --include-all-sources node_modules/mocha/bin/_mocha test/",
-    "build:layer": "npm run build:layer:prepare && npm run build:layer:zip",
-    "build:layer:prepare": "mkdir -p layer/nodejs/node_modules/common-corpus && cp -r corpus/ index.js package.json layer/nodejs/node_modules/common-corpus/",
-    "build:layer:zip": "cd layer && zip -r ../common-corpus-layer.zip nodejs/"
+    "build:layer": "bash scripts/build-layer.sh"
   },
   "repository": {
     "type": "git",

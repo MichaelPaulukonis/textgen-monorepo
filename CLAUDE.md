@@ -64,7 +64,7 @@ nx run poeticalbot:deploy
 nx run listmania:deploy
 ```
 
-All three projects have `project.json` (`apps/poeticalbot`, `apps/listmania`, `libs/common-corpus`). `poeticalbot`/`listmania`/`common-corpus` all define a `lint` target that shells out to `prettier --check` via `nx:run-commands` (repo-wide config in root `.prettierrc.json`/`.prettierignore`; `common-corpus`'s target passes `--ignore-path ../../.prettierignore` explicitly since Prettier resolves `.prettierignore` relative to cwd, not the repo root, and its `cwd` is `libs/common-corpus` — that's what keeps `corpus/` out of formatting). `poeticalbot`/`listmania` also define build/test/deploy/deploy:plan/cli targets the same way. `common-corpus`'s `project.json` only adds `build` (no-op placeholder), `test`, `build-layer`, `lint` — its other `package.json` scripts (`cover`, `build:layer:prepare`, `build:layer:zip`) are still separately inferred as Nx targets.
+All three projects have `project.json` (`apps/poeticalbot`, `apps/listmania`, `libs/common-corpus`). `poeticalbot`/`listmania`/`common-corpus` all define a `lint` target that shells out to `prettier --check` via `nx:run-commands` (repo-wide config in root `.prettierrc.json`/`.prettierignore`; `common-corpus`'s target passes `--ignore-path ../../.prettierignore` explicitly since Prettier resolves `.prettierignore` relative to cwd, not the repo root, and its `cwd` is `libs/common-corpus` — that's what keeps `corpus/` out of formatting). `poeticalbot`/`listmania` also define build/test/deploy/deploy:plan/cli targets the same way. `common-corpus`'s `project.json` only adds `build` (no-op placeholder), `test`, `build-layer`, `lint` — its other `package.json` scripts (`cover`, `build:layer`) are still separately inferred as Nx targets.
 
 ## Architecture
 
@@ -78,7 +78,7 @@ Both `poeticalbot` and `listmania` run as either a local CLI process or an AWS L
 
 `libs/common-corpus` is consumed two ways:
 - As a pnpm workspace dependency (`"common-corpus": "workspace:*"`) for local/CLI use in both apps.
-- As a prebuilt AWS Lambda layer (`npm run build:layer` in that package) for the Lambda deployments, via `lambda-index.js` as the layer-optimized entry point and `src/lib/layer-require.js` in each app for environment-aware module loading (Lambda layer path vs local `node_modules`).
+- As a prebuilt AWS Lambda layer (`npm run build:layer` in that package -> `scripts/build-layer.sh` -> `common-corpus-layer.zip`) for the Lambda deployments, with `src/lib/layer-require.js` in each app for environment-aware module loading (Lambda layer path vs local `node_modules`). The build script assembles the package in a temp dir, installs prod deps, and fails unless the layer's corpus file list matches `git ls-files corpus` (minus `###` paths, which `index.js` never loads) and every text loads. Layer v1 silently shipped 79/125 texts; don't bypass the check.
 
 Corpus text lives under `libs/common-corpus/corpus/` (~75MB), organized by category/genre, selected at runtime via regex filtering (`--corporaFilter`).
 

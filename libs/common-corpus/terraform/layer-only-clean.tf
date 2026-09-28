@@ -21,7 +21,7 @@ resource "aws_lambda_layer_version" "common_corpus_layer" {
   filename                 = var.layer_zip_path
   layer_name              = local.layer_name
   description             = "Common Corpus text collection for NLP/NLG (${var.environment})"
-  compatible_runtimes     = ["nodejs18.x", "nodejs16.x", "nodejs14.x", "nodejs20.x"]
+  compatible_runtimes     = ["nodejs18.x", "nodejs20.x", "nodejs22.x"]
   compatible_architectures = ["x86_64"]
   
   source_code_hash = filebase64sha256(var.layer_zip_path)
