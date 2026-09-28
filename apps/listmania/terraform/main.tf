@@ -14,7 +14,7 @@ provider "aws" {
 # Reference to existing common-corpus layer
 data "aws_lambda_layer_version" "common_corpus_layer" {
   layer_name = "common-corpus-layer-dev"
-  version    = 1
+  version    = 2
 }
 
 # Lambda function
