@@ -48,9 +48,20 @@ describe('npf-adapter', function () {
     const subtypes = new Set(itemBlocks.map((b) => b.subtype))
 
     expect(subtypes.size).to.equal(1)
-    expect(['numbered-list-item', 'unordered-list-item']).to.include(
-      [...subtypes][0]
-    )
+  })
+
+  // Subtype is picked by coinflip, so sample enough runs to see both branches.
+  // Tumblr 400s on anything outside the NPF spec (e.g. 'numbered-list-item').
+  it('only emits list subtypes valid in the NPF spec', function () {
+    const seen = new Set()
+    for (let i = 0; i < 50; i++) {
+      seen.add(toNPFContent(sampleList)[1].subtype)
+    }
+
+    expect([...seen].sort()).to.deep.equal([
+      'ordered-list-item',
+      'unordered-list-item'
+    ])
   })
 
   it('marks every item block as type text', function () {
