@@ -1,4 +1,11 @@
 terraform {
+  backend "s3" {
+    bucket  = "textgen-tfstate-129701576546"
+    key     = "listmania/terraform.tfstate"
+    region  = "us-east-1"
+    encrypt = true
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"

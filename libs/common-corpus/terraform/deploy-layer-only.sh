@@ -31,6 +31,18 @@ mkdir -p layer-only
 # Copy versions.tf (provider configuration)
 cp versions.tf layer-only/
 
+# Remote state (S3). layer-only/ is regenerated on every run, so state must not live here.
+cat > layer-only/backend.tf << 'EOF2'
+terraform {
+  backend "s3" {
+    bucket  = "textgen-tfstate-129701576546"
+    key     = "common-corpus-layer/terraform.tfstate"
+    region  = "us-east-1"
+    encrypt = true
+  }
+}
+EOF2
+
 # Copy the clean layer configuration (without variables)
 cp layer-only-clean.tf layer-only/main.tf
 

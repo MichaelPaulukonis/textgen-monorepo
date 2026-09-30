@@ -65,3 +65,8 @@ Thumbs.db
 # SpecStory session history (synced to SpecStory Cloud, no need to track in git)
 .specstory/
 .worktrees/
+
+# Terraform saved plans (embed state, incl. secrets)
+plan.out
+tfplan
+*.tfplan

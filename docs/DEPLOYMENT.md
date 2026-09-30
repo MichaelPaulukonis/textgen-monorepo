@@ -127,6 +127,35 @@ export AWS_SECRET_ACCESS_KEY="your-secret-key"
 export AWS_DEFAULT_REGION="us-east-1"
 ```
 
+### Terraform Remote State
+
+State for all stacks lives in S3 bucket `textgen-tfstate-129701576546` (us-east-1), one key per stack:
+
+| Stack | Key |
+|---|---|
+| `apps/poeticalbot/terraform` | `poeticalbot/terraform.tfstate` |
+| `apps/listmania/terraform` | `listmania/terraform.tfstate` |
+| `libs/common-corpus/terraform/layer-only` | `common-corpus-layer/terraform.tfstate` (backend emitted by `deploy-layer-only.sh` as `layer-only/backend.tf`) |
+
+No locking (solo project, Terraform 1.5.7 lacks `use_lockfile`; no DynamoDB). Bucket versioning is the recovery mechanism - restore a prior object version if state is corrupted. Noncurrent versions expire after 90 days.
+
+Bucket was created via CLI (not Terraform, to avoid chicken/egg):
+
+```bash
+B=textgen-tfstate-129701576546
+aws s3api create-bucket --bucket $B --region us-east-1
+aws s3api put-bucket-versioning --bucket $B --versioning-configuration Status=Enabled
+aws s3api put-public-access-block --bucket $B --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
+aws s3api put-bucket-encryption --bucket $B --server-side-encryption-configuration '{"Rules":[{"ApplyServerSideEncryptionByDefault":{"SSEAlgorithm":"AES256"}}]}'
+aws s3api put-bucket-lifecycle-configuration --bucket $B --lifecycle-configuration '{"Rules":[{"ID":"expire-noncurrent-90d","Status":"Enabled","Filter":{},"NoncurrentVersionExpiration":{"NoncurrentDays":90}}]}'
+```
+
+**`aws login` gotcha:** Terraform 1.5.7's bundled AWS SDK cannot read `aws login` credentials (it falls back to IMDS and fails with `169.254.169.254: host is down`). Export them as env vars first:
+
+```bash
+eval "$(aws configure export-credentials --format env)"
+```
+
 ### Environment Variables
 
 Each application requires a `.env` file with Tumblr API credentials:
