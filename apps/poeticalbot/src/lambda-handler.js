@@ -231,17 +231,17 @@ class LambdaHandler {
         generationConfig.transform = options.transform
       }
 
-      const poetifier = new (require('./lib/poetifier.js'))({
-        config: generationConfig
+      const { generatePoem } = require('./lib/generate-poem.js')
+      const { poem, error, attempts } = generatePoem(generationConfig, {
+        log: (msg) => this.log(msg)
       })
-      const poem = poetifier.poem()
 
-      if (poem && poem.title && poem.text) {
-        this.log(`Generated poem: "${poem.title}" (seed: ${poem.seed})`)
-        return { poem, error: null }
-      } else {
-        return { poem: null, error: 'No poem generated' }
+      if (poem) {
+        this.log(
+          `Generated poem: "${poem.title}" (seed: ${poem.seed}, attempt ${attempts})`
+        )
       }
+      return { poem, error }
     } catch (error) {
       this.logError('Poem generation error', error)
       return { poem: null, error: error.message }

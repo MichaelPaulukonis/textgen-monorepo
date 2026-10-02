@@ -130,12 +130,10 @@ Environment Variables:
       }
 
       // Generate poem
-      const poetifier = new (require('./lib/poetifier.js'))({
-        config: generationConfig
-      })
-      const poem = poetifier.poem()
+      const { generatePoem } = require('./lib/generate-poem.js')
+      const { poem, error } = generatePoem(generationConfig)
 
-      return { poem, error: null }
+      return { poem, error }
     } catch (error) {
       return { poem: null, error: error.message }
     }

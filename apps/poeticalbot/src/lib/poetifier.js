@@ -1,5 +1,46 @@
 const { boundedLetterFilter, retryTitle } = require(`./retry-bounds.js`)
 
+// hard-coded corpus filter strategies; each must match >= 1 corpus text
+// (contract-tested in test/poetifier.empty-corpus.tests.js)
+// retired: `2001`, `odyssey`, `singing`
+const CORPORA_FILTERS = [
+  `childrens|apocalypsenow`,
+  `childrens|folklore`,
+  `computerculture|folklore`,
+  `nasa|folklore`,
+  `marx|folklore`,
+  `finnegan|rutabaga`,
+  `pound|eliot|rutabaga`,
+  `sms|egypt`,
+  `sms`,
+  `shakespeare`,
+  `cyberpunk`,
+  `cyberpunk|western`,
+  `western`,
+  `gertrudestein`,
+  `gertrudestein|finnegan`,
+  `gertrudestein|marx`,
+  `gertrudestein|sentences`,
+  `computerculture`,
+  `filmscripts`,
+  `spam`,
+  `spam|sms`,
+  `spam.0`,
+  `egypt`,
+  `manifesto`,
+  `ascii|emoticon`,
+  `marx`,
+  `james.joyce`,
+  `poetry`,
+  `eliot`,
+  `imagist`,
+  `whitman`,
+  `longfellow`,
+  `lowell`,
+  `rome`,
+  `sentences`
+]
+
 class Poetifier {
   constructor(options) {
     let util = new (require(`./util.js`))({
@@ -28,44 +69,7 @@ class Poetifier {
       var strategies = [
         corporaSevenStrategy,
         corporaSevenStrategy,
-        corporaFilterStrategy(`childrens|apocalypsenow`),
-        corporaFilterStrategy(`childrens|folklore`),
-        corporaFilterStrategy(`computerculture|folklore`),
-        corporaFilterStrategy(`nasa|folklore`),
-        corporaFilterStrategy(`marx|folklore`),
-        corporaFilterStrategy(`finnegan|rutabaga`),
-        corporaFilterStrategy(`pound|eliot|rutabaga`),
-        corporaFilterStrategy(`sms|egypt`),
-        corporaFilterStrategy(`sms`),
-        corporaFilterStrategy(`shakespeare`),
-        corporaFilterStrategy(`cyberpunk`),
-        corporaFilterStrategy(`cyberpunk|western`),
-        corporaFilterStrategy(`western`),
-        corporaFilterStrategy(`gertrudestein`),
-        corporaFilterStrategy(`gertrudestein|finnegan`),
-        corporaFilterStrategy(`gertrudestein|marx`),
-        corporaFilterStrategy(`gertrudestein|sentences`),
-        corporaFilterStrategy(`computerculture`),
-        corporaFilterStrategy(`filmscripts`),
-        corporaFilterStrategy(`spam`),
-        corporaFilterStrategy(`spam|sms`),
-        corporaFilterStrategy(`spam.0`),
-        // corporaFilterStrategy(`2001`),
-        // corporaFilterStrategy(`odyssey`),
-        // corporaFilterStrategy(`singing`),
-        corporaFilterStrategy(`egypt`),
-        corporaFilterStrategy(`manifesto`),
-        corporaFilterStrategy(`ascii|emoticon`),
-        corporaFilterStrategy(`marx`),
-        corporaFilterStrategy(`james.joyce`),
-        corporaFilterStrategy(`poetry`),
-        corporaFilterStrategy(`eliot`),
-        corporaFilterStrategy(`imagist`),
-        corporaFilterStrategy(`whitman`),
-        corporaFilterStrategy(`longfellow`),
-        corporaFilterStrategy(`lowell`),
-        corporaFilterStrategy(`rome`),
-        corporaFilterStrategy(`sentences`)
+        ...CORPORA_FILTERS.map(corporaFilterStrategy)
       ]
       var strategy
       // not a parameter in the function. hrm.....
@@ -188,6 +192,14 @@ class Poetifier {
       let qb = new Buckets(config)
       return qb.generate()
     }
+    // an empty poem is a valid result - callers retry or report it
+    let emptyPoem = (extra = {}) => ({
+      title: ``,
+      text: ``,
+      lines: [],
+      seed: util.seed,
+      ...extra
+    })
     let onePoem = function () {
       try {
         const layerRequire = require('./layer-require')
@@ -208,6 +220,13 @@ class Poetifier {
           ]
         } else {
           texts = reduceCorpora(corpora.texts)
+        }
+        if (texts.length === 0) {
+          // valid outcome, not a crash: the runner (generate-poem.js) re-rolls
+          logger(
+            `no corpus texts matched (corporaFilter: ${config.corporaFilter})`
+          )
+          return emptyPoem()
         }
         let methodName
         if (config.method) {
@@ -307,7 +326,7 @@ class Poetifier {
           logger(`seed: ${util.seed}`)
         }
         logger(ex.stack || ex)
-        return `An error has occured`
+        return emptyPoem({ error: ex.message || String(ex) })
       }
     }
     let teller = function () {
@@ -321,5 +340,7 @@ class Poetifier {
     this.poem = teller
   }
 }
+
+Poetifier.CORPORA_FILTERS = CORPORA_FILTERS
 
 module.exports = Poetifier

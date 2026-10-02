@@ -56,10 +56,10 @@ const prepForNPF = (poem) => {
  */
 async function generateAndProcessPoem(options = {}) {
   try {
-    const poetifier = new (require('./lib/poetifier.js'))({ config: config })
-    const poem = poetifier.poem()
+    const { generatePoem } = require('./lib/generate-poem.js')
+    const { poem, error } = generatePoem(config, { log: logger })
 
-    if (poem && poem.title && poem.text) {
+    if (poem) {
       const result = {
         poem: poem,
         posted: false,
@@ -108,7 +108,7 @@ async function generateAndProcessPoem(options = {}) {
         poem: null,
         posted: false,
         postId: null,
-        error: 'No poem generated'
+        error
       }
     }
   } catch (error) {
