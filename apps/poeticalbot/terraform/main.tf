@@ -32,7 +32,9 @@ resource "aws_lambda_function" "poeticalbot" {
   handler         = "index.handler"
   source_code_hash = filebase64sha256("poeticalbot-lambda.zip")
   runtime         = "nodejs22.x"
-  timeout         = 30
+  # 128MB (~1/14 vCPU) timed out ~40% of runs at 30s; still within free tier
+  timeout         = 120
+  memory_size     = 512
 
   layers = [data.aws_lambda_layer_version.common_corpus_layer.arn]
 
