@@ -109,4 +109,37 @@ describe(`textutil`, function () {
       expect(cleanParens.match(/\[|\]/g)).to.not.be.null()
     })
   })
+
+  // sentencify uses the tokenizer-only compromise/one build (no POS
+  // tagging) for speed; output must match the full parse exactly
+  describe(`sentencify matches full compromise sentence parse`, function () {
+    const nlp = require(`compromise`)
+    const debreak = require(`../src/lib/debreak.js`)
+    const Corpora = require(`common-corpus`)
+    const full = (text) => {
+      const t = debreak(text).replace(/\t/g, ` `).replace(/^ +/g, ``)
+      return nlp(t)
+        .sentences()
+        .out(`array`)
+        .map((s) => s.trim())
+    }
+    const dubliners = new Corpora().texts
+      .filter((x) => /dubliners/i.test(x.name))[0]
+      .text()
+      .slice(0, 30000)
+    const fixtures = {
+      abbreviations: `Mr. Smith went to Washington, D.C. on Jan. 5th. Dr. Who? No... maybe.`,
+      linebreaks: `A line\nthat wraps\n\nA new paragraph.\tTabbed! End`,
+      dubliners,
+      'array of texts': [dubliners.slice(0, 5000), `"Stop!" she said. Why?`]
+    }
+    Object.keys(fixtures).forEach((name) => {
+      it(name, function () {
+        this.timeout(10000)
+        const input = fixtures[name]
+        const joined = Array.isArray(input) ? input.join(` `).trim() : input
+        expect(textutils.sentencify(input)).to.deep.equal(full(joined))
+      })
+    })
+  })
 })

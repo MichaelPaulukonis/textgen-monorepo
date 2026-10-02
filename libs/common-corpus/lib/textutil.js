@@ -110,10 +110,12 @@ var textutils = function () {
       text = text.reduce((p, c) => p + ` ` + c, ``).trim()
     }
 
+    // compromise/one = tokenizer only, no POS tagging. Same sentence split
+    // as the full build's .sentences(), ~7x faster and lighter on memory.
     let debreak = require(`../lib/debreak.js`),
-      nlp = require(`compromise`),
+      nlp = require(`compromise/one`),
       t = debreak(text).replace(/\t/g, ` `).replace(/^ +/g, ``)
-    return nlp(t).sentences().out(`array`)
+    return nlp(t).out(`array`)
   }
 
   return {
