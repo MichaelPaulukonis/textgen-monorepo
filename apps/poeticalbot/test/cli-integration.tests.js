@@ -67,13 +67,16 @@ describe('CLI Integration', () => {
 
     it('uses the requested seed', async () => {
       const cli = new CLI()
+      // A pinned seed gets one attempt, so it must yield a non-empty poem.
+      // Which seeds do can shift with dependency versions (compromise 14.17
+      // made 'cai-test-seed' empty) - pick another if this starts failing.
       const { poem, error } = await cli.generatePoem({
-        seed: 'cai-test-seed',
+        seed: 'cai-test-seed-2',
         transform: false
       })
 
       expect(error).to.equal(null)
-      expect(poem.seed).to.equal('cai-test-seed')
+      expect(poem.seed).to.equal('cai-test-seed-2')
     })
   })
 })
