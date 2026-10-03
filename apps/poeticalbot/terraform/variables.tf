@@ -33,3 +33,7 @@ variable "post_live" {
   type        = string
   default     = "true"
 }
+variable "alert_email" {
+  description = "Email address for CloudWatch alarm notifications (SNS)"
+  type        = string
+}
