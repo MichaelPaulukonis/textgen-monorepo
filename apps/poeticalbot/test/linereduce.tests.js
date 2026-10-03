@@ -93,9 +93,7 @@ This is probably not.`
         lasts.lines[0].split(' ').slice(-1)[0]
       )
       const allSame = lasts.lines.reduce((p, line) => {
-        const lineLastWord = linereduce.stripPunct(
-          line.split(' ').slice(-1)[0]
-        )
+        const lineLastWord = linereduce.stripPunct(line.split(' ').slice(-1)[0])
         return p && lineLastWord.toLowerCase() === lastWord.toLowerCase()
       }, true)
       expect(allSame).to.be.true()
