@@ -7,6 +7,7 @@
 // since those ship via the Lambda layer, not npm install.
 
 const fs = require('fs')
+const path = require('path')
 
 const [, , sourcePackageJsonPath, outputPackageJsonPath, mainEntry] = process.argv
 
@@ -17,10 +18,28 @@ if (!sourcePackageJsonPath || !outputPackageJsonPath) {
 
 const pkg = JSON.parse(fs.readFileSync(sourcePackageJsonPath, 'utf8'))
 
+// Pin each dep to the exact version pnpm installed locally (from the lockfile).
+// The Lambda build runs npm install without that lockfile, so a range like
+// ^14.16.0 floated to 14.17.0 and the same seed made a different poem on
+// Lambda than locally (textgen-monorepo-yfs). Read package.json by path, not
+// require.resolve - some packages (compromise) don't export it.
+const installedVersion = (name) => {
+  const p = path.join(path.dirname(sourcePackageJsonPath), 'node_modules', name, 'package.json')
+  try {
+    return JSON.parse(fs.readFileSync(p, 'utf8')).version
+  } catch (error) {
+    return null
+  }
+}
+
 const dependencies = {}
 for (const [name, version] of Object.entries(pkg.dependencies || {})) {
   if (!version.startsWith('workspace:')) {
-    dependencies[name] = version
+    const pinned = installedVersion(name)
+    if (!pinned) {
+      console.warn(`WARN: ${name} not installed locally, keeping range ${version} (run pnpm install)`)
+    }
+    dependencies[name] = pinned || version
   }
 }
 
