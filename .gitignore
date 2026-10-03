@@ -19,6 +19,7 @@ node_modules/
 dist/
 build/
 coverage/
+.nyc_output/
 
 # Nx
 .nx/cache
