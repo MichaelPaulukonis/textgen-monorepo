@@ -21,6 +21,10 @@ System design, generation pipeline, deployment architecture (local CLI + Lambda)
 
 Setting up Tumblr API authentication and configuration.
 
+### 🎲 [Testing randomized generation](testing-randomness.md)
+
+Seeded sweeps as the default for randomized code, the generator invariants, and replaying seeds against the shipped Lambda bundle.
+
 ### 🧩 [pattern-match.md](pattern-match.md)
 
 Notes on the compromise-based pattern/POS matcher behind the pattern-match REPL and the `pattern` line-reduce strategy.

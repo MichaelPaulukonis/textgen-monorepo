@@ -45,17 +45,23 @@ const LineReduce = function (config) {
     let endWord = stripPunct(targSent[targSent.length - 1])
 
     const optionalPuncts = `[.'"!?]?`
+    // whole words only: `^so` alone also matched "some" (textgen-monorepo-imu)
+    const escape = (w) => w.replace(/[.*+?^${}()|[\]\\]/g, `\\$&`)
+    const notWordChar = `[^a-z0-9-]`
 
     switch (type) {
       case reduceType.search:
         break
 
       case reduceType.start:
-        search = new RegExp(`^` + startWord.toLowerCase(), `i`)
+        search = new RegExp(`^${escape(startWord)}(?=${notWordChar}|$)`, `i`)
         break
 
       case reduceType.end:
-        search = new RegExp(endWord.toLowerCase() + optionalPuncts + `$`, `i`)
+        search = new RegExp(
+          `(?<![a-z0-9-])${escape(endWord)}${optionalPuncts}$`,
+          `i`
+        )
         break
 
       // TODO: default case - random selection, I guess

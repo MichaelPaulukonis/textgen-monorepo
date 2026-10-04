@@ -175,4 +175,40 @@ describe(`linereduceRunner `, () => {
       expect(reduced.lines.length).to.be.greaterThan(0)
     })
   })
+
+  // Seeded sweep (textgen-monorepo-imu): the single-sample tests above use an
+  // unseeded util, so a bug that only some seeds hit fails ~5% of runs and
+  // looks like flakiness. Looping fixed seeds makes it deterministic, and a
+  // failure names the seed to replay with new Util({ seed }).
+  describe('... seeded sweep', () => {
+    const Util = require(`../src/lib/util.js`)
+    const SEEDS = 200
+    const words = (line) => line.trim().split(/\s+/).map(stripPunct)
+
+    const sweep = (reduceType, wordOf) => {
+      for (let i = 0; i < SEEDS; i++) {
+        const seed = `sweep-${i}`
+        const { lines } = new LinereduceRunner({
+          util: new Util({ seed }),
+          texts: [testData.corporaDummy],
+          reduceType
+        })
+        const target = wordOf(words(lines[0])).toLowerCase()
+        const stray = lines.find(
+          (l) => wordOf(words(l)).toLowerCase() !== target
+        )
+        expect(stray, `seed ${seed}: "${stray}" vs "${target}"`).to.equal(
+          undefined
+        )
+      }
+    }
+
+    it(`START lines share the same whole first word, ${SEEDS} seeds`, () => {
+      sweep(types.start, (w) => w[0])
+    })
+
+    it(`END lines share the same whole last word, ${SEEDS} seeds`, () => {
+      sweep(types.end, (w) => w[w.length - 1])
+    })
+  })
 })
