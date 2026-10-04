@@ -1,4 +1,4 @@
-let util = new (require(`./util`))()
+const Util = require(`./util`)
 let textutil = require(`./textutil.js`)
 
 // Audited against compromise@14.16.0 in textgen-monorepo-57w: every tag here
@@ -74,10 +74,15 @@ let wordCleaner = (word) => {
   return clean.trim()
 }
 
-let PatternMatcher = function () {
+// Pass the caller's seeded util ({ util }) so the pattern path replays from
+// a seed; the unseeded fallback is for tests and manual runners only
+// (textgen-monorepo-ecv).
+let PatternMatcher = function (config = {}) {
   if (!(this instanceof PatternMatcher)) {
-    return new PatternMatcher()
+    return new PatternMatcher(config)
   }
+
+  const util = config.util || new Util()
 
   const getPatterns = ({
     lines,

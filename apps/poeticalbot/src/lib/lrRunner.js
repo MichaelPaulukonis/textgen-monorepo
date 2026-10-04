@@ -35,7 +35,7 @@ const Runner = function (config) {
 
     case types.pattern:
       const Matcher = require('./pattern-match')
-      const { getMatchingLines: patternMatchLines } = new Matcher()
+      const { getMatchingLines: patternMatchLines } = new Matcher({ util })
       // when run from poetifier, coming in as array of objects
       // which is not what linereduce expects...
       let matchObj = { sentences: [] }

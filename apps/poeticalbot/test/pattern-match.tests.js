@@ -5,6 +5,7 @@ chai.use(dirtyChai)
 
 const nlp = require('compromise')
 const PatternMatcher = require(`../src/lib/pattern-match`)
+const Util = require(`../src/lib/util`)
 
 const sample = `The yellow fog rubbed its muzzle on the window-panes. Streets follow like a tedious argument.`
 
@@ -63,6 +64,24 @@ describe(`pattern-match`, () => {
       })
 
       expect(result.metadata.strategy).to.equal(`match: '#Adjective #Noun'`)
+    })
+  })
+
+  // textgen-monorepo-ecv: the matcher used a module-level unseeded Util,
+  // so the linereduce `pattern` path could not be replayed from a seed.
+  describe(`seeded util`, () => {
+    const run = (seed) => {
+      const { getMatchingLines } = new PatternMatcher({
+        util: new Util({ seed })
+      })
+      return getMatchingLines({ lines: [sample], nlpObj: nlp(sample) })
+    }
+
+    it(`same seed gives the same strategy and fragments`, () => {
+      for (let i = 0; i < 50; i++) {
+        const seed = `pm-${i}`
+        expect(run(seed), `seed ${seed}`).to.deep.equal(run(seed))
+      }
     })
   })
 })

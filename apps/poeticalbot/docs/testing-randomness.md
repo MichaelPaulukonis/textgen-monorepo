@@ -6,7 +6,7 @@ Decision note for textgen-monorepo-imu (2026-10-03).
 
 Most generator tests take one random sample and assert its shape. A bug that only some random draws hit then fails a small fraction of runs. It looks like a flaky test, gets re-run, and ships. The queneau crash (textgen-monorepo-bvs, ~35% of prod runs) and the linereduce word-boundary bug below both slipped through this way.
 
-All randomness in `src/` goes through `src/lib/util.js` (`random-seed`), so `new Util({ seed })` makes any run deterministic. Most tests just never pass a seed.
+All randomness in `src/` goes through `src/lib/util.js` (`random-seed`), so `new Util({ seed })` makes any run deterministic, provided every module uses the caller's `util` instance. A module that builds its own `new Util()` gets a fresh unseeded stream: `pattern-match.js` did this at load time, so the linereduce `pattern` path never replayed (textgen-monorepo-ecv). Pass `util` in instead. Third-party libs calling `Math.random` can't advance the seeded stream, but their own output isn't replayable either (node-mispelr, textgen-monorepo-9b3). Most tests just never pass a seed.
 
 ## Decision
 
