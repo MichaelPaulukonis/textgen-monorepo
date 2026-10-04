@@ -55,6 +55,19 @@ const Util = function (options) {
     return poparr
   }
 
+  // Run a synchronous fn with global Math.random drawing from this seeded
+  // stream, for libs that take no rng (node-mispelr). Stopgap until mispelr
+  // accepts an rng (textgen-monorepo-ovo, -9b3).
+  this.withSeededMathRandom = function (fn) {
+    const orig = Math.random
+    Math.random = () => math.random()
+    try {
+      return fn()
+    } finally {
+      Math.random = orig
+    }
+  }
+
   this.random = function (max) {
     return max !== undefined ? randomInRange(0, max) : math.random()
   }

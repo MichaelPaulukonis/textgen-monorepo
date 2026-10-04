@@ -82,4 +82,34 @@ describe(`util tests`, () => {
       })
     })
   })
+
+  // textgen-monorepo-ovo: stopgap so node-mispelr's bare Math.random replays
+  describe(`withSeededMathRandom`, () => {
+    const mispelr = require(`node-mispelr`)
+    const text = `The yellow fog that rubs its back upon the window-panes, the yellow smoke that rubs its muzzle on the window-panes`
+
+    const respell = (seed, type) =>
+      new Util({ seed }).withSeededMathRandom(() => mispelr.respell(text, type))
+
+    it(`same seed gives identical respelling for every spelltype`, () => {
+      Object.keys(mispelr.spelltypes).forEach((type) => {
+        for (let i = 0; i < 20; i++) {
+          const seed = `ms-${type}-${i}`
+          expect(respell(seed, type), seed).to.equal(respell(seed, type))
+        }
+      })
+    })
+
+    it(`returns fn's result and restores Math.random, even on throw`, () => {
+      const orig = Math.random
+      expect(util.withSeededMathRandom(() => 42)).to.equal(42)
+      expect(Math.random).to.equal(orig)
+      expect(() =>
+        util.withSeededMathRandom(() => {
+          throw new Error(`boom`)
+        })
+      ).to.throw(`boom`)
+      expect(Math.random).to.equal(orig)
+    })
+  })
 })
