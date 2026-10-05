@@ -32,8 +32,18 @@ corpus_files | while IFS= read -r f; do
   cp "$f" "$DEST/$f"
 done
 
-echo "Installing production dependencies..."
-(cd "$DEST" && npm install --omit=dev --no-package-lock --no-audit --no-fund --silent)
+# Install from pnpm-lock.yaml via `pnpm deploy`; the old npm install had no
+# lockfile, so even compromise (^14.17.0) floated per build (textgen-monorepo-s86).
+# Deploy copies the whole package dir (terraform state etc.); keep only its
+# node_modules - the files above are copied and verified explicitly.
+echo "Installing production dependencies from pnpm-lock.yaml..."
+(cd "$PKG_DIR/../.." && pnpm --filter common-corpus deploy --prod --config.node-linker=hoisted "$BUILD_DIR/deploy" >/dev/null)
+mv "$BUILD_DIR/deploy/node_modules" "$DEST/node_modules"
+rm -rf "$BUILD_DIR/deploy" "$DEST/node_modules/.bin"
+if [ -n "$(find "$DEST/node_modules" -type l -print -quit)" ]; then
+  echo "ERROR: symlinks in layer node_modules" >&2
+  exit 1
+fi
 
 echo "Verifying corpus contents..."
 diff <(corpus_files) <(cd "$DEST" && find corpus -type f | sort) || {

@@ -282,15 +282,15 @@ nx run <app>:deploy
 chmod +x apps/*/build-lambda.sh
 ```
 
-**Problem**: npm install fails
+**Problem**: `pnpm deploy` fails in the build (e.g. `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`)
+
+Lambda zips and the corpus layer install deps with `pnpm deploy` from `pnpm-lock.yaml` (`scripts/build-lambda.sh`, `libs/common-corpus/scripts/build-layer.sh`). This requires `injectWorkspacePackages: true` in `pnpm-workspace.yaml` and a lockfile written with it:
 
 ```bash
-# Clear npm cache
-npm cache clean --force
-
-# Or use pnpm
-pnpm install
+pnpm install   # refresh pnpm-lock.yaml, then rebuild
 ```
+
+Don't add `--legacy`: it ignores the lockfile and can hoist the wrong version of a package (seen with `pos`).
 
 #### Deployment Failures
 

@@ -4,3 +4,6 @@ packages:
 onlyBuiltDependencies:
   - pre-commit
   - spawn-sync
+# Required by `pnpm deploy` (non-legacy) so Lambda/layer builds install from
+# pnpm-lock.yaml instead of resolving deps fresh (textgen-monorepo-s86).
+injectWorkspacePackages: true
