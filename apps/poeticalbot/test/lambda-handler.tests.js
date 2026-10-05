@@ -49,4 +49,29 @@ describe('LambdaHandler', () => {
       expect(poem).to.be.an('object')
     })
   })
+
+  // textgen-monorepo-ycr: the scheduled run passes no options, so Poetifier
+  // only sees config.js defaults. They used to sit under config.poetry, which
+  // Poetifier never reads, so production poems were never transformed.
+  describe('generatePoem() with no options uses config defaults', () => {
+    const generatePoemModule = require('../src/lib/generate-poem.js')
+    let origGeneratePoem
+    let seenConfig
+
+    beforeEach(() => {
+      origGeneratePoem = generatePoemModule.generatePoem
+      generatePoemModule.generatePoem = (config) => {
+        seenConfig = config
+        return { poem: { title: 't', text: 'x' }, error: null, attempts: 1 }
+      }
+    })
+    afterEach(() => {
+      generatePoemModule.generatePoem = origGeneratePoem
+    })
+
+    it('passes transform: true to the generator by default', async () => {
+      await new LambdaHandler().generatePoem()
+      expect(seenConfig.transform).to.equal(true)
+    })
+  })
 })

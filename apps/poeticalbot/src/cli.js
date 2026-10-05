@@ -115,7 +115,7 @@ Environment Variables:
 
       // Override config with CLI options
       // NOTE: Poetifier reads these top-level (config.method/seed/corporaFilter/transform),
-      // not nested under config.poetry — see textgen-monorepo-cai.
+      // config.js defaults live there too (ycr) — see textgen-monorepo-cai.
       if (options.method) {
         generationConfig.method = options.method
       }

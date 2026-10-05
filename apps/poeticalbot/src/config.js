@@ -63,13 +63,13 @@ class Config {
         blogName: process.env.BLOG_NAME || 'poeticalbot.tumblr.com'
       },
 
-      // Poetry generation
-      poetry: {
-        method: process.env.POETRY_METHOD,
-        corporaFilter: process.env.CORPORA_FILTER,
-        transform: process.env.TRANSFORM !== 'false', // default true
-        seed: process.env.POETRY_SEED
-      },
+      // Poetry generation - top-level because Poetifier reads
+      // config.method/corporaFilter/transform/seed directly. These used to sit
+      // under `poetry`, so the defaults never reached it (textgen-monorepo-ycr).
+      method: process.env.POETRY_METHOD,
+      corporaFilter: process.env.CORPORA_FILTER,
+      transform: process.env.TRANSFORM !== 'false', // default true
+      seed: process.env.POETRY_SEED,
 
       // Environment and logging
       environment: this.environment,
@@ -134,9 +134,7 @@ class Config {
         enabled: false,
         blogName: 'poeticalbot.tumblr.com'
       },
-      poetry: {
-        transform: true
-      },
+      transform: true,
       logging: {
         level: 'info'
       }

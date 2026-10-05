@@ -217,7 +217,7 @@ class LambdaHandler {
 
       // Override config with options
       // NOTE: Poetifier reads these top-level (config.method/seed/corporaFilter/transform),
-      // not nested under config.poetry — see textgen-monorepo-cai / textgen-monorepo-nwh.
+      // config.js defaults live there too (ycr) — see textgen-monorepo-cai / textgen-monorepo-nwh.
       if (options.method) {
         generationConfig.method = options.method
       }
