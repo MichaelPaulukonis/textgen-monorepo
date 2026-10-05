@@ -72,6 +72,16 @@
         var corpora = new Corpora()
         expect(corpora.texts[0].text()).to.contain('Hello world')
       })
+
+      // macOS writes .DS_Store into the local corpus; the layer only ships
+      // git-tracked files, so loading it made local runs diverge from Lambda
+      it('skips dotfiles and dot-directories', function () {
+        fs.writeFileSync(path.join(tmpDir, '.DS_Store'), 'junk')
+        fs.mkdirSync(path.join(tmpDir, '.hidden'))
+        fs.writeFileSync(path.join(tmpDir, '.hidden', 'x.txt'), 'junk')
+        var corpora = new Corpora()
+        expect(corpora.texts.map((t) => t.name)).to.deep.equal(['sample'])
+      })
     })
 
     describe('cache eviction', function () {

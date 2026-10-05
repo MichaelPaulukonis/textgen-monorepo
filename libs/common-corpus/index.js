@@ -48,6 +48,9 @@ let Corpora = function (options = {}) {
       var files = fs.readdirSync(dir)
       if (dir.indexOf(`###`) === -1) {
         files.forEach(function (file) {
+          // skip dotfiles (.DS_Store): the layer ships only git-tracked files,
+          // so loading them locally diverged from Lambda (textgen-monorepo-s86)
+          if (file.startsWith(`.`)) return
           const fullPath = dir + file
           try {
             if (fs.statSync(fullPath).isDirectory()) {
