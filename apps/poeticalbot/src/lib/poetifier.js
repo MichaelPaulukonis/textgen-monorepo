@@ -56,6 +56,7 @@ class Poetifier {
     let ALWAYS_PRINT = 0
     // let rhymer = require(`../filter/rhymer`)({ util: util })
     let textutils = require(`./textutil.js`)
+    const { capTexts } = require(`./cap-texts.js`)
     let FuzzyMatching = require(`fuzzy-matching`)
     let poemMethods = [`jgnoetry`, `queneau-buckets`, `drone`]
     let fmMethods = new FuzzyMatching(poemMethods)
@@ -230,6 +231,8 @@ class Poetifier {
           )
           return emptyPoem()
         }
+        // bound memory: multi-MB selections OOM'd on Lambda (986)
+        texts = capTexts(texts, util)
         let methodName
         if (config.method) {
           let method = fmMethods.get(config.method).value

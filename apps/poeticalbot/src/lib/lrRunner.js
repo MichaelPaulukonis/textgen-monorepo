@@ -8,13 +8,36 @@ nlp.extend(require('compromise-stats'))
 const { types } = require(`../lib/linereduce.js`)
 const LR = require(`../lib/linereduce.js`)
 
+// pattern/search run a full compromise parse over the sentences, which takes
+// ~300x the text size in memory: a multi-MB corpus selection OOM'd or
+// GC-thrashed into the 120s timeout on Lambda (textgen-monorepo-986, -oli).
+const NLP_CHAR_CAP = 250000
+
+// A contiguous window of sentences (wrapping) totalling at most NLP_CHAR_CAP
+// chars, starting at a seeded random sentence. Selections under the cap come
+// back untouched with no random draw, so their seeds replay as before.
+const capSentences = (sents, util) => {
+  const size = (s) => s.length + 1
+  if (sents.reduce((n, s) => n + size(s), 0) <= NLP_CHAR_CAP) return sents
+  const start = util.randomInRange(0, sents.length - 1)
+  const window = []
+  let chars = 0
+  for (let i = 0; i < sents.length; i++) {
+    const s = sents[(start + i) % sents.length]
+    if (chars + size(s) > NLP_CHAR_CAP) break
+    window.push(s)
+    chars += size(s)
+  }
+  return window
+}
+
 const Runner = function (config) {
   if (!(this instanceof Runner)) {
     return new Runner(config)
   }
 
   const { util, texts } = config
-  const sents = texts.reduce((p, c) => p.concat(c.sentences()), [])
+  let sents = texts.reduce((p, c) => p.concat(c.sentences()), [])
   const name = texts.reduce((p, c) => p + ` ` + c.name, ``).trim()
   let selection = { lines: [] }
 
@@ -34,6 +57,7 @@ const Runner = function (config) {
       break
 
     case types.pattern:
+      sents = capSentences(sents, util)
       const Matcher = require('./pattern-match')
       const { getMatchingLines: patternMatchLines } = new Matcher({ util })
       // when run from poetifier, coming in as array of objects
@@ -62,6 +86,7 @@ const Runner = function (config) {
 
     case types.search:
     default:
+      sents = capSentences(sents, util)
       const ngrams = nlp(sents.join('\n')).ngrams()
 
       if (ngrams.length === 0) {
@@ -90,5 +115,8 @@ const Runner = function (config) {
     lines: selection.lines
   }
 }
+
+Runner.capSentences = capSentences
+Runner.NLP_CHAR_CAP = NLP_CHAR_CAP
 
 module.exports = Runner

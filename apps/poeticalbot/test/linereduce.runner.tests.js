@@ -211,4 +211,45 @@ describe(`linereduceRunner `, () => {
       sweep(types.end, (w) => w[w.length - 1])
     })
   })
+
+  // textgen-monorepo-986: pattern/search run a full compromise parse over
+  // every selected sentence (~300x the text size in memory). Multi-MB corpus
+  // selections OOM'd or timed out on Lambda, so they parse a seeded window.
+  describe('NLP input cap', () => {
+    const Util = require(`../src/lib/util.js`)
+    const { capSentences, NLP_CHAR_CAP } = LinereduceRunner
+    const sentence = (i) => `Sentence number ${i} is about a red fox.`
+    const many = Array.from({ length: 20000 }, (_, i) => sentence(i))
+    const chars = (arr) => arr.reduce((n, s) => n + s.length + 1, 0)
+
+    it('leaves selections under the cap untouched, drawing no randomness', () => {
+      const few = many.slice(0, 10)
+      const a = new Util({ seed: 'cap' })
+      const b = new Util({ seed: 'cap' })
+      expect(capSentences(few, a)).to.equal(few)
+      expect(a.random()).to.equal(b.random())
+    })
+
+    it('returns a contiguous window within the cap, chosen by seed', () => {
+      const w1 = capSentences(many, new Util({ seed: 'cap-1' }))
+      const w1again = capSentences(many, new Util({ seed: 'cap-1' }))
+      const w2 = capSentences(many, new Util({ seed: 'cap-2' }))
+      expect(chars(w1)).to.be.at.most(NLP_CHAR_CAP)
+      expect(chars(w1)).to.be.above(NLP_CHAR_CAP * 0.9)
+      expect(w1).to.deep.equal(w1again)
+      expect(w1[0]).to.not.equal(w2[0])
+      const start = many.indexOf(w1[0])
+      w1.forEach((s, i) => expect(s).to.equal(many[(start + i) % many.length]))
+    })
+
+    it('pattern path only parses the capped window', function () {
+      this.timeout(60000)
+      const reduced = new LinereduceRunner({
+        util: new Util({ seed: 'cap-pattern' }),
+        texts: [{ name: 'big', sentences: () => many }],
+        reduceType: types.pattern
+      })
+      expect(reduced.text.length).to.be.at.most(NLP_CHAR_CAP)
+    })
+  })
 })
