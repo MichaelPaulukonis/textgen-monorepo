@@ -271,13 +271,17 @@ class Poetifier {
             texts: texts,
             reduceType: config.reduceType
           })
-          source = [
-            {
-              name: texts.reduce((p, c) => p + ` ` + c.name, ``),
-              text: () => lr.lines.join('\n'),
-              sentences: () => lr.lines // bucketRunner takes in text AND re-sentencifies it. AAAARGH
-            }
-          ]
+          // linereduce can keep 0 lines; an empty source crashed queneau, so
+          // fall back to the unreduced texts (textgen-monorepo-986)
+          if (lr.lines.length > 0) {
+            source = [
+              {
+                name: texts.reduce((p, c) => p + ` ` + c.name, ``),
+                text: () => lr.lines.join('\n'),
+                sentences: () => lr.lines // bucketRunner takes in text AND re-sentencifies it. AAAARGH
+              }
+            ]
+          }
         }
         // instantiate drone only after texts selected, above
         if (strategy === drone) {

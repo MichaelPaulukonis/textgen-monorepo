@@ -55,4 +55,27 @@ describe(`seed replay`, function () {
   it(`linereduce pattern path`, () => {
     expectReplays(seeds(`pattern`, 20), { reduce: true, reduceType: `pattern` })
   })
+
+  // linereduce can keep 0 lines; Poetifier then handed generators an empty
+  // source and queneau crashed (~4% of reduce+queneau runs). Seeds found by
+  // sweep under textgen-monorepo-986.
+  it(`empty linereduce result falls back to the unreduced texts`, () => {
+    const cases = [
+      [`eliot`, [`pre-eliot-22`, `pre-eliot-52`, `pre-eliot-80`]],
+      [`dubliners`, [`pre-dubliners-1`, `pre-dubliners-32`, `pre-dubliners-55`]]
+    ]
+    cases.forEach(([filter, seeds]) =>
+      seeds.forEach((seed) => {
+        const poem = poemFor({
+          seed,
+          corporaFilter: filter,
+          reduce: true,
+          method: `queneau-buckets`,
+          transform: false
+        })
+        expect(poem.error, seed).to.be.undefined
+        expect(poem.text, seed).to.not.equal(``)
+      })
+    )
+  })
 })
