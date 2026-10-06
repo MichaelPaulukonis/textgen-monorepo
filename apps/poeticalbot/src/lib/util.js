@@ -5,7 +5,7 @@ const Util = function (options) {
 
   options = options || { statusVerbosity: 0 }
 
-  let seed = options.seed || (Math.random() * 0x1000000000).toString(36)
+  let seed = options.seed || Util.newSeed()
 
   let randomseed = require(`random-seed`)
 
@@ -103,5 +103,8 @@ const Util = function (options) {
     }
   }
 }
+
+// Fresh random seed in the format Util has always used
+Util.newSeed = () => (Math.random() * 0x1000000000).toString(36)
 
 module.exports = Util

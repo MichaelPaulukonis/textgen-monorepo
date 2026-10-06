@@ -4,6 +4,8 @@
 // randomized constraints with a fresh Poetifier/seed, up to MAX_POEM_ATTEMPTS.
 // Never throws: on Lambda a throw triggers 2 async retries (3x the attempts).
 
+const Util = require('./util.js')
+
 const MAX_POEM_ATTEMPTS = 5
 const EXHAUSTED_MARKER = 'POETICALBOT_EXHAUSTED'
 
@@ -25,8 +27,11 @@ function generatePoem(config, { Poetifier, log = console.log } = {}) {
   const history = []
 
   for (let n = 1; n <= maxAttempts; n++) {
-    // poetifier mutates its config (e.g. config.reduce) - copy per attempt
-    const attemptConfig = { ...config }
+    // poetifier mutates its config (e.g. config.reduce) - copy per attempt.
+    // Pick the seed here and log it before generating: an OOM or timeout
+    // kills the process mid-poem, and the seed is what replays it (ewv).
+    const attemptConfig = { ...config, seed: config.seed || Util.newSeed() }
+    log(`attempt ${n}: generating with seed ${attemptConfig.seed}`)
     let poem = null
     let outcome
     try {

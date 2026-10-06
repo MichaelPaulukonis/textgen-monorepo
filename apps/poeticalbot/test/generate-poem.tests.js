@@ -88,6 +88,32 @@ describe('generatePoem (retry runner)', () => {
     expect(Poetifier.snapshots[1].reduce).to.equal(undefined)
   })
 
+  // textgen-monorepo-ewv: an OOM or timeout kills the process mid-poem, so the
+  // seed has to be in the log before generation starts or the crash can't be
+  // replayed
+  it('logs each attempt seed before generating, and generates with it', () => {
+    const logged = []
+    const seenAtPoem = []
+    class Spy {
+      constructor({ config }) {
+        this.config = config
+      }
+
+      poem() {
+        seenAtPoem.push({ seed: this.config.seed, log: logged.join('\n') })
+        return seenAtPoem.length === 1 ? empty : good
+      }
+    }
+    generatePoem({}, { Poetifier: Spy, log: (m) => logged.push(m) })
+
+    expect(seenAtPoem).to.have.lengthOf(2)
+    seenAtPoem.forEach(({ seed, log }) => {
+      expect(seed).to.be.a('string').and.not.equal('')
+      expect(log).to.contain(seed)
+    })
+    expect(seenAtPoem[0].seed).to.not.equal(seenAtPoem[1].seed)
+  })
+
   it('makes only one attempt when the seed is pinned (retries would repeat)', () => {
     const Poetifier = fakePoetifier([empty, good])
     const result = generatePoem({ seed: 'pinned' }, { Poetifier, log })
