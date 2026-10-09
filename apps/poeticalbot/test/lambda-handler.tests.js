@@ -69,6 +69,28 @@ describe('LambdaHandler', () => {
       generatePoemModule.generatePoem = origGeneratePoem
     })
 
+    // queryable sizes, to spot outsized poems in CloudWatch (a 5,329-char
+    // drone poem broke Tumblr's block limit, textgen-monorepo-mz6)
+    it('logs method and poem size with the seed', async () => {
+      generatePoemModule.generatePoem = () => ({
+        poem: {
+          title: 't',
+          text: 'ab\nlonger line',
+          seed: 'sz',
+          method: 'drone'
+        },
+        error: null,
+        attempts: 2
+      })
+      const handler = new LambdaHandler()
+      const logged = []
+      handler.log = (m) => logged.push(m)
+      await handler.generatePoem()
+      expect(logged.join('\n')).to.contain(
+        '(seed: sz, attempt 2, method drone, chars 14, lines 2, longest line 11)'
+      )
+    })
+
     it('passes transform: true to the generator by default', async () => {
       await new LambdaHandler().generatePoem()
       expect(seenConfig.transform).to.equal(true)

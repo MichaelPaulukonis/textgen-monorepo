@@ -249,8 +249,13 @@ class LambdaHandler {
       })
 
       if (poem) {
+        // sizes are queryable in CloudWatch to spot outsized poems (mz6)
+        const lines = poem.text.split('\n')
+        const longest = Math.max(...lines.map((l) => l.length))
         this.log(
-          `Generated poem: "${poem.title}" (seed: ${poem.seed}, attempt ${attempts})`
+          `Generated poem: "${poem.title}" (seed: ${poem.seed}, attempt ${attempts}, ` +
+            `method ${poem.method}, chars ${poem.text.length}, lines ${lines.length}, ` +
+            `longest line ${longest})`
         )
       }
       return { poem, error }
