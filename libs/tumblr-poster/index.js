@@ -2,6 +2,8 @@
 
 const tumblr = require('tumblr.js')
 
+const MAX_TEXT_BLOCK = 4096
+
 function validateNPF(npfPost) {
   if (
     !npfPost.content ||
@@ -17,6 +19,11 @@ function validateNPF(npfPost) {
     }
 
     if (block.type === 'text' && !block.text) {
+      return false
+    }
+
+    // Tumblr caps a text block at 4,096 code points; longer gets a 400
+    if (block.type === 'text' && [...block.text].length > MAX_TEXT_BLOCK) {
       return false
     }
 

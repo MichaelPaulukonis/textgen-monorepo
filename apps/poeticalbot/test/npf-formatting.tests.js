@@ -101,4 +101,85 @@ describe('NPF Formatting', () => {
       expect(result.content).to.be.an('array')
     })
   })
+
+  // textgen-monorepo-mz6: Tumblr NPF caps a text block at 4,096 characters
+  // (code points). A 5,329-char drone poem went out as one block and Tumblr
+  // answered 400 Bad Request (seed 2f3qjbg.ozn4, 2026-10-08).
+  describe('4096-char text block limit', () => {
+    const { MAX_TEXT_BLOCK } = npfFormatter
+    const cps = (t) => [...t].length
+    const line = (i) => `Line ${i} of a long poem that keeps going on and on.`
+    const longPoem = {
+      title: 'Long',
+      text: Array.from({ length: 200 }, (_, i) => line(i)).join('\n'),
+      seed: 's'
+    }
+    const textBlocks = (npf) => npf.content.filter((b) => !b.subtype)
+
+    it('keeps a short poem body as a single block', () => {
+      const npf = npfFormatter.convertPoemToNPF(samplePoem)
+      expect(npf.content[1].text).to.equal(samplePoem.text)
+      expect(npf.content).to.have.lengthOf(3)
+    })
+
+    it('splits a long body at line breaks into blocks of <= 4096', () => {
+      const npf = npfFormatter.convertPoemToNPF(longPoem)
+      const body = textBlocks(npf).slice(0, -1) // last is metadata
+      expect(body.length).to.be.above(1)
+      body.forEach((b) => expect(cps(b.text)).to.be.at.most(MAX_TEXT_BLOCK))
+      expect(body.map((b) => b.text).join('\n')).to.equal(longPoem.text)
+      expect(npf.content[0].subtype).to.equal('heading2')
+    })
+
+    it('splits a single over-long line at word boundaries', () => {
+      const words = Array.from({ length: 1500 }, (_, i) => `word${i}`)
+      const npf = npfFormatter.convertPoemToNPF({
+        title: 'T',
+        text: words.join(' ')
+      })
+      const body = textBlocks(npf)
+      expect(body.length).to.be.above(1)
+      body.forEach((b) => expect(cps(b.text)).to.be.at.most(MAX_TEXT_BLOCK))
+      expect(body.map((b) => b.text).join(' ')).to.equal(words.join(' '))
+    })
+
+    it('splits long metadata, with formatting sized to each block', () => {
+      const source = Array.from(
+        { length: 300 },
+        (_, i) => `corpus/text.${i}`
+      ).join(' ')
+      const npf = npfFormatter.convertPoemToNPF({
+        title: 'T',
+        text: 'x',
+        seed: 's',
+        source
+      })
+      const meta = npf.content.slice(2)
+      expect(meta.length).to.be.above(1)
+      meta.forEach((b) => {
+        expect(cps(b.text)).to.be.at.most(MAX_TEXT_BLOCK)
+        b.formatting.forEach((f) => expect(f.end).to.equal(cps(b.text)))
+      })
+    })
+
+    it('validateNPF rejects a text block over the limit', () => {
+      const npf = { content: [{ type: 'text', text: 'a'.repeat(4097) }] }
+      expect(npfFormatter.validateNPF(npf)).to.equal(false)
+    })
+
+    it('the failing production seed now formats within the limit', function () {
+      this.timeout(60000)
+      const config = require('../src/config.js')
+      const { generatePoem } = require('../src/lib/generate-poem.js')
+      const { poem } = generatePoem(
+        { ...config, seed: '2f3qjbg.ozn4' },
+        { log: () => {} }
+      )
+      const npf = npfFormatter.convertPoemToNPF(poem)
+      expect(npfFormatter.validateNPF(npf)).to.equal(true)
+      npf.content.forEach((b) =>
+        expect(cps(b.text)).to.be.at.most(MAX_TEXT_BLOCK)
+      )
+    })
+  })
 })

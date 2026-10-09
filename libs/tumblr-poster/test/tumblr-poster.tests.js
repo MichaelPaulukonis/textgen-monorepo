@@ -25,6 +25,13 @@ describe('tumblr-poster', () => {
       expect(tumblrPoster.validateNPF(npfPost)).to.equal(false)
     })
 
+    it('rejects a text block over 4096 code points (Tumblr 400)', () => {
+      const ok = { content: [{ type: 'text', text: 'a'.repeat(4096) }] }
+      const tooLong = { content: [{ type: 'text', text: 'a'.repeat(4097) }] }
+      expect(tumblrPoster.validateNPF(ok)).to.equal(true)
+      expect(tumblrPoster.validateNPF(tooLong)).to.equal(false)
+    })
+
     it('rejects formatting with non-numeric start/end', () => {
       const npfPost = {
         content: [

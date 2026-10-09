@@ -4,6 +4,67 @@
  */
 
 /**
+ * Tumblr NPF caps a text block at 4,096 characters, counted in Unicode code
+ * points. A longer block gets 400 Bad Request (textgen-monorepo-mz6).
+ */
+const MAX_TEXT_BLOCK = 4096
+
+const cpLength = (text) => [...text].length
+
+// Split one over-long line at spaces; a single word over the limit is cut.
+function splitLine(line, max) {
+  const pieces = []
+  let current = ''
+  for (const word of line.split(' ')) {
+    const candidate = current ? `${current} ${word}` : word
+    if (cpLength(candidate) <= max) {
+      current = candidate
+      continue
+    }
+    if (current) pieces.push(current)
+    current = ''
+    if (cpLength(word) <= max) {
+      current = word
+    } else {
+      const cps = [...word]
+      for (let i = 0; i < cps.length; i += max) {
+        pieces.push(cps.slice(i, i + max).join(''))
+      }
+    }
+  }
+  if (current) pieces.push(current)
+  return pieces
+}
+
+/**
+ * Split text into chunks of at most `max` code points, breaking between
+ * lines (and only inside a line when that line alone is too long). Text
+ * under the limit comes back as a single chunk, unchanged.
+ */
+function splitTextBlocks(text, max = MAX_TEXT_BLOCK) {
+  if (cpLength(text) <= max) return [text]
+  const chunks = []
+  let current = null
+  for (const line of text.split('\n')) {
+    if (cpLength(line) > max) {
+      if (current !== null) chunks.push(current)
+      current = null
+      chunks.push(...splitLine(line, max))
+      continue
+    }
+    const candidate = current === null ? line : `${current}\n${line}`
+    if (cpLength(candidate) <= max) {
+      current = candidate
+    } else {
+      chunks.push(current)
+      current = line
+    }
+  }
+  if (current !== null) chunks.push(current)
+  return chunks.filter((chunk) => chunk !== '')
+}
+
+/**
  * Convert a poem object to NPF format
  * @param {Object} poem - Poem object with title, text, and metadata
  * @returns {Object} NPF-compatible post object
@@ -27,33 +88,36 @@ function convertPoemToNPF(poem) {
     })
   }
 
-  // Add poem text as main content
+  // Add poem text as main content, split to fit Tumblr's block limit
   if (poem.text) {
-    content.push({
-      type: 'text',
-      text: poem.text
-    })
+    for (const text of splitTextBlocks(poem.text)) {
+      content.push({
+        type: 'text',
+        text
+      })
+    }
   }
 
   // Add metadata as italic text
   if (poem.seed || poem.source) {
-    const metaContent = createMetadataText(poem)
-    content.push({
-      type: 'text',
-      text: metaContent,
-      formatting: [
-        {
-          start: 0,
-          end: metaContent.length,
-          type: 'italic'
-        },
-        {
-          start: 0,
-          end: metaContent.length,
-          type: 'small'
-        }
-      ]
-    })
+    for (const text of splitTextBlocks(createMetadataText(poem))) {
+      content.push({
+        type: 'text',
+        text,
+        formatting: [
+          {
+            start: 0,
+            end: cpLength(text),
+            type: 'italic'
+          },
+          {
+            start: 0,
+            end: cpLength(text),
+            type: 'small'
+          }
+        ]
+      })
+    }
   }
 
   return {
@@ -183,6 +247,10 @@ function validateNPF(npfPost) {
       return false
     }
 
+    if (block.type === 'text' && cpLength(block.text) > MAX_TEXT_BLOCK) {
+      return false
+    }
+
     // Validate formatting if present
     if (block.formatting) {
       for (const format of block.formatting) {
@@ -200,6 +268,8 @@ function validateNPF(npfPost) {
 }
 
 module.exports = {
+  MAX_TEXT_BLOCK,
+  splitTextBlocks,
   convertPoemToNPF,
   convertPoemToNPFWithLogging,
   createMetadataText,
