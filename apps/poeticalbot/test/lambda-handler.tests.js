@@ -74,4 +74,70 @@ describe('LambdaHandler', () => {
       expect(seenConfig.transform).to.equal(true)
     })
   })
+
+  // textgen-monorepo-8ol: a Tumblr 400 on the scheduled path was caught and
+  // returned as a 500-shaped value, which async Lambda counts as success: no
+  // retry, no Errors metric, no alarm, and the hour's post was lost.
+  describe('scheduled event failures', () => {
+    const scheduled = { source: 'aws.events' }
+    const context = {
+      awsRequestId: 'test',
+      functionName: 'f',
+      functionVersion: '1'
+    }
+    const poem = { title: 'T', text: 'x', seed: 's' }
+
+    const handlerWith = ({ generated, posted }) => {
+      const handler = new LambdaHandler()
+      handler.config = {
+        ...handler.config,
+        posting: { ...handler.config.posting, enabled: true }
+      }
+      handler.generatePoem = async () => generated
+      handler.postPoem = async () => posted
+      handler.log = () => {}
+      handler.logError = () => {}
+      return handler
+    }
+
+    it('throws when posting fails, so Lambda retries and Errors alarms', async () => {
+      const handler = handlerWith({
+        generated: { poem, error: null },
+        posted: {
+          success: false,
+          postId: null,
+          error: 'API error: 400 Bad Request'
+        }
+      })
+      let thrown = null
+      try {
+        await handler.handle(scheduled, context)
+      } catch (err) {
+        thrown = err
+      }
+      expect(thrown, 'handle() should reject').to.be.an('error')
+      expect(thrown.message).to.contain('400 Bad Request')
+    })
+
+    it('does not throw when generation is exhausted (retries would triple attempts)', async () => {
+      const handler = handlerWith({
+        generated: {
+          poem: null,
+          error: 'No poem generated after 5 attempt(s)'
+        },
+        posted: null
+      })
+      const result = await handler.handle(scheduled, context)
+      expect(result.statusCode).to.equal(500)
+    })
+
+    it('returns 200 when the post succeeds', async () => {
+      const handler = handlerWith({
+        generated: { poem, error: null },
+        posted: { success: true, postId: '123', error: undefined }
+      })
+      const result = await handler.handle(scheduled, context)
+      expect(result.statusCode).to.equal(200)
+    })
+  })
 })

@@ -38,6 +38,7 @@ class LambdaHandler {
       }
     } catch (error) {
       this.logError('Lambda handler error', error)
+      if (error.rethrow) throw error
       return {
         statusCode: 500,
         body: JSON.stringify({
@@ -59,6 +60,17 @@ class LambdaHandler {
     this.log('Processing scheduled event for poetry generation and posting')
 
     const result = await this.generateAndPostPoem()
+
+    // Posting failed after a good poem: throw, so async Lambda counts an
+    // error (Errors alarm) and retries with a fresh poem. A 500-shaped return
+    // counts as success and the hour's post was silently lost
+    // (textgen-monorepo-8ol). Generation exhaustion still returns: retrying
+    // it would triple the attempts (see generate-poem.js).
+    if (result.poem && result.error) {
+      const err = new Error(`Scheduled posting failed: ${result.error}`)
+      err.rethrow = true
+      throw err
+    }
 
     if (result.error) {
       this.logError(
