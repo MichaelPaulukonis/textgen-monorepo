@@ -37,8 +37,10 @@ resource "aws_lambda_function" "poeticalbot" {
   # runs then hit the heap limit or GC-thrashed into the 120s timeout (local
   # peaks up to ~1.1GB with linereduce on big texts). 2048MB also brings more
   # CPU; ~15k GB-s/month, inside the free tier (textgen-monorepo-oli).
+  # Then 986 capped corpus text per poem: peak ~370MB over 40+ prod runs,
+  # so back down to 1024MB (~2.7x headroom).
   timeout         = 120
-  memory_size     = 2048
+  memory_size     = 1024
 
   layers = [data.aws_lambda_layer_version.common_corpus_layer.arn]
 
