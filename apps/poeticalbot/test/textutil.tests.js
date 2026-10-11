@@ -112,15 +112,26 @@ describe(`textutil`, function () {
 
   // sentencify uses the tokenizer-only compromise/one build (no POS
   // tagging) for speed; output must match the full parse exactly
+  // qi5: debreaked text has one paragraph per line; each is a hard boundary
+  it(`sentencify keeps unpunctuated paragraphs of debreaked text separate`, () => {
+    expect(
+      textutils.sentencify(`GDP - real growth rate:\nagriculture\nIt grew.`)
+    ).to.deep.equal([`GDP - real growth rate:`, `agriculture`, `It grew.`])
+  })
+
   describe(`sentencify matches full compromise sentence parse`, function () {
     const nlp = require(`compromise`)
     const debreak = require(`../src/lib/debreak.js`)
     const Corpora = require(`common-corpus`)
+    // reference: full parse, one paragraph at a time (paragraphs are hard
+    // sentence boundaries; raw text is debreaked once, qi5)
     const full = (text) => {
-      const t = debreak(text).replace(/\t/g, ` `).replace(/^ +/g, ``)
-      return nlp(t)
-        .sentences()
-        .out(`array`)
+      const t = /\n[ \t]*\n/.test(text) ? debreak(text) : text
+      return t
+        .split(`\n`)
+        .map((p) => p.replace(/\t/g, ` `).replace(/^ +/g, ``))
+        .filter((p) => p.trim())
+        .flatMap((p) => nlp(p).sentences().out(`array`))
         .map((s) => s.trim())
     }
     const dubliners = new Corpora().texts
@@ -137,7 +148,7 @@ describe(`textutil`, function () {
       it(name, function () {
         this.timeout(10000)
         const input = fixtures[name]
-        const joined = Array.isArray(input) ? input.join(` `).trim() : input
+        const joined = Array.isArray(input) ? input.join(`\n`).trim() : input
         expect(textutils.sentencify(input)).to.deep.equal(full(joined))
       })
     })

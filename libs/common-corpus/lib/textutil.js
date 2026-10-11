@@ -104,18 +104,28 @@ var textutils = function () {
     return cleanlines.join(`\n`)
   }
 
+  // Each paragraph (line of debreaked text) is a hard sentence boundary.
+  // Loaded texts are already debreaked; debreaking again joined every
+  // paragraph into one, fusing unpunctuated lines (lists, headings, labels,
+  // table rows) into giant 'sentences' (textgen-monorepo-qi5). Only raw text,
+  // which still has blank lines, gets debreaked here.
   let sentencify = function (text) {
-    // if array of texts, join 'em together
+    // if array of texts, each is its own paragraph
     if (Object.prototype.toString.call(text) === `[object Array]`) {
-      text = text.reduce((p, c) => p + ` ` + c, ``).trim()
+      text = text.join(`\n`).trim()
     }
 
     // compromise/one = tokenizer only, no POS tagging. Same sentence split
     // as the full build's .sentences(), ~7x faster and lighter on memory.
     let debreak = require(`../lib/debreak.js`),
       nlp = require(`compromise/one`),
-      t = debreak(text).replace(/\t/g, ` `).replace(/^ +/g, ``)
-    return nlp(t).out(`array`)
+      paragraphs = /\n[ \t]*\n/.test(text) ? debreak(text) : text
+    const sentences = []
+    for (const line of paragraphs.split(`\n`)) {
+      const p = line.replace(/\t/g, ` `).replace(/^ +/g, ``)
+      if (p.trim().length > 0) sentences.push(...nlp(p).out(`array`))
+    }
+    return sentences
   }
 
   return {

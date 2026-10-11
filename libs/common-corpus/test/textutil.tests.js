@@ -28,9 +28,21 @@
         var nlp = require('compromise'),
           debreak = require('../lib/debreak.js'),
           Corpora = require('../index.js')
+        // reference: full parse, one paragraph at a time (paragraphs are
+        // hard sentence boundaries; raw text is debreaked once)
         var full = function (text) {
-          var t = debreak(text).replace(/\t/g, ' ').replace(/^ +/g, '')
-          return nlp(t).sentences().out('array')
+          var t = /\n[ \t]*\n/.test(text) ? debreak(text) : text
+          return t
+            .split('\n')
+            .map(function (p) {
+              return p.replace(/\t/g, ' ').replace(/^ +/g, '')
+            })
+            .filter(function (p) {
+              return p.trim()
+            })
+            .reduce(function (acc, p) {
+              return acc.concat(nlp(p).sentences().out('array'))
+            }, [])
         }
         var fixtures = {
           abbreviations:
@@ -52,6 +64,45 @@
               full(fixtures[name])
             )
           })
+        })
+      })
+
+      // textgen-monorepo-qi5: loaded texts are already debreaked (one
+      // paragraph per line). sentencify used to debreak AGAIN, which joined
+      // every paragraph into one, so unpunctuated lines (lists, headings,
+      // labels, table rows) fused into giant 'sentences'.
+      describe('paragraph boundaries (qi5)', function () {
+        it('keeps unpunctuated paragraphs of debreaked text separate', function () {
+          var debreaked =
+            'I am very glad to have the honor\nI am very happy to be here\nThe end.'
+          expect(textutil.sentencify(debreaked)).to.deep.equal([
+            'I am very glad to have the honor',
+            'I am very happy to be here',
+            'The end.'
+          ])
+        })
+
+        it('still rejoins word-wrapped raw text before splitting', function () {
+          var raw = 'A line\nthat wraps\n\nA new paragraph'
+          expect(textutil.sentencify(raw)).to.deep.equal([
+            'A line that wraps',
+            'A new paragraph'
+          ])
+        })
+
+        it('gives the same result on raw text and on its debreaked form', function () {
+          var debreak = require('../lib/debreak.js')
+          var raw =
+            'One wrapped\nline here\n\nGDP - real growth rate:\n\nagriculture\n\nDone. Yes.'
+          expect(textutil.sentencify(debreak(raw))).to.deep.equal(
+            textutil.sentencify(raw)
+          )
+        })
+
+        it('treats each text in an array as its own paragraph', function () {
+          expect(
+            textutil.sentencify(['A heading', 'Body text here.'])
+          ).to.deep.equal(['A heading', 'Body text here.'])
         })
       })
 
