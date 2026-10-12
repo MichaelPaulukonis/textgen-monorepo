@@ -29,6 +29,11 @@ resource "aws_lambda_layer_version" "common_corpus_layer" {
   # New zip contents -> new layer version
   source_code_hash = filebase64sha256(var.layer_zip_path)
 
+  # Replacing must not DELETE the old version: apps pin versions (listmania
+  # may lag behind), and old versions are the rollback path. Terraform just
+  # forgets it.
+  skip_destroy = true
+
   lifecycle {
     create_before_destroy = true
     # Path moved when this config left the generated layer-only/ subdir;

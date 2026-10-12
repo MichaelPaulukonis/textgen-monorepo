@@ -13,7 +13,7 @@ terraform plan             # expect 1 to add when the zip changed, no changes ot
 terraform apply
 ```
 
-Layer versions are immutable: a changed zip publishes a new version, and the old one stays. Then bump the pinned `version` in the `data "aws_lambda_layer_version"` block of `apps/poeticalbot/terraform/main.tf` and `apps/listmania/terraform/main.tf`, and deploy both apps.
+Layer versions are immutable: a changed zip publishes a new version. The old one stays because the resource sets `skip_destroy = true` (before that, a replacement deleted the previous version, which apps may still pin and which is the rollback path). Then bump the pinned `version` in the `data "aws_lambda_layer_version"` block of `apps/poeticalbot/terraform/main.tf` and `apps/listmania/terraform/main.tf`, and deploy both apps.
 
 ## History
 
