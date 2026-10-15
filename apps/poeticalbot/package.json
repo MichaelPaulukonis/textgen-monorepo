@@ -41,7 +41,7 @@
     "fuzzy-matching": "0.4.3",
     "in-a-nutshell": "0.1.2",
     "natural": "^0.6.3",
-    "node-mispelr": "0.0.1",
+    "node-mispelr": "workspace:*",
     "pos": "^0.4.2",
     "ramda": "^0.27.1",
     "random-seed": "0.3.0",

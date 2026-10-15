@@ -1,17 +1,20 @@
 {
   "name": "node-mispelr",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Mispells words in several ways.",
   "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
+  "files": [
+    "index.js",
+    "lib",
+    "data"
+  ],
   "scripts": {
     "test": "mocha test/"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/michaelpaulukonis/node-mispelr.git"
+    "url": "https://github.com/MichaelPaulukonis/textgen-monorepo.git",
+    "directory": "libs/mispelr"
   },
   "keywords": [
     "text",
@@ -19,15 +22,14 @@
   ],
   "author": "Michael Paulukonis",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/michaelpaulukonis/node-mispelr/issues"
-  },
-  "homepage": "https://github.com/michaelpaulukonis/node-mispelr",
   "dependencies": {
     "pos": "0.3.0"
   },
   "devDependencies": {
-    "chai": "3.5.0",
-    "mocha": "2.4.5"
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4"
+  },
+  "engines": {
+    "node": "^22.16.0"
   }
 }

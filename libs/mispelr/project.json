@@ -1,0 +1,28 @@
+{
+  "name": "mispelr",
+  "sourceRoot": "libs/mispelr",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'Build complete - node-mispelr is ready'",
+        "cwd": "libs/mispelr"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm test",
+        "cwd": "libs/mispelr"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prettier --check index.js lib test --ignore-path ../../.prettierignore",
+        "cwd": "libs/mispelr"
+      }
+    }
+  }
+}

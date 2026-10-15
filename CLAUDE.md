@@ -12,7 +12,11 @@ apps/
   listmania/     # Generative list maker, deployed to AWS Lambda (Terraform)
 libs/
   common-corpus/ # Shared corpus of public-domain texts + text utils; also ships as a Lambda layer
+  tumblr-poster/ # Shared Tumblr NPF posting
+  mispelr/       # node-mispelr (poeticalbot respelling); web/ is the 2015 browser playground (gh-pages), not packaged
 ```
+
+`libs/mispelr` and `libs/mispelr/web` came in via `git subtree add` from `MichaelPaulukonis/node-mispelr` (master) and `MichaelPaulukonis/mispelr` (gh-pages); this repo is now the source of truth for both.
 
 ## Commands
 
@@ -77,6 +81,7 @@ Both `poeticalbot` and `listmania` run as either a local CLI process or an AWS L
 ### common-corpus as a shared lib + Lambda layer
 
 `libs/common-corpus` is consumed two ways:
+
 - As a pnpm workspace dependency (`"common-corpus": "workspace:*"`) for local/CLI use in both apps.
 - As a prebuilt AWS Lambda layer (`npm run build:layer` in that package -> `scripts/build-layer.sh` -> `common-corpus-layer.zip`) for the Lambda deployments, with `src/lib/layer-require.js` in each app for environment-aware module loading (Lambda layer path vs local `node_modules`). The build script assembles the package in a temp dir, installs prod deps via `pnpm deploy` (lockfile-pinned, like the app zips), and fails unless the layer's corpus file list matches `git ls-files corpus` (minus `###` paths and dotfiles, which `index.js` never loads) and every text loads. Layer v1 silently shipped 79/125 texts; don't bypass the check.
 
@@ -93,7 +98,6 @@ Each app owns its own `terraform/` directory (independent AWS Lambda + supportin
 ### Task Master
 
 `.taskmaster/` holds this repo's task-tracking system (tasks.json, PRDs); `AGENTS.md` documents the full `task-master` CLI/MCP workflow already available in context. Don't hand-edit `.taskmaster/tasks/tasks.json` — use `task-master` commands.
-
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:6cd5cc61 -->
 ## Beads Issue Tracker
@@ -115,7 +119,7 @@ bd close <id>         # Complete work
 - Run `bd prime` for detailed command reference and session close protocol
 - Use `bd remember` for persistent knowledge — do NOT use MEMORY.md files
 
-**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export - auto-export is disabled (`export.auto: false`) and it and `interactions.jsonl` are gitignored. See https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md for details and anti-patterns.
+**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export - auto-export is disabled (`export.auto: false`) and it and `interactions.jsonl` are gitignored. See <https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md> for details and anti-patterns.
 
 ## Agent Context Profiles
 
@@ -135,6 +139,7 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
 2. **Run quality gates** (if code changed) - Tests, linters, builds
 3. **Update issue status** - Close finished work, update in-progress items
 4. **Handle git/sync by active profile** (Team-maintainer is active for this repo — see above):
+
    ```bash
    # Team-maintainer (active), unless current instructions forbid it:
    git pull --rebase
@@ -145,9 +150,11 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
    # Conservative/minimal fallback: report status and proposed commands; wait for approval.
    git status
    ```
+
 5. **Hand off** - Summarize changes, validation, issue status, and any blocked sync/commit/push step
 
 **Critical rules:**
+
 - Explicit user or orchestrator instructions override this Beads block.
 - Do not commit or push without clear authority from the active profile or the current user request.
 - If a required sync or push is blocked, stop and report the exact command and error.
