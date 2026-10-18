@@ -8,7 +8,7 @@
 
 ## Usage (npm 0.0.1)
 
-```
+```javascript
 > var mispelr = require('node-mispelr');
 > mispelr.respell('this is a test of the respelling functions of this thing.', 'random');
 'htis is a test of tje respellinnng functiosn of tihs hting.'
