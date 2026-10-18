@@ -71,3 +71,6 @@ Thumbs.db
 plan.out
 tfplan
 *.tfplan
+
+# beads workspace gate lock (bd >=1.3, never deleted by bd)
+*.gate.lock*
