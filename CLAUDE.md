@@ -68,7 +68,7 @@ nx run poeticalbot:deploy
 nx run listmania:deploy
 
 # mispelr playground -> MichaelPaulukonis/mispelr gh-pages (live at michaelpaulukonis.github.io/mispelr/)
-nx run mispelr:deploy:web        # replaces the WHOLE branch with libs/mispelr/web; edit there, never on gh-pages
+nx run mispelr:deploy:web        # replaces every non-dot file on the branch with libs/mispelr/web (dotfiles untouched both ways); edit there, never on gh-pages
 ```
 
 All three projects have `project.json` (`apps/poeticalbot`, `apps/listmania`, `libs/common-corpus`). `poeticalbot`/`listmania`/`common-corpus` all define a `lint` target that shells out to `prettier --check` via `nx:run-commands` (repo-wide config in root `.prettierrc.json`/`.prettierignore`; `common-corpus`'s target passes `--ignore-path ../../.prettierignore` explicitly since Prettier resolves `.prettierignore` relative to cwd, not the repo root, and its `cwd` is `libs/common-corpus` — that's what keeps `corpus/` out of formatting). `poeticalbot`/`listmania` also define build/test/deploy/deploy:plan/cli targets the same way. `common-corpus`'s `project.json` only adds `build` (no-op placeholder), `test`, `build-layer`, `lint` — its other `package.json` scripts (`cover`, `build:layer`) are still separately inferred as Nx targets.
