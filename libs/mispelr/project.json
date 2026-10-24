@@ -23,6 +23,12 @@
         "command": "prettier --check index.js lib test --ignore-path ../../.prettierignore",
         "cwd": "libs/mispelr"
       }
+    },
+    "deploy:web": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx gh-pages -d libs/mispelr/web --repo https://github.com/MichaelPaulukonis/mispelr.git --branch gh-pages"
+      }
     }
   }
 }

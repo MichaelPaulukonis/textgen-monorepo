@@ -13,7 +13,7 @@ apps/
 libs/
   common-corpus/ # Shared corpus of public-domain texts + text utils; also ships as a Lambda layer
   tumblr-poster/ # Shared Tumblr NPF posting
-  mispelr/       # node-mispelr (poeticalbot respelling); web/ is the 2015 browser playground (gh-pages), not packaged
+  mispelr/       # node-mispelr (poeticalbot respelling); web/ is the 2015 browser playground, not packaged; `nx run mispelr:deploy:web` publishes it
 ```
 
 `libs/mispelr` and `libs/mispelr/web` came in via `git subtree add` from `MichaelPaulukonis/node-mispelr` (master) and `MichaelPaulukonis/mispelr` (gh-pages); this repo is now the source of truth for both.
@@ -66,6 +66,9 @@ nx build listmania
 nx run poeticalbot:deploy:plan   # review only
 nx run poeticalbot:deploy
 nx run listmania:deploy
+
+# mispelr playground -> MichaelPaulukonis/mispelr gh-pages (live at michaelpaulukonis.github.io/mispelr/)
+nx run mispelr:deploy:web        # replaces the WHOLE branch with libs/mispelr/web; edit there, never on gh-pages
 ```
 
 All three projects have `project.json` (`apps/poeticalbot`, `apps/listmania`, `libs/common-corpus`). `poeticalbot`/`listmania`/`common-corpus` all define a `lint` target that shells out to `prettier --check` via `nx:run-commands` (repo-wide config in root `.prettierrc.json`/`.prettierignore`; `common-corpus`'s target passes `--ignore-path ../../.prettierignore` explicitly since Prettier resolves `.prettierignore` relative to cwd, not the repo root, and its `cwd` is `libs/common-corpus` — that's what keeps `corpus/` out of formatting). `poeticalbot`/`listmania` also define build/test/deploy/deploy:plan/cli targets the same way. `common-corpus`'s `project.json` only adds `build` (no-op placeholder), `test`, `build-layer`, `lint` — its other `package.json` scripts (`cover`, `build:layer`) are still separately inferred as Nx targets.
