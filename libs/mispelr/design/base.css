@@ -228,6 +228,14 @@ button:hover {
   color: var(--muted);
 }
 
+.legend a {
+  text-decoration: none;
+}
+
+.legend a:hover {
+  color: var(--accent);
+}
+
 .legend .key::before {
   content: '';
   display: inline-block;
