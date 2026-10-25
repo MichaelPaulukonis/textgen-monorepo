@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mispelr - Cyanotype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+  <link rel="stylesheet" href="base.css">
+  <style>
+    :root { --bg: #fefefe; --fg: #1e1e1e; --muted: #5f6d6c; --rule: #dedede; --panel: #f3f3f1;
+      --accent: #1f5fa8; --on-accent: #fefefe;
+      --sans: 'IBM Plex Sans', system-ui, sans-serif; --mono: 'JetBrains Mono', ui-monospace, monospace; }
+    .hero { padding-top: 28px; padding-bottom: 40px; }
+    .hero .meta { grid-column: 1 / span 4; display: flex; flex-direction: column; gap: 6px; color: var(--muted); padding-top: 12px; }
+    .hero .meta b { color: var(--fg); font-weight: 500; }
+    .hero .body { grid-column: 5 / span 8; }
+    .hero .display { font-weight: 700; font-size: clamp(72px, 15vw, 240px); letter-spacing: -0.05em; color: var(--accent); }
+    .hero .lede { max-width: 34em; margin-top: 24px; font-size: 19px; }
+    .work .step:nth-child(1) { grid-column: 1 / span 4; }
+    .work .step:nth-child(2) { grid-column: 5 / span 8; }
+    .work .out { grid-column: 5 / span 8; }
+    .output { font-weight: 300; }
+    .output mark { font-weight: 600; }
+    @media (max-width: 760px) { .hero .meta, .hero .body, .work .step:nth-child(n) { grid-column: 1 / -1; } }
+  </style>
+</head>
+<body class="c-cyanotype">
+  <header class="masthead grid">
+    <div class="span-3">Mispelr</div>
+    <div class="span-6">C &mdash; Cyanotype / blue / light, asymmetric</div>
+    <nav class="span-3 right"><a href="index.html">Mockups</a><a href="https://github.com/MichaelPaulukonis/textgen-monorepo/tree/main/libs/mispelr">Source</a></nav>
+  </header>
+  <section class="hero grid">
+    <div class="meta label">
+      <span><b>Fig.</b> 00</span>
+      <span><b>Subject</b> Misspelling</span>
+      <span><b>Methods</b> 06</span>
+      <span><b>Since</b> 2015</span>
+    </div>
+    <div class="body">
+      <h1 class="display" data-respell="mispelr">mispelr</h1>
+      <p class="lede">A machine for misspelling. Six methods, from real-world typos to homophone swaps, applied word by word to whatever you give it.</p>
+    </div>
+  </section>
+  <main class="grid work">
+    <section class="step span-5">
+      <h2 class="step-h"><span class="num">01</span>Input</h2>
+      <textarea id="input" spellcheck="false">There their they are, where we were. Mispelr mangles your text in a variety of configurable ways - edit this and try it out.</textarea>
+    </section>
+    <section class="step span-7">
+      <h2 class="step-h"><span class="num">02</span>Method</h2>
+      <ul class="methods">
+          <li><label class="pill"><input type="radio" name="spelltype" value="random" checked>Random</label><small>any of the five, word by word</small></li>
+          <li><label class="pill"><input type="radio" name="spelltype" value="maledict">Maledict</label><small>real-world misspellings</small></li>
+          <li><label class="pill"><input type="radio" name="spelltype" value="homophilia">Homophilia</label><small>swaps in homophones</small></li>
+          <li><label class="pill"><input type="radio" name="spelltype" value="awfowell">Awfowell</label><small>doubles the vowels</small></li>
+          <li><label class="pill"><input type="radio" name="spelltype" value="constonantSorrow">ConstonantSorrow</label><small>doubles the consonants</small></li>
+          <li><label class="pill"><input type="radio" name="spelltype" value="maxmister">Maxmister</label><small>transposes letters</small></li>
+      </ul>
+      <button id="respell" type="button">Respell &nbsp;&#8984;&#8629;</button>
+    </section>
+    <section class="step span-12 out">
+      <h2 class="step-h"><span class="num">03</span>Output</h2>
+      <p id="output" class="output"></p>
+    </section>
+  </main>
+  <footer class="legend grid">
+    <div class="span-4"><span class="key">Changed word</span></div>
+    <div class="span-4">Click the title to respell it</div>
+    <div class="span-4 right">node-mispelr 0.0.3 &middot; 2015&ndash;2026</div>
+  </footer>
+  <script src="../web/js/mispelr.bundle.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
