@@ -85,7 +85,13 @@ button {
   letter-spacing: -0.045em;
   cursor: pointer;
   user-select: none;
-  overflow-wrap: anywhere;
+  /* a long respelling bleeds off the right edge instead of wrapping */
+  white-space: nowrap;
+}
+
+/* clip, not hidden: no scroll container, so no sideways page scroll */
+.hero {
+  overflow-x: clip;
 }
 
 .lede {
