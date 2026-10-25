@@ -24,9 +24,9 @@
     <nav class="span-3 right"><a href="index.html">Mockups</a><a href="https://github.com/MichaelPaulukonis/textgen-monorepo/tree/main/libs/mispelr">Source</a></nav>
   </header>
   <section class="hero grid">
-    <h1 class="display span-12" data-respell="Mispelr">Mispelr</h1>
-    <p class="lede">A machine for misspelling. Six methods, from real-world typos to homophone swaps, applied word by word to whatever you give it.</p>
-    <p class="cap label">Fig. 00 &mdash; Click title to respell</p>
+    <h1 class="display span-12" data-respell="Mispelr" title="clik me">Mispelr</h1>
+    <p class="lede">A machine for misspelling.</p>
+    <p class="cap label">Fig. 00</p>
   </section>
   <main class="grid work">
     <section class="step span-5">
@@ -36,12 +36,12 @@
     <section class="step span-7">
       <h2 class="step-h"><span class="num">02</span>Method</h2>
       <ul class="methods">
-          <li><label class="pill"><input type="radio" name="spelltype" value="random" checked>Random</label><small>any of the five, word by word</small></li>
-          <li><label class="pill"><input type="radio" name="spelltype" value="maledict">Maledict</label><small>real-world misspellings</small></li>
-          <li><label class="pill"><input type="radio" name="spelltype" value="homophilia">Homophilia</label><small>swaps in homophones</small></li>
-          <li><label class="pill"><input type="radio" name="spelltype" value="awfowell">Awfowell</label><small>doubles the vowels</small></li>
-          <li><label class="pill"><input type="radio" name="spelltype" value="constonantSorrow">ConstonantSorrow</label><small>doubles the consonants</small></li>
-          <li><label class="pill"><input type="radio" name="spelltype" value="maxmister">Maxmister</label><small>transposes letters</small></li>
+          <li><label class="method"><input type="radio" name="spelltype" value="random" checked><span class="pill">Random</span><small>any of the five, word by word</small></label></li>
+          <li><label class="method"><input type="radio" name="spelltype" value="maledict"><span class="pill">Maledict</span><small>real-world misspellings</small></label></li>
+          <li><label class="method"><input type="radio" name="spelltype" value="homophilia"><span class="pill">Homophilia</span><small>swaps in homophones</small></label></li>
+          <li><label class="method"><input type="radio" name="spelltype" value="awfowell"><span class="pill">Awfowell</span><small>doubles the vowels</small></label></li>
+          <li><label class="method"><input type="radio" name="spelltype" value="constonantSorrow"><span class="pill">ConstonantSorrow</span><small>doubles the consonants</small></label></li>
+          <li><label class="method"><input type="radio" name="spelltype" value="maxmister"><span class="pill">Maxmister</span><small>transposes letters</small></label></li>
       </ul>
       <button id="respell" type="button">Respell &nbsp;&#8984;&#8629;</button>
     </section>
@@ -52,7 +52,7 @@
   </main>
   <footer class="legend grid">
     <div class="span-4"><span class="key">Changed word</span></div>
-    <div class="span-4">Click the title to respell it</div>
+    <div class="span-4"></div>
     <div class="span-4 right">node-mispelr 0.0.3 &middot; 2015&ndash;2026</div>
   </footer>
   <script src="../web/js/mispelr.bundle.js"></script>
