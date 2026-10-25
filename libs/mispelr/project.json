@@ -24,6 +24,12 @@
         "cwd": "libs/mispelr"
       }
     },
+    "bundle:web": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "esbuild libs/mispelr/index.js --bundle --platform=browser --format=iife --global-name=mispelr --outfile=libs/mispelr/web/js/mispelr.bundle.js"
+      }
+    },
     "deploy:web": {
       "executor": "nx:run-commands",
       "options": {

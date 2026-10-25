@@ -68,6 +68,7 @@ nx run poeticalbot:deploy
 nx run listmania:deploy
 
 # mispelr playground -> MichaelPaulukonis/mispelr gh-pages (live at michaelpaulukonis.github.io/mispelr/)
+nx run mispelr:bundle:web        # esbuild lib -> web/js/mispelr.bundle.js (committed); rerun after lib changes
 nx run mispelr:deploy:web        # replaces every non-dot file on the branch with libs/mispelr/web (dotfiles untouched both ways); edit there, never on gh-pages
 ```
 

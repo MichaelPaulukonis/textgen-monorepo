@@ -23,7 +23,7 @@ $('#respell').click(function() {
 
         console.log(method);
 
-        var rtext = respell(text, method);
+        var rtext = mispelr.respell(text, method);
 
         $('#respelled').text(rtext);
 
@@ -48,7 +48,7 @@ var startup = function() {
 
     var $h = $('#hello');
     var htext = $h.text();
-    var rtext = respell(htext);
+    var rtext = mispelr.respell(htext);
     $h.text(rtext);
 
 }();

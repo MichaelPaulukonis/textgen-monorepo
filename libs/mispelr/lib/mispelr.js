@@ -5,8 +5,9 @@ var Mispelr = function (config) {
     return new Mispelr(config)
   }
 
-  var pos = require('pos'),
-    lexer = new pos.Lexer(),
+  // pos/lexer, not pos: the package index also loads the 4MB tagger lexicon
+  var Lexer = require('pos/lexer'),
+    lexer = new Lexer(),
     maledict = require('../data/maledict'),
     homophones = require('../data/homophones')
 
