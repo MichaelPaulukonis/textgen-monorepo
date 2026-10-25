@@ -67,12 +67,15 @@ button {
   color: var(--muted);
 }
 
-.masthead nav a {
-  margin-left: 1.5em;
+.masthead a {
   text-decoration: none;
 }
 
-.masthead nav a:hover {
+.masthead nav a {
+  margin-left: 1.5em;
+}
+
+.masthead a:hover {
   color: var(--accent);
 }
 
