@@ -4340,21 +4340,22 @@ var mispelr = (() => {
         var logger = function(msg, priority) {
           if (config.log || priority) console.log(msg);
         };
+        var rand = Math.random;
         var pick = function(arr) {
-          return arr[Math.floor(Math.random() * arr.length)];
+          return arr[Math.floor(rand() * arr.length)];
         };
         var getRandom = function(min, max) {
           if (arguments.length == 1) {
             max = min;
             min = 0;
           }
-          return Math.floor(Math.random() * (max - min) + min);
+          return Math.floor(rand() * (max - min) + min);
         };
         var coinflip = function(chance) {
           if (!chance) {
             chance = 0.5;
           }
-          return Math.random() < chance;
+          return rand() < chance;
         };
         var isFirstLetterUpperCase = function(str) {
           return str.charAt(0).toUpperCase() == str.charAt(0);
@@ -4455,44 +4456,77 @@ var mispelr = (() => {
           logger("lexed: " + words);
           return words;
         };
-        var respell = function(phrase, method) {
+        var hash = function(str) {
+          var h = 2166136261;
+          for (var i = 0; i < str.length; i++) {
+            h ^= str.charCodeAt(i);
+            h = Math.imul(h, 16777619);
+          }
+          h ^= h >>> 16;
+          h = Math.imul(h, 2246822507);
+          h ^= h >>> 13;
+          h = Math.imul(h, 3266489909);
+          h ^= h >>> 16;
+          return h >>> 0;
+        };
+        var respellWord = function(word, method) {
+          switch (method) {
+            case spelltype.maledict:
+              return maledictor(word);
+            case spelltype.awfowell:
+              return awfowell(word);
+            case spelltype.constonantSorrow:
+              return constonantsorrow(word);
+            case spelltype.maxmister:
+              return maxmister(word);
+            case spelltype.homophilia:
+              return homophilia(word);
+            default:
+              return randomRespell(word);
+          }
+        };
+        var respell = function(phrase, method, opts) {
           method = method != void 0 ? method : spelltype.random;
-          var redone = phrase;
-          var words = getTextArray(phrase);
-          logger(words);
-          for (var i = 0; i < words.length; i++) {
-            var word = words[i];
-            var wrod = "";
-            switch (method) {
-              case spelltype.maledict:
-                wrod = maledictor(word);
-                break;
-              case spelltype.awfowell:
-                wrod = awfowell(word);
-                break;
-              case spelltype.constonantSorrow:
-                wrod = constonantsorrow(word);
-                break;
-              case spelltype.maxmister:
-                wrod = maxmister(word);
-                break;
-              case spelltype.homophilia:
-                wrod = homophilia(word);
-                break;
-              default:
-                wrod = randomRespell(word);
-                break;
+          opts = opts || {};
+          var chance = opts.chance != void 0 ? opts.chance : 1;
+          var prevRand = rand;
+          rand = opts.rng || Math.random;
+          try {
+            var words = getTextArray(phrase);
+            logger(words);
+            var wrods = words.map(function(word2) {
+              return respellWord(word2, method);
+            });
+            var salt = null;
+            if (chance < 1) {
+              salt = opts.salt != void 0 ? String(opts.salt) : String(rand());
             }
-            if (isAlpha(word)) {
+            var redone = phrase;
+            var cursor = 0;
+            for (var i = 0; i < words.length; i++) {
+              var word = words[i];
+              var wrod = wrods[i];
+              if (!isAlpha(word)) continue;
+              if (salt !== null && hash(salt + ":" + i) / 4294967296 >= chance) {
+                wrod = word;
+              }
               logger('replacing "' + word + '" with "' + wrod + '"');
               try {
-                redone = redone.replace(new RegExp("\\b" + word + "\\b"), wrod);
+                var re = new RegExp("\\b" + word + "\\b", "g");
+                re.lastIndex = cursor;
+                var m = re.exec(redone);
+                if (m) {
+                  redone = redone.slice(0, m.index) + wrod + redone.slice(m.index + word.length);
+                  cursor = m.index + wrod.length;
+                }
               } catch (ex) {
                 console.log(ex);
               }
             }
+            return redone;
+          } finally {
+            rand = prevRand;
           }
-          return redone;
         };
         this.respell = respell;
         this.random = function(text) {

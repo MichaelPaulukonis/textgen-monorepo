@@ -48,12 +48,12 @@ class Poetifier {
       seed: options.config.seed
     })
     options.util = util
-    // mispelr takes no rng yet: see util.withSeededMathRandom (textgen-monorepo-9b3)
     let jgnoetry = require(`./jgnoetry/jgnoetryRunner.js`)
     let Drone = require(`./sentence.drone.js`)
     let titlifier = new (require(`../lib/titlifier`).Titlifier)({ util: util })
     let mispelr = require(`node-mispelr`)
     let ALWAYS_PRINT = 0
+    const RESPELL_CHANCE = 0.25
     // let rhymer = require(`../filter/rhymer`)({ util: util })
     let textutils = require(`./textutil.js`)
     const { capTexts } = require(`./cap-texts.js`)
@@ -143,9 +143,11 @@ class Poetifier {
     let transformMispeller = function (poem) {
       let spelltype = util.randomProperty(mispelr.spelltypes)
       logger(`spelltype: ${spelltype}`)
-      poem.text = util.withSeededMathRandom(() =>
-        mispelr.respell(poem.text, spelltype)
-      )
+      // chance < 1: respelling every eligible word reads as noise (textgen-monorepo-9b3)
+      poem.text = mispelr.respell(poem.text, spelltype, {
+        rng: () => util.random(),
+        chance: RESPELL_CHANCE
+      })
       return poem
     }
     let transformSort = function (poem) {

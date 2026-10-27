@@ -31,8 +31,11 @@ var Mispelr = function (config) {
     if (config.log || priority) console.log(msg) // eslint-disable-line no-console
   }
 
+  // all randomness goes through rand; respell swaps in opts.rng for its duration
+  var rand = Math.random
+
   var pick = function (arr) {
-    return arr[Math.floor(Math.random() * arr.length)]
+    return arr[Math.floor(rand() * arr.length)]
   }
 
   var getRandom = function (min, max) {
@@ -41,7 +44,7 @@ var Mispelr = function (config) {
       min = 0
     }
 
-    return Math.floor(Math.random() * (max - min) + min)
+    return Math.floor(rand() * (max - min) + min)
   }
 
   // return true or false
@@ -50,7 +53,7 @@ var Mispelr = function (config) {
     if (!chance) {
       chance = 0.5
     }
-    return Math.random() < chance
+    return rand() < chance
   }
 
   // TODO: we should _match_ capitalization
@@ -186,58 +189,105 @@ var Mispelr = function (config) {
     return words
   }
 
+  // FNV-1a + murmur3 fmix32, 32-bit: deterministic per-word gate that draws
+  // nothing from rand. fmix32 is needed: plain FNV-1a barely moves the high
+  // bits when only the trailing index differs, so h / 2^32 clustered ~0.58.
+  var hash = function (str) {
+    var h = 0x811c9dc5
+    for (var i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i)
+      h = Math.imul(h, 0x01000193)
+    }
+    h ^= h >>> 16
+    h = Math.imul(h, 0x85ebca6b)
+    h ^= h >>> 13
+    h = Math.imul(h, 0xc2b2ae35)
+    h ^= h >>> 16
+    return h >>> 0
+  }
+
+  var respellWord = function (word, method) {
+    switch (method) {
+      case spelltype.maledict:
+        return maledictor(word)
+      case spelltype.awfowell:
+        return awfowell(word)
+      case spelltype.constonantSorrow:
+        return constonantsorrow(word)
+      case spelltype.maxmister:
+        return maxmister(word)
+      case spelltype.homophilia:
+        return homophilia(word)
+      default:
+        return randomRespell(word)
+    }
+  }
+
   // creative respellings
   // http://security.stackexchange.com/questions/80392/never-spell-a-word-the-same-way-twice
   // http://rickconner.net/spamweb/tricks.html#misspelling
   // https://github.com/dariusk/NaNoGenMo/issues/2
-  var respell = function (phrase, method) {
+  //
+  // opts.rng: () => [0, 1), defaults to Math.random
+  // opts.chance: probability each word keeps its respelling, defaults to 1.
+  //   Every word is respelled (same rng draws at any chance), then a hash of
+  //   salt:index decides which respellings to keep - so raising chance only
+  //   adds words, and the same rng gives the same respellings at any chance.
+  // opts.salt: fixes the mask; defaults to one rng draw after respelling
+  var respell = function (phrase, method, opts) {
     method = method != undefined ? method : spelltype.random
+    opts = opts || {}
+    var chance = opts.chance != undefined ? opts.chance : 1
 
-    var redone = phrase
+    var prevRand = rand
+    rand = opts.rng || Math.random
+    try {
+      var words = getTextArray(phrase)
 
-    var words = getTextArray(phrase)
+      logger(words)
 
-    logger(words)
+      var wrods = words.map(function (word) {
+        return respellWord(word, method)
+      })
 
-    for (var i = 0; i < words.length; i++) {
-      var word = words[i]
-
-      var wrod = ''
-
-      switch (method) {
-        case spelltype.maledict:
-          wrod = maledictor(word)
-          break
-        case spelltype.awfowell:
-          wrod = awfowell(word)
-          break
-        case spelltype.constonantSorrow:
-          wrod = constonantsorrow(word)
-          break
-        case spelltype.maxmister:
-          wrod = maxmister(word)
-          break
-        case spelltype.homophilia:
-          wrod = homophilia(word)
-          break
-        default:
-          wrod = randomRespell(word)
-          break
+      var salt = null
+      if (chance < 1) {
+        salt = opts.salt != undefined ? String(opts.salt) : String(rand())
       }
 
-      if (isAlpha(word)) {
+      var redone = phrase
+      var cursor = 0
+      for (var i = 0; i < words.length; i++) {
+        var word = words[i]
+        var wrod = wrods[i]
+
+        if (!isAlpha(word)) continue
+        if (salt !== null && hash(salt + ':' + i) / 4294967296 >= chance) {
+          wrod = word
+        }
+
         logger('replacing "' + word + '" with "' + wrod + '"')
-        // this is crap, if the same word occurs more than once
-        // also unsure how to skip some things. AWKWARD.
+        // search from the cursor, so repeated words map to their own position
         try {
-          redone = redone.replace(new RegExp('\\b' + word + '\\b'), wrod)
+          var re = new RegExp('\\b' + word + '\\b', 'g')
+          re.lastIndex = cursor
+          var m = re.exec(redone)
+          if (m) {
+            redone =
+              redone.slice(0, m.index) +
+              wrod +
+              redone.slice(m.index + word.length)
+            cursor = m.index + wrod.length
+          }
         } catch (ex) {
           console.log(ex) // eslint-disable-line no-console
         }
       }
-    }
 
-    return redone
+      return redone
+    } finally {
+      rand = prevRand
+    }
   }
 
   this.respell = respell

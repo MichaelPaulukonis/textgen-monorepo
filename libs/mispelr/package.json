@@ -1,6 +1,6 @@
 {
   "name": "node-mispelr",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Mispells words in several ways.",
   "main": "index.js",
   "files": [
