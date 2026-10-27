@@ -53,7 +53,7 @@ class Poetifier {
     let titlifier = new (require(`../lib/titlifier`).Titlifier)({ util: util })
     let mispelr = require(`node-mispelr`)
     let ALWAYS_PRINT = 0
-    const RESPELL_CHANCE = 0.25
+    const RESPELL_CHANCE = 0.15
     // let rhymer = require(`../filter/rhymer`)({ util: util })
     let textutils = require(`./textutil.js`)
     const { capTexts } = require(`./cap-texts.js`)
