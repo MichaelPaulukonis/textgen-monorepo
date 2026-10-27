@@ -223,21 +223,29 @@ var Mispelr = function (config) {
     }
   }
 
+  // a selected word that comes back unchanged is re-rolled this many times
+  var MAX_TRIES = 10
+
   // creative respellings
   // http://security.stackexchange.com/questions/80392/never-spell-a-word-the-same-way-twice
   // http://rickconner.net/spamweb/tricks.html#misspelling
   // https://github.com/dariusk/NaNoGenMo/issues/2
   //
   // opts.rng: () => [0, 1), defaults to Math.random
-  // opts.chance: probability each word keeps its respelling, defaults to 1.
-  //   Every word is respelled (same rng draws at any chance), then a hash of
-  //   salt:index decides which respellings to keep - so raising chance only
-  //   adds words, and the same rng gives the same respellings at any chance.
+  // opts.chance: probability each word comes back misspelled. Only words
+  //   count (not punctuation). Omitted = 0.0.x behavior: every token goes
+  //   through the respeller once, and some come back unchanged.
+  //   Given, every word gets a candidate (re-rolled until it differs, same
+  //   rng draws at any chance), then a hash of salt:wordIndex picks which
+  //   candidates to use - so raising chance only adds misspellings, and the
+  //   same rng gives the same misspellings at any chance. Words that can't
+  //   be misspelled (not in the dictionary, too short) are made up for by
+  //   the rest, as far as possible.
   // opts.salt: fixes the mask; defaults to one rng draw after respelling
   var respell = function (phrase, method, opts) {
     method = method != undefined ? method : spelltype.random
     opts = opts || {}
-    var chance = opts.chance != undefined ? opts.chance : 1
+    var gated = opts.chance != undefined
 
     var prevRand = rand
     rand = opts.rng || Math.random
@@ -247,22 +255,45 @@ var Mispelr = function (config) {
       logger(words)
 
       var wrods = words.map(function (word) {
-        return respellWord(word, method)
+        if (!gated) return respellWord(word, method)
+        if (!isAlpha(word)) return word
+        var wrod = respellWord(word, method)
+        for (var t = 1; t < MAX_TRIES && wrod === word; t++) {
+          wrod = respellWord(word, method)
+        }
+        return wrod
       })
 
+      // p: per-respellable-word odds that put chance * wordCount misspellings
+      // across all words (capped at 1 when too few can change)
       var salt = null
-      if (chance < 1) {
-        salt = opts.salt != undefined ? String(opts.salt) : String(rand())
+      var p = 1
+      if (gated) {
+        var wordCount = 0
+        var respellable = 0
+        words.forEach(function (word, i) {
+          if (!isAlpha(word)) return
+          wordCount++
+          if (wrods[i] !== word) respellable++
+        })
+        p = respellable
+          ? Math.min(1, (opts.chance * wordCount) / respellable)
+          : 0
+        if (p < 1) {
+          salt = opts.salt != undefined ? String(opts.salt) : String(rand())
+        }
       }
 
       var redone = phrase
       var cursor = 0
+      var wordIndex = -1
       for (var i = 0; i < words.length; i++) {
         var word = words[i]
         var wrod = wrods[i]
 
         if (!isAlpha(word)) continue
-        if (salt !== null && hash(salt + ':' + i) / 4294967296 >= chance) {
+        wordIndex++
+        if (salt !== null && hash(salt + ':' + wordIndex) / 4294967296 >= p) {
           wrod = word
         }
 

@@ -4485,29 +4485,49 @@ var mispelr = (() => {
               return randomRespell(word);
           }
         };
+        var MAX_TRIES = 10;
         var respell = function(phrase, method, opts) {
           method = method != void 0 ? method : spelltype.random;
           opts = opts || {};
-          var chance = opts.chance != void 0 ? opts.chance : 1;
+          var gated = opts.chance != void 0;
           var prevRand = rand;
           rand = opts.rng || Math.random;
           try {
             var words = getTextArray(phrase);
             logger(words);
             var wrods = words.map(function(word2) {
-              return respellWord(word2, method);
+              if (!gated) return respellWord(word2, method);
+              if (!isAlpha(word2)) return word2;
+              var wrod2 = respellWord(word2, method);
+              for (var t = 1; t < MAX_TRIES && wrod2 === word2; t++) {
+                wrod2 = respellWord(word2, method);
+              }
+              return wrod2;
             });
             var salt = null;
-            if (chance < 1) {
-              salt = opts.salt != void 0 ? String(opts.salt) : String(rand());
+            var p = 1;
+            if (gated) {
+              var wordCount = 0;
+              var respellable = 0;
+              words.forEach(function(word2, i2) {
+                if (!isAlpha(word2)) return;
+                wordCount++;
+                if (wrods[i2] !== word2) respellable++;
+              });
+              p = respellable ? Math.min(1, opts.chance * wordCount / respellable) : 0;
+              if (p < 1) {
+                salt = opts.salt != void 0 ? String(opts.salt) : String(rand());
+              }
             }
             var redone = phrase;
             var cursor = 0;
+            var wordIndex = -1;
             for (var i = 0; i < words.length; i++) {
               var word = words[i];
               var wrod = wrods[i];
               if (!isAlpha(word)) continue;
-              if (salt !== null && hash(salt + ":" + i) / 4294967296 >= chance) {
+              wordIndex++;
+              if (salt !== null && hash(salt + ":" + wordIndex) / 4294967296 >= p) {
                 wrod = word;
               }
               logger('replacing "' + word + '" with "' + wrod + '"');

@@ -90,10 +90,58 @@ describe('node-mispelr', () => {
       ).to.equal(text)
     })
 
-    it('chance 1 matches the no-chance output', () => {
+    it('chance 1 misspells every word that can be misspelled', () => {
+      // maxmister can change any word of 4+ letters
+      const out = mispelr
+        .respell(text, 'maxmister', { rng: seeded(3), chance: 1 })
+        .split(/\W+/)
+      text.split(/\W+/).forEach((w, i) => {
+        if (w.length > 3) expect(out[i], w).to.not.equal(w)
+      })
+    })
+
+    const misspelledShare = (input, type, chance, n) => {
+      const orig = input.split(/\W+/).filter(Boolean)
+      let changed = 0
+      for (let k = 0; k < n; k++) {
+        const out = mispelr
+          .respell(input, type, { rng: seeded(100 + k), chance })
+          .split(/\W+/)
+          .filter(Boolean)
+        changed += orig.filter((w, i) => w !== out[i]).length
+      }
+      return changed / (orig.length * n)
+    }
+
+    ;['random', 'maxmister', 'awfowell'].forEach((type) => {
+      it(`chance is the share of words misspelled for '${type}'`, () => {
+        ;[0.1, 0.3].forEach((chance) => {
+          expect(
+            misspelledShare(text, type, chance, 200),
+            `${chance}`
+          ).to.be.closeTo(chance, 0.04)
+        })
+      })
+    })
+
+    it('punctuation does not count toward the share', () => {
+      const punchy = text.replace(/ /g, ' -- ; ')
+      expect(misspelledShare(punchy, 'random', 0.2, 50)).to.be.closeTo(
+        0.2,
+        0.04
+      )
+    })
+
+    it('3 words at 0.1: about one misspelling every three calls', () => {
       expect(
-        mispelr.respell(text, 'random', { rng: seeded(3), chance: 1 })
-      ).to.equal(mispelr.respell(text, 'random', { rng: seeded(3) }))
+        misspelledShare('quick brown foxes', 'random', 0.1, 300) * 3
+      ).to.be.closeTo(0.3, 0.08)
+    })
+
+    it('caps at what the method can change', () => {
+      // maledict only changes dictionary words
+      const share = misspelledShare(text, 'maledict', 0.9, 20)
+      expect(share).to.be.above(0).and.below(0.9)
     })
 
     it('does not touch Math.random when an rng is given', () => {
@@ -138,7 +186,7 @@ describe('node-mispelr', () => {
       expect(thin).to.be.below(full)
     })
 
-    it('chance 0.5 mixes kept and dropped words within one short text', () => {
+    it('chance 0.3 mixes kept and dropped words within one short text', () => {
       // a weak hash clusters nearby indices, making each call all-or-nothing
       const orig = text.split(' ')
       const full = mispelr.respell(text, 'maxmister', { rng: seeded(13) })
@@ -147,7 +195,7 @@ describe('node-mispelr', () => {
       for (let n = 0; n < 50; n++) {
         const out = mispelr.respell(text, 'maxmister', {
           rng: seeded(13),
-          chance: 0.5,
+          chance: 0.3,
           salt: `salt${n}`
         })
         const kept = out.split(' ').filter((w, i) => w !== orig[i]).length
