@@ -42,6 +42,7 @@ class LambdaHandler {
       }
     } catch (error) {
       this.logError('Lambda handler error', error)
+      if (error.rethrow) throw error
       return {
         statusCode: 500,
         body: JSON.stringify({
@@ -63,6 +64,17 @@ class LambdaHandler {
     this.log('Processing scheduled event for list generation and posting')
 
     const result = await this.generateAndPostList()
+
+    // Posting failed after a good list: throw, so async Lambda counts an
+    // error (Errors metric) and retries with a fresh list. A 500-shaped return
+    // counts as success and the post is silently lost (textgen-monorepo-wcx,
+    // same as poeticalbot's 8ol). Generation exhaustion still returns:
+    // retrying it would just multiply the attempts.
+    if (result.list && result.error) {
+      const err = new Error(`Scheduled posting failed: ${result.error}`)
+      err.rethrow = true
+      throw err
+    }
 
     if (result.error) {
       this.logError('Scheduled list generation failed', new Error(result.error))
