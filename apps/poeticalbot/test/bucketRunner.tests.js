@@ -75,7 +75,7 @@ describe(`bucketRunner tests`, function () {
       // TODO: implement a test, then implement code
       var re = /[.?!]$|^$/
       // console.log(poem.lines);
-      expect(poem.lines.reduce((p, c) => p && re.test(c), true)).to.be.true()
+      expect(poem.lines.reduce((p, c) => p && re.test(c), true)).to.be.true
     })
   })
 })

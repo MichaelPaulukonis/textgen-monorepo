@@ -1,8 +1,6 @@
 'use strict'
 
 const chai = require('chai')
-const dirtyChai = require('dirty-chai')
-chai.use(dirtyChai)
 const { expect } = chai
 
 const { toNPFContent } = require('../src/lib/npf-adapter')

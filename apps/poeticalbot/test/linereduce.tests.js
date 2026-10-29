@@ -76,7 +76,7 @@ This is probably not.`
         (p, line) => p && line.startsWith(firstWord),
         true
       )
-      expect(allSame).to.be.true()
+      expect(allSame).to.be.true
     })
 
     it('... will get a set of sentences that END with the same word', () => {
@@ -94,7 +94,7 @@ This is probably not.`
         const lineLastWord = linereduce.stripPunct(line.split(' ').slice(-1)[0])
         return p && lineLastWord.toLowerCase() === lastWord.toLowerCase()
       }, true)
-      expect(allSame).to.be.true()
+      expect(allSame).to.be.true
     })
 
     it('... will get a set of sentences that match some pattern', () => {
@@ -113,7 +113,7 @@ This is probably not.`
         (p, line) => p && line.indexOf(' is ') > -1,
         true
       )
-      expect(allSame).to.be.true()
+      expect(allSame).to.be.true
     })
   })
 })

@@ -1,28 +1,26 @@
 /* eslint-env mocha */
 const chai = require('chai')
-const dirtyChai = require('dirty-chai')
 const fs = require('fs')
 const path = require('path')
 const tumblrPoster = require('tumblr-poster')
 
-chai.use(dirtyChai)
 const { expect } = chai
 
 describe('Lambda Deployment Configuration', function () {
   describe('Terraform Configuration', function () {
     it('should have main.tf file', function () {
       const mainTfPath = path.join(__dirname, '../terraform/main.tf')
-      expect(fs.existsSync(mainTfPath)).to.be.true()
+      expect(fs.existsSync(mainTfPath)).to.be.true
     })
 
     it('should have variables.tf file', function () {
       const variablesTfPath = path.join(__dirname, '../terraform/variables.tf')
-      expect(fs.existsSync(variablesTfPath)).to.be.true()
+      expect(fs.existsSync(variablesTfPath)).to.be.true
     })
 
     it('should have outputs.tf file', function () {
       const outputsTfPath = path.join(__dirname, '../terraform/outputs.tf')
-      expect(fs.existsSync(outputsTfPath)).to.be.true()
+      expect(fs.existsSync(outputsTfPath)).to.be.true
     })
 
     it('should have terraform.tfvars.example file', function () {
@@ -30,17 +28,17 @@ describe('Lambda Deployment Configuration', function () {
         __dirname,
         '../terraform/terraform.tfvars.example'
       )
-      expect(fs.existsSync(exampleVarsPath)).to.be.true()
+      expect(fs.existsSync(exampleVarsPath)).to.be.true
     })
 
     it('should have .gitignore file', function () {
       const gitignorePath = path.join(__dirname, '../terraform/.gitignore')
-      expect(fs.existsSync(gitignorePath)).to.be.true()
+      expect(fs.existsSync(gitignorePath)).to.be.true
     })
 
     it('should have README.md file', function () {
       const readmePath = path.join(__dirname, '../terraform/README.md')
-      expect(fs.existsSync(readmePath)).to.be.true()
+      expect(fs.existsSync(readmePath)).to.be.true
     })
   })
 
@@ -225,7 +223,7 @@ describe('Lambda Deployment Configuration', function () {
   describe('Lambda Handler Configuration', function () {
     it('Lambda handler file should exist', function () {
       const handlerPath = path.join(__dirname, '../src/lambda-handler.js')
-      expect(fs.existsSync(handlerPath)).to.be.true()
+      expect(fs.existsSync(handlerPath)).to.be.true
     })
 
     it('Lambda handler should export handler function', function () {

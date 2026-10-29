@@ -83,9 +83,6 @@ importers:
       chai:
         specifier: ^4.3.7
         version: 4.5.0
-      dirty-chai:
-        specifier: ^2.0.1
-        version: 2.0.1(chai@4.5.0)
       mocha:
         specifier: ^8.2.1
         version: 8.4.0
@@ -156,9 +153,6 @@ importers:
       chai:
         specifier: ^4.2.0
         version: 4.5.0
-      dirty-chai:
-        specifier: ^2.0.1
-        version: 2.0.1(chai@4.5.0)
       mocha:
         specifier: ^6.1.4
         version: 6.2.3
@@ -1578,11 +1572,6 @@ packages:
   dir-glob@3.0.1:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
-
-  dirty-chai@2.0.1:
-    resolution: {integrity: sha512-ys79pWKvDMowIDEPC6Fig8d5THiC0DJ2gmTeGzVAoEH18J8OzLud0Jh7I9IWg3NSk8x2UocznUuFmfHCXYZx9w==}
-    peerDependencies:
-      chai: '>=2.2.1 <5'
 
   doctrine@3.0.0:
     resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
@@ -4889,10 +4878,6 @@ snapshots:
   dir-glob@3.0.1:
     dependencies:
       path-type: 4.0.0
-
-  dirty-chai@2.0.1(chai@4.5.0):
-    dependencies:
-      chai: 4.5.0
 
   doctrine@3.0.0:
     dependencies:

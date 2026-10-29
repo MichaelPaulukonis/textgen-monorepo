@@ -23,10 +23,10 @@ describe('Tumblr Client', () => {
     })
 
     it('validates credentials correctly', () => {
-      expect(mockClient.validateCredentials()).to.be.true()
+      expect(mockClient.validateCredentials()).to.be.true
 
       const invalidClient = new MockTumblrClient({})
-      expect(invalidClient.validateCredentials()).to.be.false()
+      expect(invalidClient.validateCredentials()).to.be.false
     })
 
     it('can mock successful post creation', async () => {

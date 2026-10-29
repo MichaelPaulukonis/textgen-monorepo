@@ -41,7 +41,7 @@ describe(`linereduceRunner `, () => {
         (p, line) => p && stripPunct(line).startsWith(firstWord),
         true
       )
-      expect(allSame).to.be.true()
+      expect(allSame).to.be.true
     })
 
     it('... will get a set of sentences that END with the same word', () => {
@@ -67,7 +67,7 @@ describe(`linereduceRunner `, () => {
         (p, line) => p && stripPunct(line).endsWith(lastWord),
         true
       )
-      expect(allSame).to.be.true()
+      expect(allSame).to.be.true
     })
 
     it('... will get a set of sentences that contain a 2+ word sequence', () => {

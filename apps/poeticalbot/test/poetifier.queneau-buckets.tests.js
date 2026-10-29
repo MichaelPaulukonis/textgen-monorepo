@@ -28,16 +28,16 @@ describe(`poetifier Queneau-Buckets incrementingLines`, () => {
     })
     describe(`which`, () => {
       it(`has a "lines" property`, () => {
-        expect(poem.lines).to.exist()
+        expect(poem.lines).to.exist
       })
       it(`has a "title" property`, () => {
-        expect(poem.title).to.exist()
+        expect(poem.title).to.exist
       })
       it(`has a "seed" property`, () => {
-        expect(poem.seed).to.exist()
+        expect(poem.seed).to.exist
       })
       it(`has a "source" property`, () => {
-        expect(poem.source).to.exist()
+        expect(poem.source).to.exist
       })
       // TODO: sometimes it DOES have a "config" property
       // WHEN using the bucketRunner (at least)
@@ -107,16 +107,16 @@ describe(`poetifier Queneau-Buckets decrementinglines`, () => {
     })
     describe(`which`, () => {
       it(`has a "lines" property`, () => {
-        expect(poem.lines).to.exist()
+        expect(poem.lines).to.exist
       })
       it(`has a "title" property`, () => {
-        expect(poem.title).to.exist()
+        expect(poem.title).to.exist
       })
       it(`has a "seed" property`, () => {
-        expect(poem.seed).to.exist()
+        expect(poem.seed).to.exist
       })
       it(`has a "source" property`, () => {
-        expect(poem.source).to.exist()
+        expect(poem.source).to.exist
       })
       // TODO: sometimes it DOES have a "config" property
       // WHEN using the bucketRunner (at least)
@@ -186,16 +186,16 @@ describe(`poetifier Queneau-Buckets shortLines`, () => {
     })
     describe(`which`, () => {
       it(`has a "lines" property`, () => {
-        expect(poem.lines).to.exist()
+        expect(poem.lines).to.exist
       })
       it(`has a "title" property`, () => {
-        expect(poem.title).to.exist()
+        expect(poem.title).to.exist
       })
       it(`has a "seed" property`, () => {
-        expect(poem.seed).to.exist()
+        expect(poem.seed).to.exist
       })
       it(`has a "source" property`, () => {
-        expect(poem.source).to.exist()
+        expect(poem.source).to.exist
       })
       // TODO: sometimes it DOES have a "config" property
       // WHEN using the bucketRunner (at least)
@@ -260,16 +260,16 @@ describe(`poetifier Queneau-Buckets diamond substrategy`, () => {
     })
     describe(`which`, () => {
       it(`has a "lines" property`, () => {
-        expect(poem.lines).to.exist()
+        expect(poem.lines).to.exist
       })
       it(`has a "title" property`, () => {
-        expect(poem.title).to.exist()
+        expect(poem.title).to.exist
       })
       it(`has a "seed" property`, () => {
-        expect(poem.seed).to.exist()
+        expect(poem.seed).to.exist
       })
       it(`has a "source" property`, () => {
-        expect(poem.source).to.exist()
+        expect(poem.source).to.exist
       })
     })
 
@@ -332,16 +332,16 @@ describe(`poetifier Queneau-Buckets drone substrategy`, () => {
     })
     describe(`which`, () => {
       it(`has a "lines" property`, () => {
-        expect(poem.lines).to.exist()
+        expect(poem.lines).to.exist
       })
       it(`has a "title" property`, () => {
-        expect(poem.title).to.exist()
+        expect(poem.title).to.exist
       })
       it(`has a "seed" property`, () => {
-        expect(poem.seed).to.exist()
+        expect(poem.seed).to.exist
       })
       it(`has a "source" property`, () => {
-        expect(poem.source).to.exist()
+        expect(poem.source).to.exist
       })
       // TODO: sometimes it DOES have a "config" property
       // WHEN using the bucketRunner (at least)

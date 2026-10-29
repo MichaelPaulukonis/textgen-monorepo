@@ -64,13 +64,13 @@ describe('PoeticalBot Lambda Deployment Integration', () => {
   describe('Terraform Configuration', () => {
     it('should have terraform directory with configuration files', () => {
       const terraformPath = path.join(__dirname, '../terraform')
-      expect(fs.existsSync(terraformPath)).to.be.true()
+      expect(fs.existsSync(terraformPath)).to.be.true
 
       const mainTfPath = path.join(terraformPath, 'main.tf')
       const variablesTfPath = path.join(terraformPath, 'variables.tf')
 
-      expect(fs.existsSync(mainTfPath)).to.be.true()
-      expect(fs.existsSync(variablesTfPath)).to.be.true()
+      expect(fs.existsSync(mainTfPath)).to.be.true
+      expect(fs.existsSync(variablesTfPath)).to.be.true
     })
 
     it('should have valid terraform main configuration', () => {
@@ -156,7 +156,7 @@ describe('PoeticalBot Lambda Deployment Integration', () => {
       // Check that environment configuration exists
       const hasEnvConfig =
         fs.existsSync(envPath) || fs.existsSync(envSamplePath)
-      expect(hasEnvConfig).to.be.true()
+      expect(hasEnvConfig).to.be.true
 
       if (fs.existsSync(envSamplePath)) {
         const envSample = fs.readFileSync(envSamplePath, 'utf8')

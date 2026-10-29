@@ -37,7 +37,7 @@ describe('Lambda Handler', () => {
     })
 
     it('has a statusCode property', () => {
-      expect(result.statusCode).to.exist()
+      expect(result.statusCode).to.exist
       expect(result.statusCode).to.be.a('number')
     })
 
@@ -46,7 +46,7 @@ describe('Lambda Handler', () => {
     })
 
     it('has a body property', () => {
-      expect(result.body).to.exist()
+      expect(result.body).to.exist
       expect(result.body).to.be.a('string')
     })
 

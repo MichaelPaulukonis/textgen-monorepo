@@ -1,6 +1,4 @@
 const chai = require('chai')
-const dirtyChai = require('dirty-chai')
-chai.use(dirtyChai)
 const expect = chai.expect
 const textutils = require('../src/lib/textutil.js')
 
@@ -92,16 +90,16 @@ describe('textutil', function () {
       expect(cleanBrackets).to.be.a('string')
     })
     it('should remove unbalancedParens', function () {
-      expect(cleanParens.match(/\(|\)/g)).to.be.null()
+      expect(cleanParens.match(/\(|\)/g)).to.be.null
     })
     it('should remove unbalancedBrackets', function () {
-      expect(cleanBrackets.match(/\[|\]/g)).to.be.null()
+      expect(cleanBrackets.match(/\[|\]/g)).to.be.null
     })
     it('should not remove balanced parens', function () {
-      expect(cleanBrackets.match(/\(|\)/g)).to.not.be.null()
+      expect(cleanBrackets.match(/\(|\)/g)).to.not.be.null
     })
     it('should not remove balanced brackets', function () {
-      expect(cleanParens.match(/\[|\]/g)).to.not.be.null()
+      expect(cleanParens.match(/\[|\]/g)).to.not.be.null
     })
   })
 })

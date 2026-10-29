@@ -107,33 +107,33 @@ describe('PoeticalBot Workspace Integration', () => {
   describe('Application Structure Integrity', () => {
     it('should not have a separate lambda directory (consolidated into src/)', () => {
       const lambdaPath = path.join(__dirname, '../lambda')
-      expect(fs.existsSync(lambdaPath)).to.be.false()
+      expect(fs.existsSync(lambdaPath)).to.be.false
     })
 
     it('should maintain existing terraform configuration', () => {
       const terraformPath = path.join(__dirname, '../terraform')
-      expect(fs.existsSync(terraformPath)).to.be.true()
+      expect(fs.existsSync(terraformPath)).to.be.true
 
       const terraformMainPath = path.join(terraformPath, 'main.tf')
-      expect(fs.existsSync(terraformMainPath)).to.be.true()
+      expect(fs.existsSync(terraformMainPath)).to.be.true
     })
 
     it('should preserve .specstory configuration', () => {
       const specstoryPath = path.join(__dirname, '../.specstory')
-      expect(fs.existsSync(specstoryPath)).to.be.true()
+      expect(fs.existsSync(specstoryPath)).to.be.true
     })
 
     it('should maintain existing source structure', () => {
       const srcPath = path.join(__dirname, '../src')
-      expect(fs.existsSync(srcPath)).to.be.true()
+      expect(fs.existsSync(srcPath)).to.be.true
 
       const indexPath = path.join(srcPath, 'index.js')
       const cliPath = path.join(srcPath, 'cli.js')
       const configPath = path.join(srcPath, 'config.js')
 
-      expect(fs.existsSync(indexPath)).to.be.true()
-      expect(fs.existsSync(cliPath)).to.be.true()
-      expect(fs.existsSync(configPath)).to.be.true()
+      expect(fs.existsSync(indexPath)).to.be.true
+      expect(fs.existsSync(cliPath)).to.be.true
+      expect(fs.existsSync(configPath)).to.be.true
     })
   })
 
@@ -166,7 +166,7 @@ describe('PoeticalBot Workspace Integration', () => {
       // At least one should exist
       const hasEnvConfig =
         fs.existsSync(envPath) || fs.existsSync(envSamplePath)
-      expect(hasEnvConfig).to.be.true()
+      expect(hasEnvConfig).to.be.true
     })
   })
 })

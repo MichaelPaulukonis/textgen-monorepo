@@ -27,7 +27,7 @@ describe('NPF Formatting', () => {
       const headingBlock = npfContent.content.find(
         (block) => block.type === 'text' && block.subtype === 'heading2'
       )
-      expect(headingBlock).to.exist()
+      expect(headingBlock).to.exist
       expect(headingBlock.text).to.equal(samplePoem.title)
     })
 
@@ -43,7 +43,7 @@ describe('NPF Formatting', () => {
         (block) =>
           block.type === 'text' && block.text && block.text.includes('Source:')
       )
-      expect(sourceBlock).to.exist()
+      expect(sourceBlock).to.exist
     })
 
     it('includes appropriate tags', () => {
