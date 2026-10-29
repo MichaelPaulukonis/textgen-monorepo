@@ -4572,6 +4572,47 @@ var mispelr = (() => {
     }
   });
 
+  // libs/mispelr/package.json
+  var require_package = __commonJS({
+    "libs/mispelr/package.json"(exports, module) {
+      module.exports = {
+        name: "node-mispelr",
+        version: "0.1.0",
+        description: "Mispells words in several ways.",
+        main: "index.js",
+        files: [
+          "index.js",
+          "lib",
+          "data"
+        ],
+        scripts: {
+          test: "mocha test/"
+        },
+        repository: {
+          type: "git",
+          url: "https://github.com/MichaelPaulukonis/textgen-monorepo.git",
+          directory: "libs/mispelr"
+        },
+        keywords: [
+          "text",
+          "nlp"
+        ],
+        author: "Michael Paulukonis",
+        license: "MIT",
+        dependencies: {
+          pos: "0.3.0"
+        },
+        devDependencies: {
+          chai: "^4.2.0",
+          mocha: "^6.1.4"
+        },
+        engines: {
+          node: "^22.16.0"
+        }
+      };
+    }
+  });
+
   // libs/mispelr/index.js
   var require_index = __commonJS({
     "libs/mispelr/index.js"(exports, module) {
@@ -4580,6 +4621,7 @@ var mispelr = (() => {
       module.exports = {
         respell: mispelr.respell,
         spelltypes: mispelr.spelltype,
+        version: require_package().version,
         Mispelr
       };
     }

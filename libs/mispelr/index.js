@@ -7,5 +7,6 @@ const mispelr = new Mispelr()
 module.exports = {
   respell: mispelr.respell,
   spelltypes: mispelr.spelltype,
+  version: require('./package.json').version,
   Mispelr
 }

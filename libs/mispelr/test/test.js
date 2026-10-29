@@ -7,6 +7,10 @@ describe('node-mispelr', () => {
       expect(mispelr.respell).to.be.a('function')
     })
 
+    it('exposes the package version', () => {
+      expect(mispelr.version).to.equal(require('../package.json').version)
+    })
+
     it('exposes the spelltypes', () => {
       expect(mispelr.spelltypes).to.have.all.keys(
         'random',
