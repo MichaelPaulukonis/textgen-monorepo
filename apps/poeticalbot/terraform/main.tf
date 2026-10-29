@@ -28,10 +28,10 @@ data "aws_lambda_layer_version" "common_corpus_layer" {
 resource "aws_lambda_function" "poeticalbot" {
   filename         = "poeticalbot-lambda.zip"
   function_name    = "poeticalbot"
-  role            = aws_iam_role.lambda_role.arn
-  handler         = "index.handler"
+  role             = aws_iam_role.lambda_role.arn
+  handler          = "index.handler"
   source_code_hash = filebase64sha256("poeticalbot-lambda.zip")
-  runtime         = "nodejs22.x"
+  runtime          = "nodejs22.x"
   # 128MB (~1/14 vCPU) timed out ~40% of runs at 30s; still within free tier.
   # 512MB was enough until corpus layer v3 restored the full corpus: ~20% of
   # runs then hit the heap limit or GC-thrashed into the 120s timeout (local
@@ -39,8 +39,8 @@ resource "aws_lambda_function" "poeticalbot" {
   # CPU; ~15k GB-s/month, inside the free tier (textgen-monorepo-oli).
   # Then 986 capped corpus text per poem: peak ~370MB over 40+ prod runs,
   # so back down to 1024MB (~2.7x headroom).
-  timeout         = 120
-  memory_size     = 1024
+  timeout     = 120
+  memory_size = 1024
 
   layers = [data.aws_lambda_layer_version.common_corpus_layer.arn]
 
@@ -48,9 +48,11 @@ resource "aws_lambda_function" "poeticalbot" {
     variables = {
       CONSUMER_KEY    = var.consumer_key
       CONSUMER_SECRET = var.consumer_secret
-      TOKEN          = var.token
-      TOKEN_SECRET   = var.token_secret
-      POST_LIVE      = var.post_live
+      TOKEN           = var.token
+      TOKEN_SECRET    = var.token_secret
+      POST_LIVE       = var.post_live
+      # stamped next to the seed in each post (textgen-monorepo-7de)
+      CORPUS_LAYER_VERSION = data.aws_lambda_layer_version.common_corpus_layer.version
     }
   }
 }

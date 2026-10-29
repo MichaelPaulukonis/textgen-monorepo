@@ -39,6 +39,12 @@ if [ -n "$(find "$BUILD/node_modules" -type l -print -quit)" ]; then
   exit 1
 fi
 
+# what was deployed, for posts to cite next to their seed (textgen-monorepo-7de)
+SHA="$(git -C "$ROOT" rev-parse --short HEAD)"
+DIRTY=false
+[ -n "$(git -C "$ROOT" status --porcelain)" ] && DIRTY=true
+printf '{ "sha": "%s", "dirty": %s }\n' "$SHA" "$DIRTY" > "$BUILD/build-info.json"
+
 node "$ROOT/scripts/generate-lambda-package-json.js" "$APP_DIR/package.json" "$BUILD/package.json" "$ENTRY"
 
 rm -f "$OUT_ZIP"

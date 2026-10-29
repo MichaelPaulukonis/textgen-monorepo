@@ -147,7 +147,8 @@ function createMetadataText(poem) {
   const parts = []
 
   if (poem.seed) {
-    parts.push(`Generated with seed: ${poem.seed}`)
+    const build = poem.build ? ` @ ${poem.build}` : ''
+    parts.push(`Generated with seed: ${poem.seed}${build}`)
   }
 
   if (poem.source) {

@@ -1,4 +1,5 @@
 const { boundedLetterFilter, retryTitle } = require(`./retry-bounds.js`)
+const { buildId } = require(`./build-info.js`)
 
 // hard-coded corpus filter strategies; each must match >= 1 corpus text
 // (contract-tested in test/poetifier.empty-corpus.tests.js)
@@ -329,6 +330,7 @@ class Poetifier {
           poem.text = textutils.cleaner(poem.text)
         }
         poem.seed = util.seed
+        poem.build = buildId.current()
         poem.method = methodName
         poem.source = texts.reduce((p, c) => p + ` ` + c.name, ``)
         return poem

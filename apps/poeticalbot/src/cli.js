@@ -187,6 +187,7 @@ Environment Variables:
       console.log('\n📊 Metadata:')
       console.log('=============')
       if (poem.seed) console.log(`Seed: ${poem.seed}`)
+      if (poem.build) console.log(`Build: ${poem.build}`)
       if (poem.source) console.log(`Source: ${poem.source}`)
       if (poem.template) console.log(`Template: ${poem.template}`)
       if (poem.method) console.log(`Method: ${poem.method}`)

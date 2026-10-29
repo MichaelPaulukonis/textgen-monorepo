@@ -182,4 +182,23 @@ describe('NPF Formatting', () => {
       )
     })
   })
+
+  // textgen-monorepo-7de
+  describe('build stamp', () => {
+    it('puts the build next to the seed', () => {
+      const text = npfFormatter.createMetadataText({
+        seed: '5ahej22.yzwr',
+        build: '7151e50 (corpus layer v4)'
+      })
+      expect(text).to.include(
+        'Generated with seed: 5ahej22.yzwr @ 7151e50 (corpus layer v4)'
+      )
+    })
+
+    it('leaves the seed line alone without a build', () => {
+      const text = npfFormatter.createMetadataText({ seed: '5ahej22.yzwr' })
+      expect(text).to.include('Generated with seed: 5ahej22.yzwr')
+      expect(text).to.not.include('@')
+    })
+  })
 })
