@@ -1,8 +1,5 @@
 var chai = require('chai')
-var dirtyChai = require('dirty-chai')
 var expect = chai.expect
-
-chai.use(dirtyChai)
 
 const util = new (require(`../src/lib/util.js`))()
 const newcorpora = new (require(`common-corpus`))()

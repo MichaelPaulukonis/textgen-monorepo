@@ -1,8 +1,5 @@
 var chai = require('chai')
-var dirtyChai = require('dirty-chai')
 var expect = chai.expect
-
-chai.use(dirtyChai)
 
 var textutils = require(`../src/lib/textutil.js`)
 

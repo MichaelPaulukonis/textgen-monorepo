@@ -1,10 +1,7 @@
 var chai = require('chai')
-var dirtyChai = require('dirty-chai')
 var expect = chai.expect
 var path = require('path')
 var fs = require('fs')
-
-chai.use(dirtyChai)
 
 /**
  * Integration tests for PoeticalBot workspace integration

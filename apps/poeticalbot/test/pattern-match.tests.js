@@ -1,7 +1,5 @@
 var chai = require('chai')
-var dirtyChai = require('dirty-chai')
 var expect = chai.expect
-chai.use(dirtyChai)
 
 const nlp = require('compromise')
 const PatternMatcher = require(`../src/lib/pattern-match`)

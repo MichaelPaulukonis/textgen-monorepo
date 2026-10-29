@@ -1,11 +1,8 @@
 var chai = require('chai')
-var dirtyChai = require('dirty-chai')
 var expect = chai.expect
 var path = require('path')
 var fs = require('fs')
 var execSync = require('child_process').execSync
-
-chai.use(dirtyChai)
 
 /**
  * Integration tests for PoeticalBot Lambda deployment configuration

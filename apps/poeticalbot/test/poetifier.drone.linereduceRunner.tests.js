@@ -1,7 +1,5 @@
 const chai = require('chai')
-const dirtyChai = require('dirty-chai')
 const expect = chai.expect
-chai.use(dirtyChai)
 
 const Poetifier = require(`../src/lib`).poetifier
 let config = require(`../src/config.js`)

@@ -1,8 +1,5 @@
 const chai = require('chai')
-const dirtyChai = require('dirty-chai')
 const expect = chai.expect
-
-chai.use(dirtyChai)
 
 // Load config from root directory
 require('dotenv').config({ path: '.env' })

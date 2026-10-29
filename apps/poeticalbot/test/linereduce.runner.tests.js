@@ -1,8 +1,6 @@
 var chai = require('chai')
-var dirtyChai = require('dirty-chai')
 var expect = chai.expect
 let util = new (require(`../src/lib/util.js`))()
-chai.use(dirtyChai)
 const { linereduceRunner: LinereduceRunner } = require('../src/lib')
 const testData = require('./testdata')
 const { types } = require(`../src/lib/linereduce.js`)
