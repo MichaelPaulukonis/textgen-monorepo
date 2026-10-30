@@ -4,6 +4,8 @@ Creative misspelling for generative text: dictionary typos, doubled letters, swa
 
 Play with it live: <https://michaelpaulukonis.github.io/mispelr/>
 
+[![The mispelr playground: input text, six method buttons, a chance slider, and the respelled output with changed words highlighted](https://raw.githubusercontent.com/MichaelPaulukonis/textgen-monorepo/main/libs/mispelr/docs/playground.png)](https://michaelpaulukonis.github.io/mispelr/)
+
 ## Install
 
 ```sh
