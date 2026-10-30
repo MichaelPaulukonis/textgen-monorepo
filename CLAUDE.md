@@ -103,6 +103,10 @@ Each app owns its own `terraform/` directory (independent AWS Lambda + supportin
 
 `.taskmaster/` holds this repo's task-tracking system (tasks.json, PRDs); `AGENTS.md` documents the full `task-master` CLI/MCP workflow already available in context. Don't hand-edit `.taskmaster/tasks/tasks.json` — use `task-master` commands.
 
+### Bead labels
+
+Every bead gets at least one project label: `poeticalbot`, `listmania`, `common-corpus`, `mispelr`, `tumblr-poster`, `repo` (monorepo-wide tooling/config), or `web-sketches` (not-yet-imported sketches). Add more when a bead spans projects (`bd create ... --labels=poeticalbot,listmania`). Concern labels (`bots-ops`, `corpus`, `tooling`) are optional extras. Filter with `bd ready --label <project>`. Epics are for bounded deliverables that finish, not per-project buckets - when an epic is done, detach leftover children (`bd update <id> --parent ""`) and close it.
+
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:6cd5cc61 -->
 ## Beads Issue Tracker
 

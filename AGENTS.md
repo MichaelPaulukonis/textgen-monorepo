@@ -78,3 +78,7 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
 - Do not commit or push without clear authority from the active profile or the current user request.
 - If a required sync or push is blocked, stop and report the exact command and error.
 <!-- END BEADS INTEGRATION -->
+
+## Bead labels
+
+Every bead gets at least one project label: `poeticalbot`, `listmania`, `common-corpus`, `mispelr`, `tumblr-poster`, `repo` (monorepo-wide tooling/config), or `web-sketches` (not-yet-imported sketches). Add more when a bead spans projects (`bd create ... --labels=poeticalbot,listmania`). Concern labels (`bots-ops`, `corpus`, `tooling`) are optional extras. Filter with `bd ready --label <project>`. Epics are for bounded deliverables that finish, not per-project buckets - when an epic is done, detach leftover children (`bd update <id> --parent ""`) and close it.
