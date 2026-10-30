@@ -50,6 +50,14 @@ describe('node-mispelr', () => {
       expect(mispelr.respell('pail', 'homophilia')).to.equal('pale')
     })
 
+    it('homophones are single words, not "and ..." list fragments', () => {
+      const homophones = require('../data/homophones')
+      Object.entries(homophones).forEach(([word, alts]) => {
+        expect(word).to.not.match(/^and /)
+        alts.forEach((alt) => expect(alt).to.not.match(/^and /))
+      })
+    })
+
     it('leaves non-alpha tokens alone', () => {
       expect(mispelr.respell('1234 !!', 'random')).to.equal('1234 !!')
     })
