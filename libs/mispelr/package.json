@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/MichaelPaulukonis/textgen-monorepo.git",
+    "url": "git+https://github.com/MichaelPaulukonis/textgen-monorepo.git",
     "directory": "libs/mispelr"
   },
   "homepage": "https://michaelpaulukonis.github.io/mispelr/",
